@@ -287,12 +287,17 @@
 .svg-waterways path { fill: none; stroke-linecap: round; stroke-linejoin: round; vector-effect: non-scaling-stroke; }
 .svg-waterways--casing path { stroke: rgba(244, 252, 252, 0.94); stroke-width: 3.6px; }
 .svg-waterways--main path { stroke: #197c9d; stroke-width: 1.55px; opacity: 0.96; }
-.svg-frontier path { stroke-width: 0.0012; vector-effect: non-scaling-stroke; transition: opacity 120ms linear; }
-.svg-frontier--initial path { fill: #d79d31; stroke: #7d550d; opacity: 0.88; }
-.svg-frontier--expansion path { fill: url('#expansion-hatch'); stroke: #963c2b; opacity: 0.88; }
-.svg-frontier--retired path { fill: #737c77; stroke: #4d5651; opacity: 0.56; }
+.svg-blob-source { pointer-events: none; }
+.svg-blob-source path { fill: #fff; stroke: none; }
+.svg-blob-source .blob-connection { fill: none; stroke: #fff; stroke-linecap: round; stroke-linejoin: round; }
+.svg-expansion-texture { opacity: 0.3; pointer-events: none; }
+.svg-expansion-texture path { fill: url('#expansion-hatch'); stroke: none; }
+.svg-frontier-hit-layer path {
+  fill: rgba(255, 255, 255, 0.001);
+  stroke: none;
+  pointer-events: all;
+}
 .coffee-cell { cursor: help; }
-.coffee-cell:hover { opacity: 1; stroke: #fff7e2; stroke-width: 0.0026; }
 .svg-waterway-labels text {
   fill: #155f7a;
   stroke: rgba(248, 253, 252, 0.98);

@@ -4,6 +4,15 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { Minus, Plus } from 'lucide-react';
 import type { Feature, FeatureCollection, GeoJsonProperties, Geometry } from 'geojson';
 
+import {
+  buildFrontierVisuals,
+  descriptorTransform,
+  interpolatePoint,
+  roughnessForMonth,
+  visualScale,
+  visualWeights,
+  type FrontierVisualDescriptor,
+} from '@/lib/simulation/frontier-visuals';
 import type { FrontierCollection, FrontierFeature } from '@/lib/simulation/types';
 
 const BASE_BOUNDS = {
@@ -48,6 +57,69 @@ interface HoverInfo {
   y: number;
   feature: FrontierFeature;
   state: string;
+}
+
+interface OrganicFilterProps {
+  id: string;
+  fill: string;
+  outline: string;
+  frequencyX: number;
+  frequencyY: number;
+  displacement: number;
+}
+
+function OrganicFilter({
+  id,
+  fill,
+  outline,
+  frequencyX,
+  frequencyY,
+  displacement,
+}: OrganicFilterProps) {
+  return (
+    <filter
+      id={id}
+      x={BASE_BOUNDS.minX - 0.18}
+      y={BASE_BOUNDS.minY - 0.18}
+      width={BASE_BOUNDS.width + 0.36}
+      height={BASE_BOUNDS.height + 0.36}
+      filterUnits="userSpaceOnUse"
+      primitiveUnits="userSpaceOnUse"
+      colorInterpolationFilters="sRGB"
+    >
+      <feGaussianBlur in="SourceGraphic" stdDeviation="0.0072" result="soft-field" />
+      <feColorMatrix
+        in="soft-field"
+        type="matrix"
+        values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 17 -6.2"
+        result="joined-field"
+      />
+      <feTurbulence
+        type="fractalNoise"
+        baseFrequency={`${frequencyX.toFixed(2)} ${frequencyY.toFixed(2)}`}
+        numOctaves="1"
+        seed="2035"
+        result="terrain-noise"
+      />
+      <feDisplacementMap
+        in="joined-field"
+        in2="terrain-noise"
+        scale={displacement}
+        xChannelSelector="R"
+        yChannelSelector="G"
+        result="rough-field"
+      />
+      <feMorphology in="rough-field" operator="dilate" radius="0.00155" result="outline-field" />
+      <feFlood floodColor={outline} result="outline-color" />
+      <feComposite in="outline-color" in2="outline-field" operator="in" result="outline-shape" />
+      <feFlood floodColor={fill} result="fill-color" />
+      <feComposite in="fill-color" in2="rough-field" operator="in" result="fill-shape" />
+      <feMerge>
+        <feMergeNode in="outline-shape" />
+        <feMergeNode in="fill-shape" />
+      </feMerge>
+    </filter>
+  );
 }
 
 function ringPath(ring: number[][]) {
@@ -134,11 +206,24 @@ function featureState(feature: FrontierFeature, month: number) {
     : 'Café inicial o persistente';
 }
 
-function activeFrontier(feature: FrontierFeature, month: number) {
-  return (
-    feature.properties.startMonth <= month &&
-    (feature.properties.retireMonth == null || feature.properties.retireMonth > month)
-  );
+function useReducedMotion() {
+  const [reducedMotion, setReducedMotion] = useState(false);
+
+  useEffect(() => {
+    const media = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const update = () => setReducedMotion(media.matches);
+    update();
+    media.addEventListener('change', update);
+    return () => media.removeEventListener('change', update);
+  }, []);
+
+  return reducedMotion;
+}
+
+function connectionPath(descriptor: FrontierVisualDescriptor, progress: number) {
+  if (!descriptor.connectsToParent || !descriptor.parentCentroid) return '';
+  const endpoint = interpolatePoint(descriptor.parentCentroid, descriptor.centroid, progress);
+  return `M${descriptor.parentCentroid.x},${descriptor.parentCentroid.y}L${endpoint.x},${endpoint.y}`;
 }
 
 export function LocalTerritoryMap({ month }: { month: number }) {
@@ -151,6 +236,7 @@ export function LocalTerritoryMap({ month }: { month: number }) {
     y: BASE_BOUNDS.minY + BASE_BOUNDS.height / 2,
   });
   const [hover, setHover] = useState<HoverInfo | null>(null);
+  const reducedMotion = useReducedMotion();
 
   useEffect(() => {
     let cancelled = false;
@@ -201,7 +287,7 @@ export function LocalTerritoryMap({ month }: { month: number }) {
     });
   };
 
-  const monthIndex = Math.round(month);
+  const visualMonth = reducedMotion ? Math.round(month) : month;
   const municipalityFeatures = (data?.municipalities.features ?? []) as Array<
     Feature<Geometry, GeoJsonProperties>
   >;
@@ -223,6 +309,18 @@ export function LocalTerritoryMap({ month }: { month: number }) {
 
     return longestLine ? [{ name, ...lineMidpoint(longestLine) }] : [];
   });
+  const descriptors = useMemo(
+    () => buildFrontierVisuals(data?.frontier.features ?? []),
+    [data],
+  );
+  const visualFeatures = useMemo(
+    () => descriptors.map((descriptor) => ({
+      descriptor,
+      weights: visualWeights(descriptor, visualMonth),
+    })),
+    [descriptors, visualMonth],
+  );
+  const roughness = roughnessForMonth(Math.round(visualMonth * 2) / 2);
 
   return (
     <div ref={shellRef} className="local-territory-map" data-testid="local-territory-map">
@@ -263,6 +361,30 @@ export function LocalTerritoryMap({ month }: { month: number }) {
               <rect width="0.018" height="0.018" fill="#e96f51" />
               <line x1="0" y1="0" x2="0" y2="0.018" stroke="#ffe1d7" strokeWidth="0.005" />
             </pattern>
+            <OrganicFilter
+              id="coffee-active-blob"
+              fill="#d79d31"
+              outline="#754d0b"
+              frequencyX={34}
+              frequencyY={29}
+              displacement={roughness.displacement}
+            />
+            <OrganicFilter
+              id="coffee-expansion-blob"
+              fill="#e96f51"
+              outline="#943b2b"
+              frequencyX={34}
+              frequencyY={29}
+              displacement={roughness.displacement}
+            />
+            <OrganicFilter
+              id="coffee-retired-blob"
+              fill="#737c77"
+              outline="#4d5651"
+              frequencyX={34}
+              frequencyY={29}
+              displacement={roughness.displacement}
+            />
           </defs>
           <g className="svg-territory-base">
             {municipalityFeatures.map((feature, index) => (
@@ -284,46 +406,113 @@ export function LocalTerritoryMap({ month }: { month: number }) {
               ))}
           </g>
 
-          <g className="svg-frontier svg-frontier--retired">
-            {data.frontier.features
-              .filter((feature) => feature.properties.retireMonth != null && feature.properties.retireMonth <= monthIndex)
-              .map((feature) => (
-                <path
-                  key={String(feature.id)}
-                  className="coffee-cell"
-                  d={geometryPath(feature.geometry)}
-                  onPointerMove={(event) => moveHover(event, feature)}
-                  onPointerLeave={() => setHover(null)}
-                />
-              ))}
-          </g>
+          <g
+            className="svg-blob-layer"
+            clipPath="url(#huila-mask)"
+            data-testid="coffee-blob-layer"
+            data-visual-month={visualMonth.toFixed(3)}
+            data-roughness={`${roughness.frequencyX.toFixed(3)}:${roughness.frequencyY.toFixed(3)}:${roughness.displacement.toFixed(5)}`}
+          >
+            <g className="svg-blob-source svg-blob-source--retired" filter="url(#coffee-retired-blob)" data-testid="retired-blob">
+              {visualFeatures
+                .filter(({ weights }) => weights.retired > 0.001)
+                .map(({ descriptor, weights }) => (
+                  <path
+                    key={descriptor.feature.properties.id}
+                    d={geometryPath(descriptor.feature.geometry)}
+                    transform={descriptorTransform(descriptor, weights.retired, 1, 1.38)}
+                    data-progress={weights.retired.toFixed(4)}
+                  />
+                ))}
+            </g>
 
-          <g className="svg-frontier svg-frontier--initial">
-            {data.frontier.features
-              .filter((feature) => feature.properties.origin === 'initial' && activeFrontier(feature, monthIndex))
-              .map((feature) => (
-                <path
-                  key={String(feature.id)}
-                  className="coffee-cell"
-                  d={geometryPath(feature.geometry)}
-                  onPointerMove={(event) => moveHover(event, feature)}
-                  onPointerLeave={() => setHover(null)}
-                />
-              ))}
-          </g>
+            <g className="svg-blob-source svg-blob-source--active" filter="url(#coffee-active-blob)" data-testid="active-blob">
+              {visualFeatures
+                .filter(({ weights }) => weights.active > 0.001)
+                .flatMap(({ descriptor, weights }) => {
+                  const connection = connectionPath(descriptor, weights.entry);
+                  const width = descriptor.radiusDegrees * 1.08 * visualScale(weights.active);
+                  return [
+                    connection ? (
+                      <path
+                        key={`${descriptor.feature.properties.id}-link`}
+                        className="blob-connection"
+                        d={connection}
+                        strokeWidth={width}
+                        data-connected-to={descriptor.parentId ?? undefined}
+                      />
+                    ) : null,
+                    <path
+                      key={descriptor.feature.properties.id}
+                      d={geometryPath(descriptor.feature.geometry)}
+                      transform={descriptorTransform(descriptor, weights.active, weights.entry, 1.42)}
+                      data-progress={weights.active.toFixed(4)}
+                    />,
+                  ];
+                })}
+            </g>
 
-          <g className="svg-frontier svg-frontier--expansion">
-            {data.frontier.features
-              .filter((feature) => feature.properties.origin === 'expansion' && activeFrontier(feature, monthIndex))
-              .map((feature) => (
-                <path
-                  key={String(feature.id)}
-                  className="coffee-cell"
-                  d={geometryPath(feature.geometry)}
-                  onPointerMove={(event) => moveHover(event, feature)}
-                  onPointerLeave={() => setHover(null)}
-                />
-              ))}
+            <g className="svg-blob-source svg-blob-source--expansion" filter="url(#coffee-expansion-blob)" data-testid="expansion-blob">
+              {visualFeatures
+                .filter(({ weights }) => weights.expansion > 0.001)
+                .flatMap(({ descriptor, weights }) => {
+                  const connection = connectionPath(descriptor, weights.entry);
+                  const width = descriptor.radiusDegrees * 0.92 * visualScale(weights.expansion);
+                  return [
+                    connection ? (
+                      <path
+                        key={`${descriptor.feature.properties.id}-expansion-link`}
+                        className="blob-connection"
+                        d={connection}
+                        strokeWidth={width}
+                      />
+                    ) : null,
+                    <path
+                      key={`${descriptor.feature.properties.id}-expansion`}
+                      d={geometryPath(descriptor.feature.geometry)}
+                      transform={descriptorTransform(descriptor, weights.expansion, weights.entry, 1.42)}
+                      data-progress={weights.expansion.toFixed(4)}
+                    />,
+                  ];
+                })}
+            </g>
+
+            <g className="svg-expansion-texture" aria-hidden="true">
+              {visualFeatures
+                .filter(({ weights }) => weights.expansion > 0.001)
+                .map(({ descriptor, weights }) => (
+                  <path
+                    key={`${descriptor.feature.properties.id}-texture`}
+                    d={geometryPath(descriptor.feature.geometry)}
+                    transform={descriptorTransform(descriptor, weights.expansion, weights.entry, 1.42)}
+                  />
+                ))}
+            </g>
+
+            <g className="svg-frontier-hit-layer" data-testid="frontier-hit-layer">
+              {visualFeatures
+                .filter(({ weights }) => weights.active + weights.retired > 0.02)
+                .map(({ descriptor, weights }) => {
+                  const useActivePosition = weights.active >= weights.retired;
+                  const hitWeight = Math.max(weights.active, weights.retired);
+                  return (
+                    <path
+                      key={`${descriptor.feature.properties.id}-hit`}
+                      className="coffee-cell"
+                      d={geometryPath(descriptor.feature.geometry)}
+                      transform={descriptorTransform(
+                        descriptor,
+                        Math.max(0.28, hitWeight),
+                        useActivePosition ? weights.entry : 1,
+                        1.34,
+                      )}
+                      data-feature-id={descriptor.feature.properties.id}
+                      onPointerMove={(event) => moveHover(event, descriptor.feature)}
+                      onPointerLeave={() => setHover(null)}
+                    />
+                  );
+                })}
+            </g>
           </g>
 
           <g className="svg-waterways svg-waterways--casing" clipPath="url(#huila-mask)" aria-hidden="true">

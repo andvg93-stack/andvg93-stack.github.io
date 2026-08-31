@@ -13,7 +13,7 @@
     "format": "oxfmt",
     "data:fetch": "node scripts/fetch-base-data.mjs",
     "data:build": "node scripts/build-simulation-data.mjs",
-    "test:model": "node --test tests/model.test.mjs tests/data.test.mjs",
+    "test:model": "node --test tests/model.test.mjs tests/data.test.mjs tests/frontier-visuals.test.mjs",
     "test:e2e": "playwright test",
     "test": "npm run test:model && npm run test:e2e"
   },

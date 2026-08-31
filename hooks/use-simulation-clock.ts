@@ -49,6 +49,7 @@ export function useSimulationClock() {
     if (!isPlaying) return;
     const origin = playheadRef.current;
     const startedAt = performance.now();
+    let lastRenderedAt = startedAt - 34;
     let frame = 0;
 
     const advance = (now: number) => {
@@ -58,7 +59,10 @@ export function useSimulationClock() {
         setIsPlaying(false);
         return;
       }
-      setPlayhead(next);
+      if (now - lastRenderedAt >= 1000 / 30) {
+        setPlayhead(next);
+        lastRenderedAt = now;
+      }
       frame = requestAnimationFrame(advance);
     };
 
@@ -68,4 +72,3 @@ export function useSimulationClock() {
 
   return { playhead, isPlaying, play, pause, toggle, seek, step, setPlayhead };
 }
-
