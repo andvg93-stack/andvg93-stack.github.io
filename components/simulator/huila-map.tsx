@@ -24,6 +24,17 @@ const FOCUS_MUNICIPALITIES = [
   'Timaná',
 ];
 
+const MAJOR_WATERWAYS = [
+  'Río Magdalena',
+  'Río Páez',
+  'Río Suaza',
+  'Río Las Ceibas',
+  'Río Guarapas',
+  'Río Timaná',
+  'Río Bordones',
+  'Baché',
+];
+
 const OPEN_FREE_MAP_STYLE = 'https://tiles.openfreemap.org/styles/liberty';
 const HUILA_BOUNDS: [[number, number], [number, number]] = [
   [-76.62466, 1.55213],
@@ -128,16 +139,6 @@ function overlayLayers(month: number): StyleSpecification['layers'] {
       },
     },
     {
-      id: 'sim-waterways-lines',
-      type: 'line',
-      source: 'sim-waterways',
-      paint: {
-        'line-color': '#69abc2',
-        'line-width': ['interpolate', ['linear'], ['zoom'], 6, 0.6, 10, 1.8],
-        'line-opacity': 0.78,
-      },
-    },
-    {
       id: 'sim-coffee-retired',
       type: 'fill',
       source: 'sim-frontier',
@@ -186,6 +187,46 @@ function overlayLayers(month: number): StyleSpecification['layers'] {
         ],
         'line-width': 0.8,
         'line-opacity': 0.82,
+      },
+    },
+    {
+      id: 'sim-waterways-casing',
+      type: 'line',
+      source: 'sim-waterways',
+      paint: {
+        'line-color': '#eef9fb',
+        'line-width': ['interpolate', ['linear'], ['zoom'], 6, 3.4, 10, 5.2],
+        'line-opacity': 0.9,
+      },
+    },
+    {
+      id: 'sim-waterways-lines',
+      type: 'line',
+      source: 'sim-waterways',
+      paint: {
+        'line-color': '#197c9d',
+        'line-width': ['interpolate', ['linear'], ['zoom'], 6, 1.45, 10, 2.8],
+        'line-opacity': 0.96,
+      },
+    },
+    {
+      id: 'sim-waterways-labels',
+      type: 'symbol',
+      source: 'sim-waterways',
+      filter: ['match', ['get', 'name'], MAJOR_WATERWAYS, true, false],
+      layout: {
+        'symbol-placement': 'line',
+        'symbol-spacing': 360,
+        'text-field': ['get', 'name'],
+        'text-size': 11,
+        'text-allow-overlap': false,
+        'text-ignore-placement': false,
+      },
+      paint: {
+        'text-color': '#155f7a',
+        'text-halo-color': '#f5fbfa',
+        'text-halo-width': 1.7,
+        'text-halo-blur': 0.4,
       },
     },
   ];

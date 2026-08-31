@@ -25,6 +25,17 @@ const FOCUS = new Set([
   'Timaná',
 ]);
 
+const MAJOR_WATERWAYS = [
+  'Río Magdalena',
+  'Río Páez',
+  'Río Suaza',
+  'Río Las Ceibas',
+  'Río Guarapas',
+  'Río Timaná',
+  'Río Bordones',
+  'Baché',
+];
+
 interface TerritoryData {
   municipalities: FeatureCollection;
   protectedAreas: FeatureCollection;
@@ -76,6 +87,42 @@ function geometryBounds(geometry: Geometry | null) {
     ],
     [Infinity, Infinity, -Infinity, -Infinity],
   );
+}
+
+function geometryLines(geometry: Geometry | null): number[][][] {
+  if (!geometry) return [];
+  if (geometry.type === 'LineString') return [geometry.coordinates];
+  if (geometry.type === 'MultiLineString') return geometry.coordinates;
+  return [];
+}
+
+function lineLength(line: number[][]) {
+  return line.slice(1).reduce((total, [x, y], index) => {
+    const [previousX, previousY] = line[index];
+    return total + Math.hypot(x - previousX, y - previousY);
+  }, 0);
+}
+
+function lineMidpoint(line: number[][]) {
+  const total = lineLength(line);
+  let travelled = 0;
+
+  for (let index = 1; index < line.length; index += 1) {
+    const [startX, startY] = line[index - 1];
+    const [endX, endY] = line[index];
+    const segment = Math.hypot(endX - startX, endY - startY);
+    if (travelled + segment >= total / 2) {
+      const ratio = segment ? (total / 2 - travelled) / segment : 0;
+      return {
+        x: startX + (endX - startX) * ratio,
+        y: -(startY + (endY - startY) * ratio),
+      };
+    }
+    travelled += segment;
+  }
+
+  const [x = 0, y = 0] = line[0] ?? [];
+  return { x, y: -y };
 }
 
 function featureState(feature: FrontierFeature, month: number) {
@@ -168,6 +215,14 @@ export function LocalTerritoryMap({ month }: { month: number }) {
         y: -((bounds[1] + bounds[3]) / 2),
       };
     });
+  const waterwayLabels = MAJOR_WATERWAYS.flatMap((name) => {
+    const longestLine = (data?.waterways.features ?? [])
+      .filter((feature) => feature.properties?.name === name)
+      .flatMap((feature) => geometryLines(feature.geometry))
+      .sort((a, b) => lineLength(b) - lineLength(a))[0];
+
+    return longestLine ? [{ name, ...lineMidpoint(longestLine) }] : [];
+  });
 
   return (
     <div ref={shellRef} className="local-territory-map" data-testid="local-territory-map">
@@ -229,12 +284,6 @@ export function LocalTerritoryMap({ month }: { month: number }) {
               ))}
           </g>
 
-          <g className="svg-waterways" clipPath="url(#huila-mask)">
-            {data.waterways.features.map((feature, index) => (
-              <path key={feature.id ?? index} d={geometryPath(feature.geometry)} />
-            ))}
-          </g>
-
           <g className="svg-frontier svg-frontier--retired">
             {data.frontier.features
               .filter((feature) => feature.properties.retireMonth != null && feature.properties.retireMonth <= monthIndex)
@@ -275,6 +324,28 @@ export function LocalTerritoryMap({ month }: { month: number }) {
                   onPointerLeave={() => setHover(null)}
                 />
               ))}
+          </g>
+
+          <g className="svg-waterways svg-waterways--casing" clipPath="url(#huila-mask)" aria-hidden="true">
+            {data.waterways.features.map((feature, index) => (
+              <path key={feature.id ?? index} d={geometryPath(feature.geometry)} />
+            ))}
+          </g>
+
+          <g
+            className="svg-waterways svg-waterways--main"
+            clipPath="url(#huila-mask)"
+            data-testid="waterways-layer"
+          >
+            {data.waterways.features.map((feature, index) => (
+              <path key={feature.id ?? index} d={geometryPath(feature.geometry)} />
+            ))}
+          </g>
+
+          <g className="svg-waterway-labels" data-testid="waterway-labels" aria-hidden="true">
+            {waterwayLabels.map((label) => (
+              <text key={label.name} x={label.x} y={label.y}>{label.name}</text>
+            ))}
           </g>
 
           <g className="svg-municipality-labels" aria-hidden="true">

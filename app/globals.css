@@ -284,13 +284,28 @@
 .svg-territory-base path { fill: rgba(239, 233, 213, 0.84); stroke: #496a62; stroke-width: 0.0015; vector-effect: non-scaling-stroke; }
 .svg-protected path { fill: rgba(46, 107, 79, 0.54); stroke: #275d47; stroke-width: 0.0011; vector-effect: non-scaling-stroke; }
 .svg-focus-municipalities path { fill: rgba(241, 197, 91, 0.08); stroke: #173f3a; stroke-width: 0.0026; vector-effect: non-scaling-stroke; }
-.svg-waterways path { fill: none; stroke: #5aa7c1; stroke-width: 0.0019; stroke-linecap: round; opacity: 0.9; vector-effect: non-scaling-stroke; }
+.svg-waterways path { fill: none; stroke-linecap: round; stroke-linejoin: round; vector-effect: non-scaling-stroke; }
+.svg-waterways--casing path { stroke: rgba(244, 252, 252, 0.94); stroke-width: 3.6px; }
+.svg-waterways--main path { stroke: #197c9d; stroke-width: 1.55px; opacity: 0.96; }
 .svg-frontier path { stroke-width: 0.0012; vector-effect: non-scaling-stroke; transition: opacity 120ms linear; }
 .svg-frontier--initial path { fill: #d79d31; stroke: #7d550d; opacity: 0.88; }
 .svg-frontier--expansion path { fill: url('#expansion-hatch'); stroke: #963c2b; opacity: 0.88; }
 .svg-frontier--retired path { fill: #737c77; stroke: #4d5651; opacity: 0.56; }
 .coffee-cell { cursor: help; }
 .coffee-cell:hover { opacity: 1; stroke: #fff7e2; stroke-width: 0.0026; }
+.svg-waterway-labels text {
+  fill: #155f7a;
+  stroke: rgba(248, 253, 252, 0.98);
+  stroke-width: 0.0065;
+  paint-order: stroke fill;
+  font-family: var(--font-sans-ui);
+  font-size: 0.021px;
+  font-style: italic;
+  font-weight: 750;
+  letter-spacing: 0.0004px;
+  text-anchor: middle;
+  pointer-events: none;
+}
 .svg-municipality-labels text {
   fill: #224c46;
   stroke: rgba(255, 253, 246, 0.96);

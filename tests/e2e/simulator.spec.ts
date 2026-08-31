@@ -56,6 +56,15 @@ test('funciona con todas las solicitudes externas bloqueadas', async ({ page }) 
   await expect(page.getByRole('img', { name: /Mapa vectorial local del Huila/ })).toBeVisible();
 });
 
+test('muestra los cauces y rotula los ríos principales', async ({ page }) => {
+  await openLocal(page);
+  const waterways = page.getByTestId('waterways-layer').locator('path');
+  await expect(waterways).toHaveCount(245);
+  await expect(page.getByTestId('waterway-labels').locator('text')).toHaveCount(8);
+  await expect(page.getByTestId('waterway-labels')).toContainText('Río Magdalena');
+  await expect(waterways.first()).toHaveCSS('stroke-width', '1.55px');
+});
+
 for (const viewport of [
   { name: 'desktop', width: 1440, height: 900 },
   { name: 'laptop', width: 1024, height: 768 },
