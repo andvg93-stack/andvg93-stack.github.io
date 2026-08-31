@@ -1,0 +1,1931 @@
+{
+  "source": "EVA UPRA, conjunto uejq-wxrr",
+  "generatedAt": "2026-08-31T21:02:36.202Z",
+  "municipalities": [
+    {
+      "code": "41001",
+      "municipality": "Neiva",
+      "observations": [
+        {
+          "year": 2019,
+          "plantedHa": 4327.4,
+          "harvestedHa": 3414.44,
+          "productionT": 4848.5,
+          "yieldTPerHa": 1.42
+        },
+        {
+          "year": 2020,
+          "plantedHa": 4303,
+          "harvestedHa": 3549,
+          "productionT": 4968.6,
+          "yieldTPerHa": 1.4
+        },
+        {
+          "year": 2021,
+          "plantedHa": 4381.4,
+          "harvestedHa": 3654.82,
+          "productionT": 4422.33,
+          "yieldTPerHa": 1.21
+        },
+        {
+          "year": 2022,
+          "plantedHa": 4471.31,
+          "harvestedHa": 3857.11,
+          "productionT": 4002.84,
+          "yieldTPerHa": 1.04
+        },
+        {
+          "year": 2023,
+          "plantedHa": 4622.68,
+          "harvestedHa": 4035.72,
+          "productionT": 4035.72,
+          "yieldTPerHa": 1
+        },
+        {
+          "year": 2024,
+          "plantedHa": 4746.67,
+          "harvestedHa": 3838.33,
+          "productionT": 5719.11,
+          "yieldTPerHa": 1.49
+        },
+        {
+          "year": 2025,
+          "plantedHa": 4814.37,
+          "harvestedHa": 3761.44,
+          "productionT": 5650.63,
+          "yieldTPerHa": 1.5
+        }
+      ]
+    },
+    {
+      "code": "41006",
+      "municipality": "Acevedo",
+      "observations": [
+        {
+          "year": 2019,
+          "plantedHa": 13985.8,
+          "harvestedHa": 10700.36,
+          "productionT": 15301.51,
+          "yieldTPerHa": 1.43
+        },
+        {
+          "year": 2020,
+          "plantedHa": 15465.8,
+          "harvestedHa": 13465.8,
+          "productionT": 20198.7,
+          "yieldTPerHa": 1.5
+        },
+        {
+          "year": 2021,
+          "plantedHa": 13672.35,
+          "harvestedHa": 10882.35,
+          "productionT": 15561.76,
+          "yieldTPerHa": 1.43
+        },
+        {
+          "year": 2022,
+          "plantedHa": 13828.74,
+          "harvestedHa": 11188.62,
+          "productionT": 14762.14,
+          "yieldTPerHa": 1.32
+        },
+        {
+          "year": 2023,
+          "plantedHa": 14184.62,
+          "harvestedHa": 11531.94,
+          "productionT": 13208.87,
+          "yieldTPerHa": 1.15
+        },
+        {
+          "year": 2024,
+          "plantedHa": 14319.14,
+          "harvestedHa": 11031.77,
+          "productionT": 15665.11,
+          "yieldTPerHa": 1.42
+        },
+        {
+          "year": 2025,
+          "plantedHa": 14387.85,
+          "harvestedHa": 11053.88,
+          "productionT": 16052.2,
+          "yieldTPerHa": 1.45
+        }
+      ]
+    },
+    {
+      "code": "41013",
+      "municipality": "Agrado",
+      "observations": [
+        {
+          "year": 2019,
+          "plantedHa": 1333.5,
+          "harvestedHa": 903.43,
+          "productionT": 1282.87,
+          "yieldTPerHa": 1.42
+        },
+        {
+          "year": 2020,
+          "plantedHa": 1253,
+          "harvestedHa": 977,
+          "productionT": 1465.5,
+          "yieldTPerHa": 1.5
+        },
+        {
+          "year": 2021,
+          "plantedHa": 1287.53,
+          "harvestedHa": 1047.26,
+          "productionT": 1330.02,
+          "yieldTPerHa": 1.27
+        },
+        {
+          "year": 2022,
+          "plantedHa": 1308.42,
+          "harvestedHa": 1048.74,
+          "productionT": 1230.62,
+          "yieldTPerHa": 1.17
+        },
+        {
+          "year": 2023,
+          "plantedHa": 1327.43,
+          "harvestedHa": 1042.12,
+          "productionT": 1192.25,
+          "yieldTPerHa": 1.14
+        },
+        {
+          "year": 2024,
+          "plantedHa": 1408.83,
+          "harvestedHa": 1068.76,
+          "productionT": 1506.95,
+          "yieldTPerHa": 1.41
+        },
+        {
+          "year": 2025,
+          "plantedHa": 1463.83,
+          "harvestedHa": 1128.46,
+          "productionT": 1616.12,
+          "yieldTPerHa": 1.43
+        }
+      ]
+    },
+    {
+      "code": "41016",
+      "municipality": "Aipe",
+      "observations": [
+        {
+          "year": 2019,
+          "plantedHa": 1104.9,
+          "harvestedHa": 877.77,
+          "productionT": 1246.43,
+          "yieldTPerHa": 1.42
+        },
+        {
+          "year": 2020,
+          "plantedHa": 1122.9,
+          "harvestedHa": 871,
+          "productionT": 1219.4,
+          "yieldTPerHa": 1.4
+        },
+        {
+          "year": 2021,
+          "plantedHa": 1145.16,
+          "harvestedHa": 922.26,
+          "productionT": 1171.27,
+          "yieldTPerHa": 1.27
+        },
+        {
+          "year": 2022,
+          "plantedHa": 1172.58,
+          "harvestedHa": 988.73,
+          "productionT": 1098.09,
+          "yieldTPerHa": 1.11
+        },
+        {
+          "year": 2023,
+          "plantedHa": 1205.35,
+          "harvestedHa": 1043.74,
+          "productionT": 1124.03,
+          "yieldTPerHa": 1.08
+        },
+        {
+          "year": 2024,
+          "plantedHa": 1226.94,
+          "harvestedHa": 1012.3,
+          "productionT": 1356.48,
+          "yieldTPerHa": 1.34
+        },
+        {
+          "year": 2025,
+          "plantedHa": 1226.8,
+          "harvestedHa": 957.48,
+          "productionT": 1342.48,
+          "yieldTPerHa": 1.4
+        }
+      ]
+    },
+    {
+      "code": "41020",
+      "municipality": "Algeciras",
+      "observations": [
+        {
+          "year": 2019,
+          "plantedHa": 5935.1,
+          "harvestedHa": 4432.04,
+          "productionT": 6293.5,
+          "yieldTPerHa": 1.42
+        },
+        {
+          "year": 2020,
+          "plantedHa": 6041.1,
+          "harvestedHa": 4541.1,
+          "productionT": 4541.1,
+          "yieldTPerHa": 1
+        },
+        {
+          "year": 2021,
+          "plantedHa": 5885.59,
+          "harvestedHa": 4690.05,
+          "productionT": 5112.15,
+          "yieldTPerHa": 1.09
+        },
+        {
+          "year": 2022,
+          "plantedHa": 6073.83,
+          "harvestedHa": 4950.01,
+          "productionT": 4888.24,
+          "yieldTPerHa": 0.99
+        },
+        {
+          "year": 2023,
+          "plantedHa": 6253.42,
+          "harvestedHa": 5104.53,
+          "productionT": 4466.75,
+          "yieldTPerHa": 0.88
+        },
+        {
+          "year": 2024,
+          "plantedHa": 6392.16,
+          "harvestedHa": 4904.82,
+          "productionT": 5346.25,
+          "yieldTPerHa": 1.09
+        },
+        {
+          "year": 2025,
+          "plantedHa": 6523.48,
+          "harvestedHa": 4871.99,
+          "productionT": 5464.83,
+          "yieldTPerHa": 1.12
+        }
+      ]
+    },
+    {
+      "code": "41026",
+      "municipality": "Altamira",
+      "observations": [
+        {
+          "year": 2019,
+          "plantedHa": 94.5,
+          "harvestedHa": 71.07,
+          "productionT": 100.92,
+          "yieldTPerHa": 1.42
+        },
+        {
+          "year": 2020,
+          "plantedHa": 92,
+          "harvestedHa": 74,
+          "productionT": 103.84,
+          "yieldTPerHa": 1.4
+        },
+        {
+          "year": 2021,
+          "plantedHa": 87.7,
+          "harvestedHa": 67.94,
+          "productionT": 80.17,
+          "yieldTPerHa": 1.18
+        },
+        {
+          "year": 2022,
+          "plantedHa": 87.7,
+          "harvestedHa": 67.94,
+          "productionT": 80.17,
+          "yieldTPerHa": 1.18
+        },
+        {
+          "year": 2023,
+          "plantedHa": 98.52,
+          "harvestedHa": 62.63,
+          "productionT": 92.56,
+          "yieldTPerHa": 1.48
+        },
+        {
+          "year": 2024,
+          "plantedHa": 114.64,
+          "harvestedHa": 75.28,
+          "productionT": 137.76,
+          "yieldTPerHa": 1.83
+        },
+        {
+          "year": 2025,
+          "plantedHa": 115.28,
+          "harvestedHa": 84.69,
+          "productionT": 156.92,
+          "yieldTPerHa": 1.85
+        }
+      ]
+    },
+    {
+      "code": "41078",
+      "municipality": "Baraya",
+      "observations": [
+        {
+          "year": 2019,
+          "plantedHa": 828.8,
+          "harvestedHa": 665.75,
+          "productionT": 945.37,
+          "yieldTPerHa": 1.42
+        },
+        {
+          "year": 2020,
+          "plantedHa": 817,
+          "harvestedHa": 717,
+          "productionT": 1059.93,
+          "yieldTPerHa": 1.48
+        },
+        {
+          "year": 2021,
+          "plantedHa": 825.45,
+          "harvestedHa": 746.37,
+          "productionT": 947.89,
+          "yieldTPerHa": 1.27
+        },
+        {
+          "year": 2022,
+          "plantedHa": 854.17,
+          "harvestedHa": 751.92,
+          "productionT": 788.65,
+          "yieldTPerHa": 1.05
+        },
+        {
+          "year": 2023,
+          "plantedHa": 862.55,
+          "harvestedHa": 748.55,
+          "productionT": 854.82,
+          "yieldTPerHa": 1.14
+        },
+        {
+          "year": 2024,
+          "plantedHa": 847.08,
+          "harvestedHa": 691.25,
+          "productionT": 974.66,
+          "yieldTPerHa": 1.41
+        },
+        {
+          "year": 2025,
+          "plantedHa": 915.98,
+          "harvestedHa": 740.52,
+          "productionT": 1067.95,
+          "yieldTPerHa": 1.44
+        }
+      ]
+    },
+    {
+      "code": "41132",
+      "municipality": "Campoalegre",
+      "observations": [
+        {
+          "year": 2019,
+          "plantedHa": 1806,
+          "harvestedHa": 1338.38,
+          "productionT": 1900.5,
+          "yieldTPerHa": 1.42
+        },
+        {
+          "year": 2020,
+          "plantedHa": 1839,
+          "harvestedHa": 1449,
+          "productionT": 2028.6,
+          "yieldTPerHa": 1.4
+        },
+        {
+          "year": 2021,
+          "plantedHa": 1888.32,
+          "harvestedHa": 1540.62,
+          "productionT": 1956.59,
+          "yieldTPerHa": 1.27
+        },
+        {
+          "year": 2022,
+          "plantedHa": 1940.73,
+          "harvestedHa": 1578.49,
+          "productionT": 998.03,
+          "yieldTPerHa": 0.63
+        },
+        {
+          "year": 2023,
+          "plantedHa": 2025.83,
+          "harvestedHa": 1631.12,
+          "productionT": 869.64,
+          "yieldTPerHa": 0.53
+        },
+        {
+          "year": 2024,
+          "plantedHa": 2065.09,
+          "harvestedHa": 1535.4,
+          "productionT": 1013.36,
+          "yieldTPerHa": 0.66
+        },
+        {
+          "year": 2025,
+          "plantedHa": 2114.24,
+          "harvestedHa": 1543.76,
+          "productionT": 1082.25,
+          "yieldTPerHa": 0.7
+        }
+      ]
+    },
+    {
+      "code": "41206",
+      "municipality": "Colombia",
+      "observations": [
+        {
+          "year": 2019,
+          "plantedHa": 1892.1,
+          "harvestedHa": 1592.16,
+          "productionT": 2260.87,
+          "yieldTPerHa": 1.42
+        },
+        {
+          "year": 2020,
+          "plantedHa": 1861,
+          "harvestedHa": 1600,
+          "productionT": 2240,
+          "yieldTPerHa": 1.4
+        },
+        {
+          "year": 2021,
+          "plantedHa": 1905.01,
+          "harvestedHa": 1640.77,
+          "productionT": 2083.78,
+          "yieldTPerHa": 1.27
+        },
+        {
+          "year": 2022,
+          "plantedHa": 1939.07,
+          "harvestedHa": 1612.68,
+          "productionT": 1826.71,
+          "yieldTPerHa": 1.13
+        },
+        {
+          "year": 2023,
+          "plantedHa": 1897.87,
+          "harvestedHa": 1539.16,
+          "productionT": 1865.82,
+          "yieldTPerHa": 1.21
+        },
+        {
+          "year": 2024,
+          "plantedHa": 1924.12,
+          "harvestedHa": 1567.59,
+          "productionT": 2351.38,
+          "yieldTPerHa": 1.5
+        },
+        {
+          "year": 2025,
+          "plantedHa": 1917.84,
+          "harvestedHa": 1547.27,
+          "productionT": 2324.4,
+          "yieldTPerHa": 1.5
+        }
+      ]
+    },
+    {
+      "code": "41244",
+      "municipality": "Elías",
+      "observations": [
+        {
+          "year": 2019,
+          "plantedHa": 1079.6,
+          "harvestedHa": 867.59,
+          "productionT": 1240.65,
+          "yieldTPerHa": 1.43
+        },
+        {
+          "year": 2020,
+          "plantedHa": 1138,
+          "harvestedHa": 941,
+          "productionT": 1505.03,
+          "yieldTPerHa": 1.6
+        },
+        {
+          "year": 2021,
+          "plantedHa": 1125.6,
+          "harvestedHa": 875.99,
+          "productionT": 1112.51,
+          "yieldTPerHa": 1.27
+        },
+        {
+          "year": 2022,
+          "plantedHa": 1159.49,
+          "harvestedHa": 917.97,
+          "productionT": 1104.84,
+          "yieldTPerHa": 1.2
+        },
+        {
+          "year": 2023,
+          "plantedHa": 1205.41,
+          "harvestedHa": 987.74,
+          "productionT": 963.3,
+          "yieldTPerHa": 0.98
+        },
+        {
+          "year": 2024,
+          "plantedHa": 1205.92,
+          "harvestedHa": 926.94,
+          "productionT": 1121.6,
+          "yieldTPerHa": 1.21
+        },
+        {
+          "year": 2025,
+          "plantedHa": 1146.6,
+          "harvestedHa": 862.29,
+          "productionT": 1079.48,
+          "yieldTPerHa": 1.25
+        }
+      ]
+    },
+    {
+      "code": "41298",
+      "municipality": "Garzón",
+      "observations": [
+        {
+          "year": 2019,
+          "plantedHa": 9488,
+          "harvestedHa": 7429.19,
+          "productionT": 10549.45,
+          "yieldTPerHa": 1.42
+        },
+        {
+          "year": 2020,
+          "plantedHa": 9547,
+          "harvestedHa": 8589,
+          "productionT": 12024.6,
+          "yieldTPerHa": 1.4
+        },
+        {
+          "year": 2021,
+          "plantedHa": 9206.38,
+          "harvestedHa": 7506.49,
+          "productionT": 9383.11,
+          "yieldTPerHa": 1.25
+        },
+        {
+          "year": 2022,
+          "plantedHa": 9194.99,
+          "harvestedHa": 7553.95,
+          "productionT": 10392.8,
+          "yieldTPerHa": 1.38
+        },
+        {
+          "year": 2023,
+          "plantedHa": 9344.97,
+          "harvestedHa": 7736.18,
+          "productionT": 14473.68,
+          "yieldTPerHa": 1.87
+        },
+        {
+          "year": 2024,
+          "plantedHa": 9413.79,
+          "harvestedHa": 7424.09,
+          "productionT": 9725.56,
+          "yieldTPerHa": 1.31
+        },
+        {
+          "year": 2025,
+          "plantedHa": 9472.43,
+          "harvestedHa": 7371.75,
+          "productionT": 9671.49,
+          "yieldTPerHa": 1.31
+        }
+      ]
+    },
+    {
+      "code": "41306",
+      "municipality": "Gigante",
+      "observations": [
+        {
+          "year": 2019,
+          "plantedHa": 5534.6,
+          "harvestedHa": 4135.54,
+          "productionT": 5872.47,
+          "yieldTPerHa": 1.42
+        },
+        {
+          "year": 2020,
+          "plantedHa": 5265,
+          "harvestedHa": 4301,
+          "productionT": 1591.37,
+          "yieldTPerHa": 0.37
+        },
+        {
+          "year": 2021,
+          "plantedHa": 5180.81,
+          "harvestedHa": 4164.74,
+          "productionT": 5747.34,
+          "yieldTPerHa": 1.38
+        },
+        {
+          "year": 2022,
+          "plantedHa": 5175.55,
+          "harvestedHa": 4024.91,
+          "productionT": 5476.4,
+          "yieldTPerHa": 1.36
+        },
+        {
+          "year": 2023,
+          "plantedHa": 5237.74,
+          "harvestedHa": 4006.76,
+          "productionT": 6110.06,
+          "yieldTPerHa": 1.52
+        },
+        {
+          "year": 2024,
+          "plantedHa": 5252.59,
+          "harvestedHa": 3930.35,
+          "productionT": 7389.06,
+          "yieldTPerHa": 1.88
+        },
+        {
+          "year": 2025,
+          "plantedHa": 5292.01,
+          "harvestedHa": 3910.26,
+          "productionT": 7362.33,
+          "yieldTPerHa": 1.88
+        }
+      ]
+    },
+    {
+      "code": "41319",
+      "municipality": "Guadalupe",
+      "observations": [
+        {
+          "year": 2019,
+          "plantedHa": 5103.1,
+          "harvestedHa": 4044.88,
+          "productionT": 5743.73,
+          "yieldTPerHa": 1.42
+        },
+        {
+          "year": 2020,
+          "plantedHa": 4514,
+          "harvestedHa": 3430,
+          "productionT": 4116,
+          "yieldTPerHa": 1.2
+        },
+        {
+          "year": 2021,
+          "plantedHa": 4502.32,
+          "harvestedHa": 3490.71,
+          "productionT": 3490.71,
+          "yieldTPerHa": 1
+        },
+        {
+          "year": 2022,
+          "plantedHa": 4588.41,
+          "harvestedHa": 3745.87,
+          "productionT": 3399.43,
+          "yieldTPerHa": 0.91
+        },
+        {
+          "year": 2023,
+          "plantedHa": 4689.88,
+          "harvestedHa": 3866.37,
+          "productionT": 3275.73,
+          "yieldTPerHa": 0.85
+        },
+        {
+          "year": 2024,
+          "plantedHa": 4768,
+          "harvestedHa": 3758.85,
+          "productionT": 3946.79,
+          "yieldTPerHa": 1.05
+        },
+        {
+          "year": 2025,
+          "plantedHa": 4861.4,
+          "harvestedHa": 3794.4,
+          "productionT": 3990.1,
+          "yieldTPerHa": 1.05
+        }
+      ]
+    },
+    {
+      "code": "41349",
+      "municipality": "Hobo",
+      "observations": [
+        {
+          "year": 2019,
+          "plantedHa": 1006.2,
+          "harvestedHa": 835.93,
+          "productionT": 1187.02,
+          "yieldTPerHa": 1.42
+        },
+        {
+          "year": 2020,
+          "plantedHa": 970,
+          "harvestedHa": 837,
+          "productionT": 1006.2,
+          "yieldTPerHa": 1.2
+        },
+        {
+          "year": 2021,
+          "plantedHa": 968.11,
+          "harvestedHa": 859.39,
+          "productionT": 1108.61,
+          "yieldTPerHa": 1.29
+        },
+        {
+          "year": 2022,
+          "plantedHa": 913.29,
+          "harvestedHa": 750.79,
+          "productionT": 950.25,
+          "yieldTPerHa": 1.27
+        },
+        {
+          "year": 2023,
+          "plantedHa": 933.41,
+          "harvestedHa": 711.06,
+          "productionT": 850.12,
+          "yieldTPerHa": 1.2
+        },
+        {
+          "year": 2024,
+          "plantedHa": 937.33,
+          "harvestedHa": 677.7,
+          "productionT": 1009.77,
+          "yieldTPerHa": 1.49
+        },
+        {
+          "year": 2025,
+          "plantedHa": 947.14,
+          "harvestedHa": 707.88,
+          "productionT": 1063.41,
+          "yieldTPerHa": 1.5
+        }
+      ]
+    },
+    {
+      "code": "41357",
+      "municipality": "Íquira",
+      "observations": [
+        {
+          "year": 2019,
+          "plantedHa": 2632.7,
+          "harvestedHa": 2044.98,
+          "productionT": 2903.87,
+          "yieldTPerHa": 1.42
+        },
+        {
+          "year": 2020,
+          "plantedHa": 2534,
+          "harvestedHa": 2046,
+          "productionT": 2864.4,
+          "yieldTPerHa": 1.4
+        },
+        {
+          "year": 2021,
+          "plantedHa": 2578.82,
+          "harvestedHa": 2124.17,
+          "productionT": 2570.25,
+          "yieldTPerHa": 1.21
+        },
+        {
+          "year": 2022,
+          "plantedHa": 2563.18,
+          "harvestedHa": 2048.6,
+          "productionT": 2514.37,
+          "yieldTPerHa": 1.23
+        },
+        {
+          "year": 2023,
+          "plantedHa": 2638.29,
+          "harvestedHa": 2222.53,
+          "productionT": 2203.53,
+          "yieldTPerHa": 0.99
+        },
+        {
+          "year": 2024,
+          "plantedHa": 2688.2,
+          "harvestedHa": 2180.94,
+          "productionT": 2682.56,
+          "yieldTPerHa": 1.23
+        },
+        {
+          "year": 2025,
+          "plantedHa": 2701.55,
+          "harvestedHa": 2076.48,
+          "productionT": 2703.47,
+          "yieldTPerHa": 1.3
+        }
+      ]
+    },
+    {
+      "code": "41359",
+      "municipality": "Isnos",
+      "observations": [
+        {
+          "year": 2019,
+          "plantedHa": 4445.4,
+          "harvestedHa": 3558.28,
+          "productionT": 5088.34,
+          "yieldTPerHa": 1.43
+        },
+        {
+          "year": 2020,
+          "plantedHa": 4495.4,
+          "harvestedHa": 3610,
+          "productionT": 5050.5,
+          "yieldTPerHa": 1.4
+        },
+        {
+          "year": 2021,
+          "plantedHa": 4662.15,
+          "harvestedHa": 3741.73,
+          "productionT": 3629.48,
+          "yieldTPerHa": 0.97
+        },
+        {
+          "year": 2022,
+          "plantedHa": 4737.09,
+          "harvestedHa": 3953.9,
+          "productionT": 1705.42,
+          "yieldTPerHa": 0.43
+        },
+        {
+          "year": 2023,
+          "plantedHa": 4897.22,
+          "harvestedHa": 4095.15,
+          "productionT": 1751.21,
+          "yieldTPerHa": 0.43
+        },
+        {
+          "year": 2024,
+          "plantedHa": 5121.46,
+          "harvestedHa": 4006.08,
+          "productionT": 2123.22,
+          "yieldTPerHa": 0.53
+        },
+        {
+          "year": 2025,
+          "plantedHa": 5372.62,
+          "harvestedHa": 4131.23,
+          "productionT": 2482.46,
+          "yieldTPerHa": 0.6
+        }
+      ]
+    },
+    {
+      "code": "41378",
+      "municipality": "La Argentina",
+      "observations": [
+        {
+          "year": 2019,
+          "plantedHa": 2609.8,
+          "harvestedHa": 2050.09,
+          "productionT": 2911.13,
+          "yieldTPerHa": 1.42
+        },
+        {
+          "year": 2020,
+          "plantedHa": 2604.8,
+          "harvestedHa": 2235,
+          "productionT": 1644.96,
+          "yieldTPerHa": 0.74
+        },
+        {
+          "year": 2021,
+          "plantedHa": 2623.75,
+          "harvestedHa": 2173.4,
+          "productionT": 2347.27,
+          "yieldTPerHa": 1.08
+        },
+        {
+          "year": 2022,
+          "plantedHa": 2620.68,
+          "harvestedHa": 2073.57,
+          "productionT": 2170.84,
+          "yieldTPerHa": 1.05
+        },
+        {
+          "year": 2023,
+          "plantedHa": 2594.4,
+          "harvestedHa": 2099.99,
+          "productionT": 2357.31,
+          "yieldTPerHa": 1.12
+        },
+        {
+          "year": 2024,
+          "plantedHa": 2606.41,
+          "harvestedHa": 2061.77,
+          "productionT": 2865.86,
+          "yieldTPerHa": 1.39
+        },
+        {
+          "year": 2025,
+          "plantedHa": 2589.3,
+          "harvestedHa": 2049.57,
+          "productionT": 2853.18,
+          "yieldTPerHa": 1.39
+        }
+      ]
+    },
+    {
+      "code": "41396",
+      "municipality": "La Plata",
+      "observations": [
+        {
+          "year": 2019,
+          "plantedHa": 11367.4,
+          "harvestedHa": 8979.76,
+          "productionT": 12751.26,
+          "yieldTPerHa": 1.42
+        },
+        {
+          "year": 2020,
+          "plantedHa": 11881.4,
+          "harvestedHa": 11281,
+          "productionT": 15793.4,
+          "yieldTPerHa": 1.4
+        },
+        {
+          "year": 2021,
+          "plantedHa": 11098.32,
+          "harvestedHa": 9079.39,
+          "productionT": 10622.89,
+          "yieldTPerHa": 1.17
+        },
+        {
+          "year": 2022,
+          "plantedHa": 11282.44,
+          "harvestedHa": 9379.13,
+          "productionT": 11644.87,
+          "yieldTPerHa": 1.24
+        },
+        {
+          "year": 2023,
+          "plantedHa": 11448.81,
+          "harvestedHa": 9476.39,
+          "productionT": 12023.96,
+          "yieldTPerHa": 1.27
+        },
+        {
+          "year": 2024,
+          "plantedHa": 11549.74,
+          "harvestedHa": 9040.67,
+          "productionT": 14193.85,
+          "yieldTPerHa": 1.57
+        },
+        {
+          "year": 2025,
+          "plantedHa": 11713.18,
+          "harvestedHa": 8950.19,
+          "productionT": 14341.81,
+          "yieldTPerHa": 1.6
+        }
+      ]
+    },
+    {
+      "code": "41483",
+      "municipality": "Nátaga",
+      "observations": [
+        {
+          "year": 2019,
+          "plantedHa": 1974.7,
+          "harvestedHa": 1476.27,
+          "productionT": 2096.3,
+          "yieldTPerHa": 1.42
+        },
+        {
+          "year": 2020,
+          "plantedHa": 1838,
+          "harvestedHa": 1509,
+          "productionT": 2112.6,
+          "yieldTPerHa": 1.4
+        },
+        {
+          "year": 2021,
+          "plantedHa": 1781.68,
+          "harvestedHa": 1476.3,
+          "productionT": 1874.9,
+          "yieldTPerHa": 1.27
+        },
+        {
+          "year": 2022,
+          "plantedHa": 1862.95,
+          "harvestedHa": 1533.46,
+          "productionT": 1748.81,
+          "yieldTPerHa": 1.14
+        },
+        {
+          "year": 2023,
+          "plantedHa": 1923.69,
+          "harvestedHa": 1585.92,
+          "productionT": 1869.68,
+          "yieldTPerHa": 1.18
+        },
+        {
+          "year": 2024,
+          "plantedHa": 1964.37,
+          "harvestedHa": 1510.05,
+          "productionT": 2204.67,
+          "yieldTPerHa": 1.46
+        },
+        {
+          "year": 2025,
+          "plantedHa": 1992.58,
+          "harvestedHa": 1539.62,
+          "productionT": 2282.06,
+          "yieldTPerHa": 1.48
+        }
+      ]
+    },
+    {
+      "code": "41503",
+      "municipality": "Oporapa",
+      "observations": [
+        {
+          "year": 2019,
+          "plantedHa": 3159.5,
+          "harvestedHa": 2466.64,
+          "productionT": 3527.3,
+          "yieldTPerHa": 1.43
+        },
+        {
+          "year": 2020,
+          "plantedHa": 3110,
+          "harvestedHa": 2524,
+          "productionT": 2776.4,
+          "yieldTPerHa": 1.1
+        },
+        {
+          "year": 2021,
+          "plantedHa": 3037.4,
+          "harvestedHa": 2468.58,
+          "productionT": 2468.58,
+          "yieldTPerHa": 1
+        },
+        {
+          "year": 2022,
+          "plantedHa": 3016.33,
+          "harvestedHa": 2538.9,
+          "productionT": 2291.85,
+          "yieldTPerHa": 0.9
+        },
+        {
+          "year": 2023,
+          "plantedHa": 3045.09,
+          "harvestedHa": 2600.3,
+          "productionT": 2220.25,
+          "yieldTPerHa": 0.85
+        },
+        {
+          "year": 2024,
+          "plantedHa": 3007.82,
+          "harvestedHa": 2363.7,
+          "productionT": 2481.88,
+          "yieldTPerHa": 1.05
+        },
+        {
+          "year": 2025,
+          "plantedHa": 2926.51,
+          "harvestedHa": 2284.51,
+          "productionT": 2402.34,
+          "yieldTPerHa": 1.05
+        }
+      ]
+    },
+    {
+      "code": "41518",
+      "municipality": "Paicol",
+      "observations": [
+        {
+          "year": 2019,
+          "plantedHa": 1753.3,
+          "harvestedHa": 1340.61,
+          "productionT": 1903.67,
+          "yieldTPerHa": 1.42
+        },
+        {
+          "year": 2020,
+          "plantedHa": 1687,
+          "harvestedHa": 1391,
+          "productionT": 1692.06,
+          "yieldTPerHa": 1.22
+        },
+        {
+          "year": 2021,
+          "plantedHa": 1679.79,
+          "harvestedHa": 1378.72,
+          "productionT": 1406.29,
+          "yieldTPerHa": 1.02
+        },
+        {
+          "year": 2022,
+          "plantedHa": 1680.33,
+          "harvestedHa": 1408.09,
+          "productionT": 532.91,
+          "yieldTPerHa": 0.38
+        },
+        {
+          "year": 2023,
+          "plantedHa": 1706.6,
+          "harvestedHa": 1403.4,
+          "productionT": 543.37,
+          "yieldTPerHa": 0.39
+        },
+        {
+          "year": 2024,
+          "plantedHa": 1722.4,
+          "harvestedHa": 1292.68,
+          "productionT": 620.49,
+          "yieldTPerHa": 0.48
+        },
+        {
+          "year": 2025,
+          "plantedHa": 1737.22,
+          "harvestedHa": 1306.14,
+          "productionT": 627.89,
+          "yieldTPerHa": 0.48
+        }
+      ]
+    },
+    {
+      "code": "41524",
+      "municipality": "Palermo",
+      "observations": [
+        {
+          "year": 2019,
+          "plantedHa": 2580.2,
+          "harvestedHa": 1924.28,
+          "productionT": 2732.48,
+          "yieldTPerHa": 1.42
+        },
+        {
+          "year": 2020,
+          "plantedHa": 2510,
+          "harvestedHa": 1990,
+          "productionT": 2786,
+          "yieldTPerHa": 1.4
+        },
+        {
+          "year": 2021,
+          "plantedHa": 2532.32,
+          "harvestedHa": 2101.92,
+          "productionT": 2732.5,
+          "yieldTPerHa": 1.3
+        },
+        {
+          "year": 2022,
+          "plantedHa": 2571.79,
+          "harvestedHa": 2150.09,
+          "productionT": 2304.02,
+          "yieldTPerHa": 1.07
+        },
+        {
+          "year": 2023,
+          "plantedHa": 2567.29,
+          "harvestedHa": 2178.27,
+          "productionT": 2245.79,
+          "yieldTPerHa": 1.03
+        },
+        {
+          "year": 2024,
+          "plantedHa": 2566.98,
+          "harvestedHa": 2041.16,
+          "productionT": 2592.27,
+          "yieldTPerHa": 1.27
+        },
+        {
+          "year": 2025,
+          "plantedHa": 2235.38,
+          "harvestedHa": 1743.93,
+          "productionT": 2253.05,
+          "yieldTPerHa": 1.29
+        }
+      ]
+    },
+    {
+      "code": "41530",
+      "municipality": "Palestina",
+      "observations": [
+        {
+          "year": 2019,
+          "plantedHa": 4712.4,
+          "harvestedHa": 3689.28,
+          "productionT": 5275.67,
+          "yieldTPerHa": 1.43
+        },
+        {
+          "year": 2020,
+          "plantedHa": 4581,
+          "harvestedHa": 3833,
+          "productionT": 5366.2,
+          "yieldTPerHa": 1.4
+        },
+        {
+          "year": 2021,
+          "plantedHa": 4541.83,
+          "harvestedHa": 3734.03,
+          "productionT": 4368.82,
+          "yieldTPerHa": 1.17
+        },
+        {
+          "year": 2022,
+          "plantedHa": 4531.49,
+          "harvestedHa": 3758.83,
+          "productionT": 4012.24,
+          "yieldTPerHa": 1.07
+        },
+        {
+          "year": 2023,
+          "plantedHa": 4569.74,
+          "harvestedHa": 3851.86,
+          "productionT": 5125.95,
+          "yieldTPerHa": 1.33
+        },
+        {
+          "year": 2024,
+          "plantedHa": 4613.13,
+          "harvestedHa": 3739.1,
+          "productionT": 6169.52,
+          "yieldTPerHa": 1.65
+        },
+        {
+          "year": 2025,
+          "plantedHa": 4448.33,
+          "harvestedHa": 3493.81,
+          "productionT": 5773.45,
+          "yieldTPerHa": 1.65
+        }
+      ]
+    },
+    {
+      "code": "41548",
+      "municipality": "Pital",
+      "observations": [
+        {
+          "year": 2019,
+          "plantedHa": 4767.6,
+          "harvestedHa": 3780.07,
+          "productionT": 5367.7,
+          "yieldTPerHa": 1.42
+        },
+        {
+          "year": 2020,
+          "plantedHa": 4801,
+          "harvestedHa": 3864,
+          "productionT": 5409.6,
+          "yieldTPerHa": 1.4
+        },
+        {
+          "year": 2021,
+          "plantedHa": 4759.67,
+          "harvestedHa": 3910.8,
+          "productionT": 4575.64,
+          "yieldTPerHa": 1.17
+        },
+        {
+          "year": 2022,
+          "plantedHa": 4768.23,
+          "harvestedHa": 3939.93,
+          "productionT": 4204.67,
+          "yieldTPerHa": 1.07
+        },
+        {
+          "year": 2023,
+          "plantedHa": 4733.9,
+          "harvestedHa": 3836.32,
+          "productionT": 4561.21,
+          "yieldTPerHa": 1.19
+        },
+        {
+          "year": 2024,
+          "plantedHa": 4672.93,
+          "harvestedHa": 3500.45,
+          "productionT": 5145.66,
+          "yieldTPerHa": 1.47
+        },
+        {
+          "year": 2025,
+          "plantedHa": 4646.38,
+          "harvestedHa": 3423.16,
+          "productionT": 5108.17,
+          "yieldTPerHa": 1.49
+        }
+      ]
+    },
+    {
+      "code": "41551",
+      "municipality": "Pitalito",
+      "observations": [
+        {
+          "year": 2019,
+          "plantedHa": 18290.7,
+          "harvestedHa": 14194.55,
+          "productionT": 20298.21,
+          "yieldTPerHa": 1.43
+        },
+        {
+          "year": 2020,
+          "plantedHa": 19015.03,
+          "harvestedHa": 18454,
+          "productionT": 25835.6,
+          "yieldTPerHa": 1.4
+        },
+        {
+          "year": 2021,
+          "plantedHa": 17512.62,
+          "harvestedHa": 13827.62,
+          "productionT": 16178.32,
+          "yieldTPerHa": 1.17
+        },
+        {
+          "year": 2022,
+          "plantedHa": 17641.91,
+          "harvestedHa": 14437.43,
+          "productionT": 19834.1,
+          "yieldTPerHa": 1.37
+        },
+        {
+          "year": 2023,
+          "plantedHa": 17753.33,
+          "harvestedHa": 14718.45,
+          "productionT": 21598.77,
+          "yieldTPerHa": 1.47
+        },
+        {
+          "year": 2024,
+          "plantedHa": 17789.59,
+          "harvestedHa": 13762.68,
+          "productionT": 25048.08,
+          "yieldTPerHa": 1.82
+        },
+        {
+          "year": 2025,
+          "plantedHa": 17761.36,
+          "harvestedHa": 13327.27,
+          "productionT": 24292.06,
+          "yieldTPerHa": 1.82
+        }
+      ]
+    },
+    {
+      "code": "41615",
+      "municipality": "Rivera",
+      "observations": [
+        {
+          "year": 2019,
+          "plantedHa": 757.6,
+          "harvestedHa": 590.45,
+          "productionT": 838.44,
+          "yieldTPerHa": 1.42
+        },
+        {
+          "year": 2020,
+          "plantedHa": 727.6,
+          "harvestedHa": 596,
+          "productionT": 834.4,
+          "yieldTPerHa": 1.4
+        },
+        {
+          "year": 2021,
+          "plantedHa": 736.19,
+          "harvestedHa": 605.4,
+          "productionT": 823.34,
+          "yieldTPerHa": 1.36
+        },
+        {
+          "year": 2022,
+          "plantedHa": 750.82,
+          "harvestedHa": 614.77,
+          "productionT": 773.97,
+          "yieldTPerHa": 1.26
+        },
+        {
+          "year": 2023,
+          "plantedHa": 770.56,
+          "harvestedHa": 633.11,
+          "productionT": 1023.07,
+          "yieldTPerHa": 1.62
+        },
+        {
+          "year": 2024,
+          "plantedHa": 764.7,
+          "harvestedHa": 601.8,
+          "productionT": 1263.78,
+          "yieldTPerHa": 2.1
+        },
+        {
+          "year": 2025,
+          "plantedHa": 775.56,
+          "harvestedHa": 605.9,
+          "productionT": 1274.3,
+          "yieldTPerHa": 2.1
+        }
+      ]
+    },
+    {
+      "code": "41660",
+      "municipality": "Saladoblanco",
+      "observations": [
+        {
+          "year": 2019,
+          "plantedHa": 3524.4,
+          "harvestedHa": 2895.57,
+          "productionT": 4140.67,
+          "yieldTPerHa": 1.43
+        },
+        {
+          "year": 2020,
+          "plantedHa": 3626.4,
+          "harvestedHa": 2954,
+          "productionT": 4135.6,
+          "yieldTPerHa": 1.4
+        },
+        {
+          "year": 2021,
+          "plantedHa": 3604.46,
+          "harvestedHa": 2833.27,
+          "productionT": 3541.59,
+          "yieldTPerHa": 1.25
+        },
+        {
+          "year": 2022,
+          "plantedHa": 3604.46,
+          "harvestedHa": 2893.46,
+          "productionT": 3616.82,
+          "yieldTPerHa": 1.25
+        },
+        {
+          "year": 2023,
+          "plantedHa": 3567.79,
+          "harvestedHa": 2883.27,
+          "productionT": 3162.88,
+          "yieldTPerHa": 1.1
+        },
+        {
+          "year": 2024,
+          "plantedHa": 3552.27,
+          "harvestedHa": 2741.11,
+          "productionT": 3727.91,
+          "yieldTPerHa": 1.36
+        },
+        {
+          "year": 2025,
+          "plantedHa": 3545.6,
+          "harvestedHa": 2727,
+          "productionT": 3768.91,
+          "yieldTPerHa": 1.38
+        }
+      ]
+    },
+    {
+      "code": "41668",
+      "municipality": "San Agustín",
+      "observations": [
+        {
+          "year": 2019,
+          "plantedHa": 5638.7,
+          "harvestedHa": 4611.71,
+          "productionT": 6594.75,
+          "yieldTPerHa": 1.43
+        },
+        {
+          "year": 2020,
+          "plantedHa": 5743,
+          "harvestedHa": 4690,
+          "productionT": 5628,
+          "yieldTPerHa": 1.2
+        },
+        {
+          "year": 2021,
+          "plantedHa": 5779.3,
+          "harvestedHa": 4604.17,
+          "productionT": 4880.42,
+          "yieldTPerHa": 1.06
+        },
+        {
+          "year": 2022,
+          "plantedHa": 5838.28,
+          "harvestedHa": 4706.54,
+          "productionT": 4712.69,
+          "yieldTPerHa": 1
+        },
+        {
+          "year": 2023,
+          "plantedHa": 5909.24,
+          "harvestedHa": 4846.99,
+          "productionT": 5606.46,
+          "yieldTPerHa": 1.16
+        },
+        {
+          "year": 2024,
+          "plantedHa": 5903.28,
+          "harvestedHa": 4620.47,
+          "productionT": 6653.48,
+          "yieldTPerHa": 1.44
+        },
+        {
+          "year": 2025,
+          "plantedHa": 5989.52,
+          "harvestedHa": 4580.36,
+          "productionT": 6605.63,
+          "yieldTPerHa": 1.44
+        }
+      ]
+    },
+    {
+      "code": "41676",
+      "municipality": "Santa María",
+      "observations": [
+        {
+          "year": 2019,
+          "plantedHa": 3145.7,
+          "harvestedHa": 2495.52,
+          "productionT": 3543.64,
+          "yieldTPerHa": 1.42
+        },
+        {
+          "year": 2020,
+          "plantedHa": 3093,
+          "harvestedHa": 2595,
+          "productionT": 3712.28,
+          "yieldTPerHa": 1.43
+        },
+        {
+          "year": 2021,
+          "plantedHa": 3163.07,
+          "harvestedHa": 2762.73,
+          "productionT": 3232.39,
+          "yieldTPerHa": 1.17
+        },
+        {
+          "year": 2022,
+          "plantedHa": 3129,
+          "harvestedHa": 2790.06,
+          "productionT": 3975.35,
+          "yieldTPerHa": 1.42
+        },
+        {
+          "year": 2023,
+          "plantedHa": 2914.61,
+          "harvestedHa": 2408.6,
+          "productionT": 3888,
+          "yieldTPerHa": 1.61
+        },
+        {
+          "year": 2024,
+          "plantedHa": 2958.69,
+          "harvestedHa": 2394.83,
+          "productionT": 4765.71,
+          "yieldTPerHa": 1.99
+        },
+        {
+          "year": 2025,
+          "plantedHa": 3320.02,
+          "harvestedHa": 2801.82,
+          "productionT": 5583.99,
+          "yieldTPerHa": 1.99
+        }
+      ]
+    },
+    {
+      "code": "41770",
+      "municipality": "Suaza",
+      "observations": [
+        {
+          "year": 2019,
+          "plantedHa": 7059.6,
+          "harvestedHa": 5199.23,
+          "productionT": 7382.91,
+          "yieldTPerHa": 1.42
+        },
+        {
+          "year": 2020,
+          "plantedHa": 7059.6,
+          "harvestedHa": 6559,
+          "productionT": 2098.88,
+          "yieldTPerHa": 0.32
+        },
+        {
+          "year": 2021,
+          "plantedHa": 7062.42,
+          "harvestedHa": 5528.55,
+          "productionT": 6910.69,
+          "yieldTPerHa": 1.25
+        },
+        {
+          "year": 2022,
+          "plantedHa": 7351.79,
+          "harvestedHa": 5782.36,
+          "productionT": 6665.51,
+          "yieldTPerHa": 1.15
+        },
+        {
+          "year": 2023,
+          "plantedHa": 7672.73,
+          "harvestedHa": 5989.87,
+          "productionT": 7558.7,
+          "yieldTPerHa": 1.26
+        },
+        {
+          "year": 2024,
+          "plantedHa": 7846.35,
+          "harvestedHa": 5910.87,
+          "productionT": 9220.96,
+          "yieldTPerHa": 1.56
+        },
+        {
+          "year": 2025,
+          "plantedHa": 8300.83,
+          "harvestedHa": 6270.98,
+          "productionT": 9797.42,
+          "yieldTPerHa": 1.56
+        }
+      ]
+    },
+    {
+      "code": "41791",
+      "municipality": "Tarqui",
+      "observations": [
+        {
+          "year": 2019,
+          "plantedHa": 4316.1,
+          "harvestedHa": 2362.98,
+          "productionT": 3355.43,
+          "yieldTPerHa": 1.42
+        },
+        {
+          "year": 2020,
+          "plantedHa": 3233,
+          "harvestedHa": 2548,
+          "productionT": 4331.6,
+          "yieldTPerHa": 1.7
+        },
+        {
+          "year": 2021,
+          "plantedHa": 3306.17,
+          "harvestedHa": 2600.44,
+          "productionT": 3042.51,
+          "yieldTPerHa": 1.17
+        },
+        {
+          "year": 2022,
+          "plantedHa": 3388.69,
+          "harvestedHa": 2652.68,
+          "productionT": 2995.55,
+          "yieldTPerHa": 1.13
+        },
+        {
+          "year": 2023,
+          "plantedHa": 3451.09,
+          "harvestedHa": 2733.25,
+          "productionT": 2783.7,
+          "yieldTPerHa": 1.02
+        },
+        {
+          "year": 2024,
+          "plantedHa": 3473.32,
+          "harvestedHa": 2635.13,
+          "productionT": 3320.26,
+          "yieldTPerHa": 1.26
+        },
+        {
+          "year": 2025,
+          "plantedHa": 3515.07,
+          "harvestedHa": 2687.47,
+          "productionT": 3391.3,
+          "yieldTPerHa": 1.26
+        }
+      ]
+    },
+    {
+      "code": "41797",
+      "municipality": "Tesalia",
+      "observations": [
+        {
+          "year": 2019,
+          "plantedHa": 709.1,
+          "harvestedHa": 543.26,
+          "productionT": 771.43,
+          "yieldTPerHa": 1.42
+        },
+        {
+          "year": 2020,
+          "plantedHa": 671.1,
+          "harvestedHa": 576,
+          "productionT": 691.2,
+          "yieldTPerHa": 1.2
+        },
+        {
+          "year": 2021,
+          "plantedHa": 663.27,
+          "harvestedHa": 590.64,
+          "productionT": 643.8,
+          "yieldTPerHa": 1.09
+        },
+        {
+          "year": 2022,
+          "plantedHa": 676.98,
+          "harvestedHa": 580.17,
+          "productionT": 546.72,
+          "yieldTPerHa": 0.94
+        },
+        {
+          "year": 2023,
+          "plantedHa": 682.16,
+          "harvestedHa": 583.91,
+          "productionT": 558.09,
+          "yieldTPerHa": 0.96
+        },
+        {
+          "year": 2024,
+          "plantedHa": 672.6,
+          "harvestedHa": 532.74,
+          "productionT": 633.96,
+          "yieldTPerHa": 1.19
+        },
+        {
+          "year": 2025,
+          "plantedHa": 716,
+          "harvestedHa": 559.78,
+          "productionT": 672.75,
+          "yieldTPerHa": 1.2
+        }
+      ]
+    },
+    {
+      "code": "41799",
+      "municipality": "Tello",
+      "observations": [
+        {
+          "year": 2019,
+          "plantedHa": 3364.3,
+          "harvestedHa": 2608.63,
+          "productionT": 3704.25,
+          "yieldTPerHa": 1.42
+        },
+        {
+          "year": 2020,
+          "plantedHa": 3254,
+          "harvestedHa": 2757,
+          "productionT": 3859.8,
+          "yieldTPerHa": 1.4
+        },
+        {
+          "year": 2021,
+          "plantedHa": 3240.04,
+          "harvestedHa": 2888.97,
+          "productionT": 3380.09,
+          "yieldTPerHa": 1.17
+        },
+        {
+          "year": 2022,
+          "plantedHa": 3276.29,
+          "harvestedHa": 2794.71,
+          "productionT": 3180.27,
+          "yieldTPerHa": 1.14
+        },
+        {
+          "year": 2023,
+          "plantedHa": 3338.96,
+          "harvestedHa": 2763.59,
+          "productionT": 2786.1,
+          "yieldTPerHa": 1.01
+        },
+        {
+          "year": 2024,
+          "plantedHa": 3369.81,
+          "harvestedHa": 2675.95,
+          "productionT": 3344.94,
+          "yieldTPerHa": 1.25
+        },
+        {
+          "year": 2025,
+          "plantedHa": 3111.45,
+          "harvestedHa": 2341.3,
+          "productionT": 2931.02,
+          "yieldTPerHa": 1.25
+        }
+      ]
+    },
+    {
+      "code": "41801",
+      "municipality": "Teruel",
+      "observations": [
+        {
+          "year": 2019,
+          "plantedHa": 2771.1,
+          "harvestedHa": 2066.3,
+          "productionT": 2934.15,
+          "yieldTPerHa": 1.42
+        },
+        {
+          "year": 2020,
+          "plantedHa": 2735.1,
+          "harvestedHa": 2141,
+          "productionT": 2997.4,
+          "yieldTPerHa": 1.4
+        },
+        {
+          "year": 2021,
+          "plantedHa": 2751.52,
+          "harvestedHa": 2297.85,
+          "productionT": 2688.48,
+          "yieldTPerHa": 1.17
+        },
+        {
+          "year": 2022,
+          "plantedHa": 2779.73,
+          "harvestedHa": 2329.32,
+          "productionT": 1111.46,
+          "yieldTPerHa": 0.48
+        },
+        {
+          "year": 2023,
+          "plantedHa": 2824.13,
+          "harvestedHa": 2264.79,
+          "productionT": 977.74,
+          "yieldTPerHa": 0.43
+        },
+        {
+          "year": 2024,
+          "plantedHa": 2823.36,
+          "harvestedHa": 2150.46,
+          "productionT": 1139.74,
+          "yieldTPerHa": 0.53
+        },
+        {
+          "year": 2025,
+          "plantedHa": 2818.85,
+          "harvestedHa": 2056.61,
+          "productionT": 1235.82,
+          "yieldTPerHa": 0.6
+        }
+      ]
+    },
+    {
+      "code": "41807",
+      "municipality": "Timaná",
+      "observations": [
+        {
+          "year": 2019,
+          "plantedHa": 4964.7,
+          "harvestedHa": 3837.09,
+          "productionT": 5487.04,
+          "yieldTPerHa": 1.43
+        },
+        {
+          "year": 2020,
+          "plantedHa": 4910,
+          "harvestedHa": 3937,
+          "productionT": 5868.38,
+          "yieldTPerHa": 1.49
+        },
+        {
+          "year": 2021,
+          "plantedHa": 4946.24,
+          "harvestedHa": 3934.53,
+          "productionT": 4603.4,
+          "yieldTPerHa": 1.17
+        },
+        {
+          "year": 2022,
+          "plantedHa": 5009.22,
+          "harvestedHa": 4093.03,
+          "productionT": 4481.53,
+          "yieldTPerHa": 1.09
+        },
+        {
+          "year": 2023,
+          "plantedHa": 5092.33,
+          "harvestedHa": 4199.98,
+          "productionT": 4295.19,
+          "yieldTPerHa": 1.02
+        },
+        {
+          "year": 2024,
+          "plantedHa": 4787.57,
+          "harvestedHa": 3401.28,
+          "productionT": 4285.61,
+          "yieldTPerHa": 1.26
+        },
+        {
+          "year": 2025,
+          "plantedHa": 4710.72,
+          "harvestedHa": 3348.88,
+          "productionT": 4293.01,
+          "yieldTPerHa": 1.28
+        }
+      ]
+    }
+  ]
+}

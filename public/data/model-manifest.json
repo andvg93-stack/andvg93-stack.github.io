@@ -1,0 +1,114 @@
+{
+  "model": "Café 2035 · Huila",
+  "version": "1.0.0",
+  "generatedAt": "2026-08-31T21:10:30.785Z",
+  "coordinateSystems": {
+    "sourceAreaCalculations": "MAGNA-SIRGAS / Origen-Nacional (EPSG:9377), valores EVA municipales",
+    "webDelivery": "WGS 84 / CRS84"
+  },
+  "scenario": {
+    "start": "2026-01-01",
+    "end": "2035-12-01",
+    "climate": "SSP2-4.5, señal departamental didáctica interpolada",
+    "timeSteps": 120,
+    "deterministic": true
+  },
+  "sources": [
+    {
+      "name": "IGAC · Límites municipales",
+      "url": "https://mapas2.igac.gov.co/server/rest/services/limites/limites/FeatureServer",
+      "accessedAt": "2026-08-31T21:10:30.785Z",
+      "license": "Datos abiertos de la República de Colombia; atribución IGAC",
+      "use": "37 límites municipales y contorno del Huila"
+    },
+    {
+      "name": "UPRA · Evaluaciones Agropecuarias Municipales (EVA)",
+      "url": "https://www.datos.gov.co/resource/uejq-wxrr.json",
+      "accessedAt": "2026-08-31T21:10:30.785Z",
+      "license": "Datos Abiertos Colombia; atribución UPRA",
+      "use": "Área sembrada municipal de café 2019–2025"
+    },
+    {
+      "name": "RUNAP · Parques Nacionales Naturales",
+      "url": "https://mapas.parquesnacionales.gov.co/arcgis/rest/services/pnn/runap/FeatureServer",
+      "accessedAt": "2026-08-31T21:10:30.785Z",
+      "license": "Datos abiertos; atribución RUNAP / PNN",
+      "use": "Exclusión legal y proximidad a áreas protegidas"
+    },
+    {
+      "name": "OpenStreetMap contributors",
+      "url": "https://www.openstreetmap.org/copyright",
+      "accessedAt": "2026-08-31T21:10:30.785Z",
+      "license": "ODbL",
+      "use": "Cauces con nombre para contexto y proximidad hídrica"
+    },
+    {
+      "name": "UPRA · Aptitud para café, julio de 2022",
+      "url": "https://geoservicios.upra.gov.co/arcgis/rest/services/aptitud_uso_suelo/Aptitud_Cafe_Jul2022/MapServer/0",
+      "accessedAt": "2026-08-31T21:10:30.785Z",
+      "license": "Referencia institucional UPRA",
+      "use": "Estructura conceptual A1/A2/A3/N; servicio no disponible durante esta compilación"
+    },
+    {
+      "name": "IDEAM · Nuevos escenarios de cambio climático",
+      "url": "https://ideam.gov.co/sala-de-prensa/noticia/el-instituto-lanza-nuevos-escenarios-de-cambio-climatico-escala-departamental-para-fortalecer-la",
+      "accessedAt": "2026-08-31T21:10:30.785Z",
+      "license": "Referencia institucional IDEAM",
+      "use": "Señal SSP2-4.5 2021–2040"
+    },
+    {
+      "name": "IPCC 2019 Refinement · AFOLU",
+      "url": "https://efdb.ipcc-nggip.iges.or.jp/public/2019rf/vol4.html",
+      "accessedAt": "2026-08-31T21:10:30.785Z",
+      "license": "Referencia metodológica",
+      "use": "Método de diferencia de existencias y conversión 44/12"
+    }
+  ],
+  "assumptions": [
+    "La huella inicial es una estimación espacial calibrada a hectáreas municipales EVA; no representa lotes cafeteros observados.",
+    "Las celdas son unidades visuales agregadas: su geometría no equivale a las hectáreas indicadas en el tooltip.",
+    "Las incorporaciones y retiros mensuales son interpolaciones didácticas de una trayectoria anual.",
+    "Los indicadores son índices didácticos estimados; no sustituyen monitoreo ambiental ni ordenamiento territorial.",
+    "El CO₂e incluye solo cambio de cobertura; excluye fertilizantes, transporte, beneficio y energía."
+  ],
+  "checks": {
+    "municipalities": 37,
+    "evaMunicipalities": 35,
+    "frontierFeatures": 292,
+    "monthlySnapshots": 120,
+    "baselineAreaHa": 151697.8,
+    "finalAreaHa": 154161.3,
+    "expansionInsideRunap": 0,
+    "indicesWithinRange": true
+  },
+  "files": [
+    {
+      "name": "huila-municipios.geojson",
+      "sha256": "a9ee364d6c7acdcfcabc500868e462ca4e5332deb82cd29f19dbae87f54e9676"
+    },
+    {
+      "name": "huila-areas-protegidas.geojson",
+      "sha256": "cf46bf02ed10d8a93a1a1e840e609b7e73aa4287ca2512565f9fb51d913404ca"
+    },
+    {
+      "name": "huila-cauces-osm.geojson",
+      "sha256": "81eeb82210c331e69c82838a297b0bc48e67cb80f3c2a23d3479562f0a8db8bf"
+    },
+    {
+      "name": "eva-huila-cafe-derived.json",
+      "sha256": "4f81bf036f4eaee53f12412b6bd0c815271cdc2ffd71d13ea29d13098c697710"
+    },
+    {
+      "name": "cafe-frontier.geojson",
+      "sha256": "060fc776ca19e0836ac9affe52ec393cfe3942cf5d655065468998563662b618"
+    },
+    {
+      "name": "simulation-snapshots.json",
+      "sha256": "f68e4e49f6cda0971c4319b21fd766aea370c8c3f4129f44bd6edb3d6cba2837"
+    },
+    {
+      "name": "municipality-model.json",
+      "sha256": "626d78ce89c6d81ca4330d1a5494c1f43696b71d63de61b5fee9d8574d9a3aba"
+    }
+  ]
+}
