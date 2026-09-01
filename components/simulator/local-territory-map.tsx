@@ -55,9 +55,14 @@ interface TerritoryData {
 interface HoverInfo {
   x: number;
   y: number;
-  feature: FrontierFeature;
-  state: string;
+  municipality: string;
+  hectares: number;
+  aptitude2026: string;
+  aptitude2035: string;
+  confidence: string;
 }
+
+type MunicipalitySummary = Omit<HoverInfo, 'x' | 'y'>;
 
 interface OrganicFilterProps {
   id: string;
@@ -161,6 +166,55 @@ function geometryBounds(geometry: Geometry | null) {
   );
 }
 
+function pointInRing([x, y]: [number, number], ring: number[][]) {
+  let inside = false;
+  for (let index = 0, previous = ring.length - 1; index < ring.length; previous = index, index += 1) {
+    const [currentX, currentY] = ring[index];
+    const [previousX, previousY] = ring[previous];
+    const intersects =
+      currentY > y !== previousY > y &&
+      x < ((previousX - currentX) * (y - currentY)) / (previousY - currentY) + currentX;
+    if (intersects) inside = !inside;
+  }
+  return inside;
+}
+
+function pointInMunicipality(point: [number, number], geometry: Geometry | null) {
+  const insidePolygon = (rings: number[][][]) =>
+    Boolean(rings[0] && pointInRing(point, rings[0])) &&
+    rings.slice(1).every((ring) => !pointInRing(point, ring));
+  if (geometry?.type === 'Polygon') return insidePolygon(geometry.coordinates);
+  if (geometry?.type === 'MultiPolygon') return geometry.coordinates.some(insidePolygon);
+  return false;
+}
+
+function municipalityInteriorPoint(geometry: Geometry | null) {
+  const bounds = geometryBounds(geometry);
+  const center: [number, number] = [
+    (bounds[0] + bounds[2]) / 2,
+    (bounds[1] + bounds[3]) / 2,
+  ];
+  if (pointInMunicipality(center, geometry)) return center;
+
+  let closest: [number, number] | null = null;
+  let closestDistance = Infinity;
+  for (let row = 1; row < 20; row += 1) {
+    for (let column = 1; column < 20; column += 1) {
+      const candidate: [number, number] = [
+        bounds[0] + ((bounds[2] - bounds[0]) * column) / 20,
+        bounds[1] + ((bounds[3] - bounds[1]) * row) / 20,
+      ];
+      if (!pointInMunicipality(candidate, geometry)) continue;
+      const distance = Math.hypot(candidate[0] - center[0], candidate[1] - center[1]);
+      if (distance < closestDistance) {
+        closest = candidate;
+        closestDistance = distance;
+      }
+    }
+  }
+  return closest ?? center;
+}
+
 function geometryLines(geometry: Geometry | null): number[][][] {
   if (!geometry) return [];
   if (geometry.type === 'LineString') return [geometry.coordinates];
@@ -197,15 +251,6 @@ function lineMidpoint(line: number[][]) {
   return { x, y: -y };
 }
 
-function featureState(feature: FrontierFeature, month: number) {
-  if (feature.properties.retireMonth != null && feature.properties.retireMonth <= month) {
-    return 'Retiro / pérdida de aptitud';
-  }
-  return feature.properties.origin === 'expansion'
-    ? 'Nueva expansión'
-    : 'Café inicial o persistente';
-}
-
 function useReducedMotion() {
   const [reducedMotion, setReducedMotion] = useState(false);
 
@@ -224,6 +269,53 @@ function connectionPath(descriptor: FrontierVisualDescriptor, progress: number) 
   if (!descriptor.connectsToParent || !descriptor.parentCentroid) return '';
   const endpoint = interpolatePoint(descriptor.parentCentroid, descriptor.centroid, progress);
   return `M${descriptor.parentCentroid.x},${descriptor.parentCentroid.y}L${endpoint.x},${endpoint.y}`;
+}
+
+function summarizeMunicipality(
+  municipality: string,
+  descriptors: FrontierVisualDescriptor[],
+  month: number,
+): MunicipalitySummary | null {
+  const entries = descriptors
+    .map((descriptor) => {
+      const weights = visualWeights(descriptor, month);
+      return {
+        feature: descriptor.feature,
+        weight: Math.max(weights.active, weights.retired),
+      };
+    })
+    .filter(({ weight }) => weight > 0.02);
+  if (!entries.length) {
+    return {
+      municipality,
+      hectares: 0,
+      aptitude2026: 'Sin huella activa',
+      aptitude2035: 'Sin huella activa',
+      confidence: 'Sin dato',
+    };
+  }
+
+  const dominantValue = (selector: (feature: FrontierFeature) => string) => {
+    const totals = new Map<string, number>();
+    entries.forEach(({ feature, weight }) => {
+      const value = selector(feature);
+      totals.set(value, (totals.get(value) ?? 0) + feature.properties.hectares * weight);
+    });
+    return [...totals.entries()].sort((first, second) =>
+      second[1] - first[1] || first[0].localeCompare(second[0]),
+    )[0]?.[0] ?? 'Sin dato';
+  };
+
+  return {
+    municipality,
+    hectares: entries.reduce(
+      (total, { feature, weight }) => total + feature.properties.hectares * weight,
+      0,
+    ),
+    aptitude2026: dominantValue((feature) => feature.properties.aptitude2026),
+    aptitude2035: dominantValue((feature) => feature.properties.aptitude2035),
+    confidence: dominantValue((feature) => feature.properties.confidence),
+  };
 }
 
 export function LocalTerritoryMap({ month }: { month: number }) {
@@ -265,28 +357,6 @@ export function LocalTerritoryMap({ month }: { month: number }) {
 
   const setZoomClamped = (value: number) => setZoom(Math.min(3.6, Math.max(1, value)));
 
-  const moveHover = (event: React.PointerEvent<SVGPathElement>, feature: FrontierFeature) => {
-    const rect = shellRef.current?.getBoundingClientRect();
-    if (!rect) return;
-    setHover({
-      x: event.clientX - rect.left,
-      y: event.clientY - rect.top,
-      feature,
-      state: featureState(feature, Math.round(month)),
-    });
-  };
-
-  const onPointerMove = (event: React.PointerEvent<SVGSVGElement>) => {
-    if (!dragRef.current || !shellRef.current) return;
-    const rect = shellRef.current.getBoundingClientRect();
-    const width = BASE_BOUNDS.width / zoom;
-    const height = BASE_BOUNDS.height / zoom;
-    setCenter({
-      x: dragRef.current.centerX - ((event.clientX - dragRef.current.x) / rect.width) * width,
-      y: dragRef.current.centerY - ((event.clientY - dragRef.current.y) / rect.height) * height,
-    });
-  };
-
   const visualMonth = reducedMotion ? Math.round(month) : month;
   const municipalityFeatures = (data?.municipalities.features ?? []) as Array<
     Feature<Geometry, GeoJsonProperties>
@@ -320,6 +390,57 @@ export function LocalTerritoryMap({ month }: { month: number }) {
     })),
     [descriptors, visualMonth],
   );
+  const summaryMonth = Math.round(visualMonth);
+  const descriptorsByMunicipality = useMemo(() => {
+    const grouped = new Map<string, FrontierVisualDescriptor[]>();
+    descriptors.forEach((descriptor) => {
+      const municipality = descriptor.feature.properties.municipality;
+      grouped.set(municipality, [...(grouped.get(municipality) ?? []), descriptor]);
+    });
+    return grouped;
+  }, [descriptors]);
+  const municipalityHitPoints = useMemo(() => new Map(
+    ((data?.municipalities.features ?? []) as Array<Feature<Geometry, GeoJsonProperties>>)
+      .map((feature) => [String(feature.properties?.MpNombre ?? ''), municipalityInteriorPoint(feature.geometry)]),
+  ), [data]);
+  const onPointerMove = (event: React.PointerEvent<SVGSVGElement>) => {
+    if (!shellRef.current) return;
+    const shellRect = shellRef.current.getBoundingClientRect();
+    const rect = event.currentTarget.getBoundingClientRect();
+    const width = BASE_BOUNDS.width / zoom;
+    const height = BASE_BOUNDS.height / zoom;
+    if (dragRef.current) {
+      setCenter({
+        x: dragRef.current.centerX - ((event.clientX - dragRef.current.x) / rect.width) * width,
+        y: dragRef.current.centerY - ((event.clientY - dragRef.current.y) / rect.height) * height,
+      });
+      return;
+    }
+
+    const scale = Math.min(rect.width / width, rect.height / height);
+    const offsetX = (rect.width - width * scale) / 2;
+    const offsetY = (rect.height - height * scale) / 2;
+    const svgX = center.x - width / 2 + (event.clientX - rect.left - offsetX) / scale;
+    const svgY = center.y - height / 2 + (event.clientY - rect.top - offsetY) / scale;
+    const municipalityFeature = municipalityFeatures.find((feature) =>
+      pointInMunicipality([svgX, -svgY], feature.geometry),
+    );
+    const municipality = String(municipalityFeature?.properties?.MpNombre ?? '');
+    const summary = summarizeMunicipality(
+      municipality,
+      descriptorsByMunicipality.get(municipality) ?? [],
+      summaryMonth,
+    );
+    if (!municipality || !summary) {
+      setHover(null);
+      return;
+    }
+    setHover({
+      x: event.clientX - shellRect.left,
+      y: event.clientY - shellRect.top,
+      ...summary,
+    });
+  };
   const roughness = roughnessForMonth(Math.round(visualMonth * 2) / 2);
 
   return (
@@ -334,6 +455,7 @@ export function LocalTerritoryMap({ month }: { month: number }) {
           }}
           onPointerDown={(event) => {
             if ((event.target as SVGElement).classList.contains('coffee-cell')) return;
+            setHover(null);
             dragRef.current = { x: event.clientX, y: event.clientY, centerX: center.x, centerY: center.y };
             event.currentTarget.setPointerCapture(event.pointerId);
           }}
@@ -344,6 +466,7 @@ export function LocalTerritoryMap({ month }: { month: number }) {
           onPointerCancel={() => {
             dragRef.current = null;
           }}
+          onPointerLeave={() => setHover(null)}
         >
           <defs>
             <clipPath id="huila-mask">
@@ -489,7 +612,7 @@ export function LocalTerritoryMap({ month }: { month: number }) {
                 ))}
             </g>
 
-            <g className="svg-frontier-hit-layer" data-testid="frontier-hit-layer">
+            <g className="svg-frontier-hit-layer" data-testid="frontier-hit-layer" aria-hidden="true">
               {visualFeatures
                 .filter(({ weights }) => weights.active + weights.retired > 0.02)
                 .map(({ descriptor, weights }) => {
@@ -507,8 +630,7 @@ export function LocalTerritoryMap({ month }: { month: number }) {
                         1.34,
                       )}
                       data-feature-id={descriptor.feature.properties.id}
-                      onPointerMove={(event) => moveHover(event, descriptor.feature)}
-                      onPointerLeave={() => setHover(null)}
+                      data-municipality={descriptor.feature.properties.municipality}
                     />
                   );
                 })}
@@ -542,6 +664,24 @@ export function LocalTerritoryMap({ month }: { month: number }) {
               <text key={label.name} x={label.x} y={label.y}>{label.name}</text>
             ))}
           </g>
+
+          <g className="svg-municipality-hit-layer" data-testid="municipality-hit-layer" aria-hidden="true">
+            {municipalityFeatures.map((feature, index) => {
+              const municipality = String(feature.properties?.MpNombre ?? '');
+              const [hitX, hitY] = municipalityHitPoints.get(municipality) ?? [0, 0];
+              return (
+                <circle
+                  key={feature.id ?? index}
+                  cx={hitX}
+                  cy={-hitY}
+                  r="0"
+                  data-municipality={municipality}
+                  data-hit-x={hitX}
+                  data-hit-y={-hitY}
+                />
+              );
+            })}
+          </g>
         </svg>
       )}
 
@@ -556,11 +696,11 @@ export function LocalTerritoryMap({ month }: { month: number }) {
 
       {hover && (
         <div className="local-map-tooltip" style={{ left: hover.x + 12, top: hover.y + 12 }}>
-          <span>{hover.state}</span>
-          <strong>{hover.feature.properties.municipality}</strong>
-          <p>≈ {new Intl.NumberFormat('es-CO', { maximumFractionDigits: 0 }).format(hover.feature.properties.hectares)} ha representadas</p>
-          <p>Aptitud: {hover.feature.properties.aptitude2026} → {hover.feature.properties.aptitude2035}</p>
-          <p>Confianza espacial: {hover.feature.properties.confidence}</p>
+          <span>Resumen municipal · huella estimada</span>
+          <strong>{hover.municipality}</strong>
+          <p>≈ {new Intl.NumberFormat('es-CO', { maximumFractionDigits: 0 }).format(hover.hectares)} ha representadas</p>
+          <p>Aptitud dominante: {hover.aptitude2026} → {hover.aptitude2035}</p>
+          <p>Confianza espacial dominante: {hover.confidence}</p>
         </div>
       )}
     </div>

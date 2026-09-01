@@ -295,9 +295,11 @@
 .svg-frontier-hit-layer path {
   fill: rgba(255, 255, 255, 0.001);
   stroke: none;
-  pointer-events: all;
+  pointer-events: none;
 }
-.coffee-cell { cursor: help; }
+.svg-municipality-hit-layer {
+  pointer-events: none;
+}
 .svg-waterway-labels text {
   fill: #155f7a;
   stroke: rgba(248, 253, 252, 0.98);

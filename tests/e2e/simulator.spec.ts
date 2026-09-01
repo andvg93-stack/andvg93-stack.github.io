@@ -6,6 +6,34 @@ async function openLocal(page: Page) {
   await expect(page.getByTestId('local-territory-map')).toBeVisible();
 }
 
+async function hoverMunicipality(page: Page, municipality: string) {
+  const path = page
+    .getByTestId('municipality-hit-layer')
+    .locator(`[data-municipality="${municipality}"]`);
+  const point = await path.evaluate((element) => {
+    const svg = element.closest('svg')!;
+    const rect = svg.getBoundingClientRect();
+    const [minX, minY, width, height] = svg
+      .getAttribute('viewBox')!
+      .split(' ')
+      .map(Number);
+    const scale = Math.min(rect.width / width, rect.height / height);
+    const offsetX = (rect.width - width * scale) / 2;
+    const offsetY = (rect.height - height * scale) / 2;
+    return {
+      x: rect.left + offsetX + (Number(element.getAttribute('data-hit-x')) - minX) * scale,
+      y: rect.top + offsetY + (Number(element.getAttribute('data-hit-y')) - minY) * scale,
+    };
+  });
+  await page.getByRole('img', { name: /Mapa vectorial local del Huila/ }).dispatchEvent('pointermove', {
+    bubbles: true,
+    clientX: point.x,
+    clientY: point.y,
+    pointerId: 1,
+    pointerType: 'mouse',
+  });
+}
+
 test('inicia en 2026, reproduce, pausa y conserva el mes', async ({ page }) => {
   await openLocal(page);
   const slider = page.getByTestId('timeline-slider');
@@ -79,10 +107,25 @@ test('agrupa la frontera en tres blobs orgánicos sin mostrar círculos individu
 
 test('mantiene los detalles territoriales sobre las geometrías agrupadas', async ({ page }) => {
   await openLocal(page);
-  await page.getByTestId('frontier-hit-layer').locator('path').first().hover({ force: true });
+  await hoverMunicipality(page, 'Pitalito');
   await expect(page.locator('.local-map-tooltip')).toBeVisible();
-  await expect(page.locator('.local-map-tooltip')).toContainText('Aptitud:');
-  await expect(page.locator('.local-map-tooltip')).toContainText('Confianza espacial:');
+  await expect(page.locator('.local-map-tooltip')).toContainText('Pitalito');
+  await expect(page.locator('.local-map-tooltip')).toContainText('Aptitud dominante:');
+  await expect(page.locator('.local-map-tooltip')).toContainText('Confianza espacial dominante:');
+});
+
+test('resuelve el municipio real bajo el cursor en todo el departamento', async ({ page }) => {
+  await openLocal(page);
+  const hitLayer = page.getByTestId('municipality-hit-layer');
+  await expect(hitLayer.locator('[data-municipality]')).toHaveCount(37);
+  const municipalities = await hitLayer.locator('[data-municipality]').evaluateAll((markers) =>
+    markers.map((marker) => marker.getAttribute('data-municipality') ?? ''),
+  );
+
+  for (const municipality of municipalities) {
+    await hoverMunicipality(page, municipality);
+    await expect(page.locator('.local-map-tooltip strong')).toHaveText(municipality);
+  }
 });
 
 test('la geometría evoluciona de forma continua y se congela al pausar', async ({ page }) => {
