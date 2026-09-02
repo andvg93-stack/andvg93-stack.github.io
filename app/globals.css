@@ -281,6 +281,11 @@
 }
 
 .local-territory-map svg:active { cursor: grabbing; }
+.svg-map-content {
+  transform-box: view-box;
+  transform-origin: 0 0;
+}
+.svg-map-content.is-panning { will-change: transform; }
 .svg-territory-base path { fill: rgba(239, 233, 213, 0.84); stroke: #496a62; stroke-width: 0.0015; vector-effect: non-scaling-stroke; }
 .svg-protected path { fill: rgba(46, 107, 79, 0.54); stroke: #275d47; stroke-width: 0.0011; vector-effect: non-scaling-stroke; }
 .svg-focus-municipalities path { fill: rgba(241, 197, 91, 0.08); stroke: #173f3a; stroke-width: 0.0026; vector-effect: non-scaling-stroke; }
@@ -292,11 +297,6 @@
 .svg-blob-source .blob-connection { fill: none; stroke: #fff; stroke-linecap: round; stroke-linejoin: round; }
 .svg-expansion-texture { opacity: 0.3; pointer-events: none; }
 .svg-expansion-texture path { fill: url('#expansion-hatch'); stroke: none; }
-.svg-frontier-hit-layer path {
-  fill: rgba(255, 255, 255, 0.001);
-  stroke: none;
-  pointer-events: none;
-}
 .svg-municipality-hit-layer {
   pointer-events: none;
 }

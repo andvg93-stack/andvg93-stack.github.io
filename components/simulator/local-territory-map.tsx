@@ -64,6 +64,19 @@ interface HoverInfo {
 
 type MunicipalitySummary = Omit<HoverInfo, 'x' | 'y'>;
 
+interface DragState {
+  startX: number;
+  startY: number;
+  latestX: number;
+  latestY: number;
+  centerX: number;
+  centerY: number;
+  viewWidth: number;
+  viewHeight: number;
+  rectWidth: number;
+  rectHeight: number;
+}
+
 interface OrganicFilterProps {
   id: string;
   fill: string;
@@ -320,7 +333,10 @@ function summarizeMunicipality(
 
 export function LocalTerritoryMap({ month }: { month: number }) {
   const shellRef = useRef<HTMLDivElement>(null);
-  const dragRef = useRef<{ x: number; y: number; centerX: number; centerY: number } | null>(null);
+  const svgRef = useRef<SVGSVGElement>(null);
+  const contentRef = useRef<SVGGElement>(null);
+  const dragRef = useRef<DragState | null>(null);
+  const panFrameRef = useRef<number | null>(null);
   const [data, setData] = useState<TerritoryData | null>(null);
   const [zoom, setZoom] = useState(1);
   const [center, setCenter] = useState({
@@ -349,6 +365,10 @@ export function LocalTerritoryMap({ month }: { month: number }) {
     };
   }, []);
 
+  useEffect(() => () => {
+    if (panFrameRef.current !== null) cancelAnimationFrame(panFrameRef.current);
+  }, []);
+
   const viewBox = useMemo(() => {
     const width = BASE_BOUNDS.width / zoom;
     const height = BASE_BOUNDS.height / zoom;
@@ -357,11 +377,25 @@ export function LocalTerritoryMap({ month }: { month: number }) {
 
   const setZoomClamped = (value: number) => setZoom(Math.min(3.6, Math.max(1, value)));
 
-  const visualMonth = reducedMotion ? Math.round(month) : month;
-  const municipalityFeatures = (data?.municipalities.features ?? []) as Array<
-    Feature<Geometry, GeoJsonProperties>
-  >;
-  const labels = municipalityFeatures
+  const requestedVisualMonth = reducedMotion ? Math.round(month) : month;
+  const visualMonth = requestedVisualMonth;
+  const municipalityFeatures = useMemo(() => (
+    (data?.municipalities.features ?? []) as Array<Feature<Geometry, GeoJsonProperties>>
+  ), [data?.municipalities.features]);
+  const municipalityPaths = useMemo(() => municipalityFeatures.map((feature, index) => ({
+    key: String(feature.id ?? index),
+    name: String(feature.properties?.MpNombre ?? ''),
+    d: geometryPath(feature.geometry),
+  })), [municipalityFeatures]);
+  const protectedPaths = useMemo(() => (data?.protectedAreas.features ?? []).map((feature, index) => ({
+    key: String(feature.id ?? index),
+    d: geometryPath(feature.geometry),
+  })), [data?.protectedAreas.features]);
+  const waterwayPaths = useMemo(() => (data?.waterways.features ?? []).map((feature, index) => ({
+    key: String(feature.id ?? index),
+    d: geometryPath(feature.geometry),
+  })), [data?.waterways.features]);
+  const labels = useMemo(() => municipalityFeatures
     .filter((feature) => FOCUS.has(String(feature.properties?.MpNombre)))
     .map((feature) => {
       const bounds = geometryBounds(feature.geometry);
@@ -370,15 +404,15 @@ export function LocalTerritoryMap({ month }: { month: number }) {
         x: (bounds[0] + bounds[2]) / 2,
         y: -((bounds[1] + bounds[3]) / 2),
       };
-    });
-  const waterwayLabels = MAJOR_WATERWAYS.flatMap((name) => {
+    }), [municipalityFeatures]);
+  const waterwayLabels = useMemo(() => MAJOR_WATERWAYS.flatMap((name) => {
     const longestLine = (data?.waterways.features ?? [])
       .filter((feature) => feature.properties?.name === name)
       .flatMap((feature) => geometryLines(feature.geometry))
       .sort((a, b) => lineLength(b) - lineLength(a))[0];
 
     return longestLine ? [{ name, ...lineMidpoint(longestLine) }] : [];
-  });
+  }), [data?.waterways.features]);
   const descriptors = useMemo(
     () => buildFrontierVisuals(data?.frontier.features ?? []),
     [data],
@@ -390,6 +424,10 @@ export function LocalTerritoryMap({ month }: { month: number }) {
     })),
     [descriptors, visualMonth],
   );
+  const frontierPaths = useMemo(() => new Map(descriptors.map((descriptor) => [
+    descriptor.feature.properties.id,
+    geometryPath(descriptor.feature.geometry),
+  ])), [descriptors]);
   const summaryMonth = Math.round(visualMonth);
   const descriptorsByMunicipality = useMemo(() => {
     const grouped = new Map<string, FrontierVisualDescriptor[]>();
@@ -403,19 +441,49 @@ export function LocalTerritoryMap({ month }: { month: number }) {
     ((data?.municipalities.features ?? []) as Array<Feature<Geometry, GeoJsonProperties>>)
       .map((feature) => [String(feature.properties?.MpNombre ?? ''), municipalityInteriorPoint(feature.geometry)]),
   ), [data]);
+
+  const applyPanTransform = () => {
+    panFrameRef.current = null;
+    const drag = dragRef.current;
+    if (!drag || !contentRef.current) return;
+    contentRef.current.style.transform = `translate(${drag.latestX - drag.startX}px, ${drag.latestY - drag.startY}px)`;
+  };
+
+  const finishDrag = () => {
+    const drag = dragRef.current;
+    if (!drag) return;
+    if (panFrameRef.current !== null) {
+      cancelAnimationFrame(panFrameRef.current);
+      panFrameRef.current = null;
+    }
+    const nextCenter = {
+      x: drag.centerX - ((drag.latestX - drag.startX) / drag.rectWidth) * drag.viewWidth,
+      y: drag.centerY - ((drag.latestY - drag.startY) / drag.rectHeight) * drag.viewHeight,
+    };
+    const nextViewBox = `${nextCenter.x - drag.viewWidth / 2} ${nextCenter.y - drag.viewHeight / 2} ${drag.viewWidth} ${drag.viewHeight}`;
+    svgRef.current?.setAttribute('viewBox', nextViewBox);
+    if (contentRef.current) {
+      contentRef.current.style.transform = '';
+      contentRef.current.classList.remove('is-panning');
+    }
+    dragRef.current = null;
+    setCenter(nextCenter);
+  };
+
   const onPointerMove = (event: React.PointerEvent<SVGSVGElement>) => {
+    const drag = dragRef.current;
+    if (drag) {
+      drag.latestX = event.clientX;
+      drag.latestY = event.clientY;
+      if (panFrameRef.current === null) panFrameRef.current = requestAnimationFrame(applyPanTransform);
+      return;
+    }
+
     if (!shellRef.current) return;
     const shellRect = shellRef.current.getBoundingClientRect();
     const rect = event.currentTarget.getBoundingClientRect();
     const width = BASE_BOUNDS.width / zoom;
     const height = BASE_BOUNDS.height / zoom;
-    if (dragRef.current) {
-      setCenter({
-        x: dragRef.current.centerX - ((event.clientX - dragRef.current.x) / rect.width) * width,
-        y: dragRef.current.centerY - ((event.clientY - dragRef.current.y) / rect.height) * height,
-      });
-      return;
-    }
 
     const scale = Math.min(rect.width / width, rect.height / height);
     const offsetX = (rect.width - width * scale) / 2;
@@ -447,6 +515,7 @@ export function LocalTerritoryMap({ month }: { month: number }) {
     <div ref={shellRef} className="local-territory-map" data-testid="local-territory-map">
       {data && (
         <svg
+          ref={svgRef}
           viewBox={viewBox}
           aria-label="Mapa vectorial local del Huila con municipios, áreas protegidas, cauces y huella cafetera"
           onWheel={(event) => {
@@ -454,24 +523,34 @@ export function LocalTerritoryMap({ month }: { month: number }) {
             setZoomClamped(zoom * (event.deltaY < 0 ? 1.18 : 0.85));
           }}
           onPointerDown={(event) => {
-            if ((event.target as SVGElement).classList.contains('coffee-cell')) return;
+            const rect = event.currentTarget.getBoundingClientRect();
+            const width = BASE_BOUNDS.width / zoom;
+            const height = BASE_BOUNDS.height / zoom;
             setHover(null);
-            dragRef.current = { x: event.clientX, y: event.clientY, centerX: center.x, centerY: center.y };
+            dragRef.current = {
+              startX: event.clientX,
+              startY: event.clientY,
+              latestX: event.clientX,
+              latestY: event.clientY,
+              centerX: center.x,
+              centerY: center.y,
+              viewWidth: width,
+              viewHeight: height,
+              rectWidth: rect.width,
+              rectHeight: rect.height,
+            };
+            contentRef.current?.classList.add('is-panning');
             event.currentTarget.setPointerCapture(event.pointerId);
           }}
           onPointerMove={onPointerMove}
-          onPointerUp={() => {
-            dragRef.current = null;
-          }}
-          onPointerCancel={() => {
-            dragRef.current = null;
-          }}
+          onPointerUp={finishDrag}
+          onPointerCancel={finishDrag}
           onPointerLeave={() => setHover(null)}
         >
           <defs>
             <clipPath id="huila-mask">
-              {municipalityFeatures.map((feature, index) => (
-                <path key={feature.id ?? index} d={geometryPath(feature.geometry)} />
+              {municipalityPaths.map((shape) => (
+                <path key={shape.key} d={shape.d} />
               ))}
             </clipPath>
             <pattern
@@ -509,23 +588,24 @@ export function LocalTerritoryMap({ month }: { month: number }) {
               displacement={roughness.displacement}
             />
           </defs>
+          <g ref={contentRef} className="svg-map-content">
           <g className="svg-territory-base">
-            {municipalityFeatures.map((feature, index) => (
-              <path key={feature.id ?? index} d={geometryPath(feature.geometry)} />
+            {municipalityPaths.map((shape) => (
+              <path key={shape.key} d={shape.d} />
             ))}
           </g>
 
           <g className="svg-protected" clipPath="url(#huila-mask)">
-            {data.protectedAreas.features.map((feature, index) => (
-              <path key={feature.id ?? index} d={geometryPath(feature.geometry)} />
+            {protectedPaths.map((shape) => (
+              <path key={shape.key} d={shape.d} />
             ))}
           </g>
 
           <g className="svg-focus-municipalities">
-            {municipalityFeatures
-              .filter((feature) => FOCUS.has(String(feature.properties?.MpNombre)))
-              .map((feature, index) => (
-                <path key={feature.id ?? index} d={geometryPath(feature.geometry)} />
+            {municipalityPaths
+              .filter((shape) => FOCUS.has(shape.name))
+              .map((shape) => (
+                <path key={shape.key} d={shape.d} />
               ))}
           </g>
 
@@ -542,7 +622,7 @@ export function LocalTerritoryMap({ month }: { month: number }) {
                 .map(({ descriptor, weights }) => (
                   <path
                     key={descriptor.feature.properties.id}
-                    d={geometryPath(descriptor.feature.geometry)}
+                    d={frontierPaths.get(descriptor.feature.properties.id)}
                     transform={descriptorTransform(descriptor, weights.retired, 1, 1.38)}
                     data-progress={weights.retired.toFixed(4)}
                   />
@@ -567,7 +647,7 @@ export function LocalTerritoryMap({ month }: { month: number }) {
                     ) : null,
                     <path
                       key={descriptor.feature.properties.id}
-                      d={geometryPath(descriptor.feature.geometry)}
+                      d={frontierPaths.get(descriptor.feature.properties.id)}
                       transform={descriptorTransform(descriptor, weights.active, weights.entry, 1.42)}
                       data-progress={weights.active.toFixed(4)}
                     />,
@@ -592,7 +672,7 @@ export function LocalTerritoryMap({ month }: { month: number }) {
                     ) : null,
                     <path
                       key={`${descriptor.feature.properties.id}-expansion`}
-                      d={geometryPath(descriptor.feature.geometry)}
+                      d={frontierPaths.get(descriptor.feature.properties.id)}
                       transform={descriptorTransform(descriptor, weights.expansion, weights.entry, 1.42)}
                       data-progress={weights.expansion.toFixed(4)}
                     />,
@@ -606,40 +686,17 @@ export function LocalTerritoryMap({ month }: { month: number }) {
                 .map(({ descriptor, weights }) => (
                   <path
                     key={`${descriptor.feature.properties.id}-texture`}
-                    d={geometryPath(descriptor.feature.geometry)}
+                    d={frontierPaths.get(descriptor.feature.properties.id)}
                     transform={descriptorTransform(descriptor, weights.expansion, weights.entry, 1.42)}
                   />
                 ))}
             </g>
 
-            <g className="svg-frontier-hit-layer" data-testid="frontier-hit-layer" aria-hidden="true">
-              {visualFeatures
-                .filter(({ weights }) => weights.active + weights.retired > 0.02)
-                .map(({ descriptor, weights }) => {
-                  const useActivePosition = weights.active >= weights.retired;
-                  const hitWeight = Math.max(weights.active, weights.retired);
-                  return (
-                    <path
-                      key={`${descriptor.feature.properties.id}-hit`}
-                      className="coffee-cell"
-                      d={geometryPath(descriptor.feature.geometry)}
-                      transform={descriptorTransform(
-                        descriptor,
-                        Math.max(0.28, hitWeight),
-                        useActivePosition ? weights.entry : 1,
-                        1.34,
-                      )}
-                      data-feature-id={descriptor.feature.properties.id}
-                      data-municipality={descriptor.feature.properties.municipality}
-                    />
-                  );
-                })}
-            </g>
           </g>
 
           <g className="svg-waterways svg-waterways--casing" clipPath="url(#huila-mask)" aria-hidden="true">
-            {data.waterways.features.map((feature, index) => (
-              <path key={feature.id ?? index} d={geometryPath(feature.geometry)} />
+            {waterwayPaths.map((shape) => (
+              <path key={shape.key} d={shape.d} />
             ))}
           </g>
 
@@ -648,8 +705,8 @@ export function LocalTerritoryMap({ month }: { month: number }) {
             clipPath="url(#huila-mask)"
             data-testid="waterways-layer"
           >
-            {data.waterways.features.map((feature, index) => (
-              <path key={feature.id ?? index} d={geometryPath(feature.geometry)} />
+            {waterwayPaths.map((shape) => (
+              <path key={shape.key} d={shape.d} />
             ))}
           </g>
 
@@ -681,6 +738,7 @@ export function LocalTerritoryMap({ month }: { month: number }) {
                 />
               );
             })}
+          </g>
           </g>
         </svg>
       )}

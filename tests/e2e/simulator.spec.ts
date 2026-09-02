@@ -84,6 +84,51 @@ test('funciona con todas las solicitudes externas bloqueadas', async ({ page }) 
   await expect(page.getByRole('img', { name: /Mapa vectorial local del Huila/ })).toBeVisible();
 });
 
+test('desplaza el mapa móvil con una sola transformación por cuadro', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await openLocal(page);
+  const map = page.getByRole('img', { name: /Mapa vectorial local del Huila/ });
+  const content = page.locator('.svg-map-content');
+  const box = await map.boundingBox();
+  expect(box).not.toBeNull();
+  const startX = box!.x + box!.width * 0.55;
+  const startY = box!.y + box!.height * 0.42;
+  const initialViewBox = await map.getAttribute('viewBox');
+
+  await map.dispatchEvent('pointerdown', {
+    bubbles: true,
+    clientX: startX,
+    clientY: startY,
+    pointerId: 7,
+    pointerType: 'touch',
+  });
+  for (let step = 1; step <= 12; step += 1) {
+    await map.dispatchEvent('pointermove', {
+      bubbles: true,
+      clientX: startX + step * 4,
+      clientY: startY + step * 2,
+      pointerId: 7,
+      pointerType: 'touch',
+    });
+  }
+  await page.evaluate(() => new Promise(requestAnimationFrame));
+
+  await expect(map).toHaveAttribute('viewBox', initialViewBox ?? '');
+  await expect(content).toHaveClass(/is-panning/);
+  expect(await content.evaluate((element) => (element as SVGGElement).style.transform)).toContain('translate');
+
+  await map.dispatchEvent('pointerup', {
+    bubbles: true,
+    clientX: startX + 48,
+    clientY: startY + 24,
+    pointerId: 7,
+    pointerType: 'touch',
+  });
+  await expect(map).not.toHaveAttribute('viewBox', initialViewBox ?? '');
+  await expect(content).not.toHaveClass(/is-panning/);
+  expect(await content.evaluate((element) => (element as SVGGElement).style.transform)).toBe('');
+});
+
 test('muestra los cauces y rotula los ríos principales', async ({ page }) => {
   await openLocal(page);
   const waterways = page.getByTestId('waterways-layer').locator('path');
@@ -101,6 +146,7 @@ test('agrupa la frontera en tres blobs orgánicos sin mostrar círculos individu
   await expect(page.getByTestId('expansion-blob')).toHaveAttribute('filter', 'url(#coffee-expansion-blob)');
   await expect(page.getByTestId('retired-blob')).toHaveAttribute('filter', 'url(#coffee-retired-blob)');
   await expect(page.locator('filter[id^="coffee-"][id$="-blob"]')).toHaveCount(3);
+  await expect(page.getByTestId('frontier-hit-layer')).toHaveCount(0);
   expect(await page.locator('.svg-frontier--initial, .svg-frontier--expansion, .svg-frontier--retired').count()).toBe(0);
   expect(await page.getByTestId('active-blob').locator('[data-connected-to]').count()).toBeGreaterThan(0);
 });
