@@ -17,6 +17,10 @@ Abrir `http://localhost:3000`. Para forzar el fondo local determinista: `http://
 
 El simulador se publica en **https://andvg93-stack.github.io/**. El repositorio incluye un flujo de GitHub Pages: cada cambio enviado a `main` ejecuta las pruebas del modelo, genera una versión estática con la ruta base correcta y publica el sitio. La compilación equivalente en local se genera con `npm run build:pages` y queda en `dist/client/`.
 
+El QR listo para compartir o imprimir está disponible en PNG y SVG dentro de `deliverables/`.
+
+![QR del simulador Café 2035](deliverables/QR_Cafe_2035_Huila.svg)
+
 ## Controles
 
 - Arrastrar la cronología selecciona cualquiera de los 120 meses.
