@@ -11,6 +11,7 @@ import { Timeline } from '@/components/simulator/timeline';
 import { useSimulationClock } from '@/hooks/use-simulation-clock';
 import { interpolateSnapshot, LAST_MONTH } from '@/lib/simulation/model';
 import type { ModelManifest, SimulationSnapshot } from '@/lib/simulation/types';
+import { sitePath } from '@/lib/site-path';
 
 interface SnapshotResponse {
   version: string;
@@ -29,11 +30,11 @@ export function CafeSimulator() {
   useEffect(() => {
     let cancelled = false;
     Promise.all([
-      fetch('/data/simulation-snapshots.json').then((response) => {
+      fetch(sitePath('/data/simulation-snapshots.json')).then((response) => {
         if (!response.ok) throw new Error('No se pudieron cargar los cortes mensuales.');
         return response.json() as Promise<SnapshotResponse>;
       }),
-      fetch('/data/model-manifest.json').then((response) => {
+      fetch(sitePath('/data/model-manifest.json')).then((response) => {
         if (!response.ok) throw new Error('No se pudo cargar el manifiesto del modelo.');
         return response.json() as Promise<ModelManifest>;
       }),

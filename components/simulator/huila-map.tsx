@@ -11,6 +11,7 @@ import { CloudOff, Layers3, MapPin } from 'lucide-react';
 
 import { LocalTerritoryMap } from '@/components/simulator/local-territory-map';
 import { monthLabel } from '@/lib/simulation/model';
+import { sitePath } from '@/lib/site-path';
 
 const FOCUS_MUNICIPALITIES = [
   'Acevedo',
@@ -44,22 +45,22 @@ const HUILA_BOUNDS: [[number, number], [number, number]] = [
 const sources: Record<string, GeoJSONSourceSpecification> = {
   'sim-municipalities': {
     type: 'geojson',
-    data: '/data/huila-municipios.geojson',
+    data: sitePath('/data/huila-municipios.geojson'),
     attribution: 'Instituto Geográfico Agustín Codazzi (IGAC)',
   },
   'sim-protected': {
     type: 'geojson',
-    data: '/data/huila-areas-protegidas.geojson',
+    data: sitePath('/data/huila-areas-protegidas.geojson'),
     attribution: 'RUNAP · Parques Nacionales Naturales de Colombia',
   },
   'sim-waterways': {
     type: 'geojson',
-    data: '/data/huila-cauces-osm.geojson',
+    data: sitePath('/data/huila-cauces-osm.geojson'),
     attribution: '© OpenStreetMap contributors',
   },
   'sim-frontier': {
     type: 'geojson',
-    data: '/data/cafe-frontier.geojson',
+    data: sitePath('/data/cafe-frontier.geojson'),
     attribution: 'Modelo didáctico Café 2035 · hectáreas calibradas con EVA/UPRA',
   },
 };

@@ -13,6 +13,10 @@ npm run dev
 
 Abrir `http://localhost:3000`. Para forzar el fondo local determinista: `http://localhost:3000/?basemap=local`.
 
+## Sitio público
+
+El simulador se publica en **https://andvg93-stack.github.io/**. El repositorio incluye un flujo de GitHub Pages: cada cambio enviado a `main` ejecuta las pruebas del modelo, genera una versión estática con la ruta base correcta y publica el sitio. La compilación equivalente en local se genera con `npm run build:pages` y queda en `dist/client/`.
+
 ## Controles
 
 - Arrastrar la cronología selecciona cualquiera de los 120 meses.
@@ -41,6 +45,7 @@ npm run test:model   # pruebas unitarias y validación de datos
 npm run test:e2e     # siete pruebas Playwright
 npm run lint
 npm run build
+npm run build:pages # versión estática para GitHub Pages
 ```
 
 Las capturas de Playwright se escriben en `outputs/playwright/` y no se versionan. Las descargas crudas pesadas tampoco se guardan en Git.
@@ -48,4 +53,3 @@ Las capturas de Playwright se escriben en `outputs/playwright/` y no se versiona
 ## Advertencia de uso
 
 El escenario es educativo y tendencial. No es una predicción parcelaria, no reemplaza monitoreo de campo y no autoriza expansión agrícola. El CO₂e incluye únicamente el cambio estimado de cobertura; excluye fertilizantes, transporte, beneficio y energía.
-

@@ -8,6 +8,7 @@
   "scripts": {
     "dev": "vinext dev",
     "build": "vinext build",
+    "build:pages": "node scripts/build-github-pages.mjs",
     "start": "wrangler dev --config dist/server/wrangler.json",
     "lint": "oxlint app components/simulator hooks/use-simulation-clock.ts lib/simulation tests",
     "format": "oxfmt",

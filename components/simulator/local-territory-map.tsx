@@ -14,6 +14,7 @@ import {
   type FrontierVisualDescriptor,
 } from '@/lib/simulation/frontier-visuals';
 import type { FrontierCollection, FrontierFeature } from '@/lib/simulation/types';
+import { sitePath } from '@/lib/site-path';
 
 const BASE_BOUNDS = {
   minX: -76.72,
@@ -349,10 +350,10 @@ export function LocalTerritoryMap({ month }: { month: number }) {
   useEffect(() => {
     let cancelled = false;
     void Promise.all([
-      fetch('/data/huila-municipios.geojson').then((response) => response.json() as Promise<FeatureCollection>),
-      fetch('/data/huila-areas-protegidas.geojson').then((response) => response.json() as Promise<FeatureCollection>),
-      fetch('/data/huila-cauces-osm.geojson').then((response) => response.json() as Promise<FeatureCollection>),
-      fetch('/data/cafe-frontier.geojson').then((response) => response.json() as Promise<FrontierCollection>),
+      fetch(sitePath('/data/huila-municipios.geojson')).then((response) => response.json() as Promise<FeatureCollection>),
+      fetch(sitePath('/data/huila-areas-protegidas.geojson')).then((response) => response.json() as Promise<FeatureCollection>),
+      fetch(sitePath('/data/huila-cauces-osm.geojson')).then((response) => response.json() as Promise<FeatureCollection>),
+      fetch(sitePath('/data/cafe-frontier.geojson')).then((response) => response.json() as Promise<FrontierCollection>),
     ])
       .then(([municipalities, protectedAreas, waterways, frontier]) => {
         if (!cancelled) setData({ municipalities, protectedAreas, waterways, frontier });

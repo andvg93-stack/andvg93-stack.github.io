@@ -2,14 +2,15 @@
   "name": "Café 2035 · Huila",
   "short_name": "Café 2035",
   "description": "Simulador educativo de la evolución estimada de la huella cafetera del Huila.",
-  "start_url": "/?basemap=local",
+  "start_url": "./?basemap=local",
+  "scope": "./",
   "display": "standalone",
   "background_color": "#f3efe4",
   "theme_color": "#123f3d",
   "lang": "es-CO",
   "icons": [
     {
-      "src": "/favicon.svg",
+      "src": "favicon.svg",
       "sizes": "any",
       "type": "image/svg+xml",
       "purpose": "any maskable"

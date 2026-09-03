@@ -1,4 +1,6 @@
-const CACHE_NAME = 'cafe-2035-huila-v1';
+const CACHE_NAME = 'cafe-2035-huila-v2';
+const BASE_PATH = new URL(self.registration.scope).pathname.replace(/\/$/, '');
+const atSite = (path) => `${BASE_PATH}${path}`;
 const ESSENTIAL = [
   '/',
   '/?basemap=local',
@@ -9,8 +11,8 @@ const ESSENTIAL = [
   '/data/huila-cauces-osm.geojson',
   '/data/cafe-frontier.geojson',
   '/data/simulation-snapshots.json',
-  '/data/model-manifest.json'
-];
+  '/data/model-manifest.json',
+].map(atSite);
 
 self.addEventListener('install', (event) => {
   event.waitUntil(caches.open(CACHE_NAME).then((cache) => cache.addAll(ESSENTIAL)));
@@ -35,10 +37,10 @@ self.addEventListener('fetch', (event) => {
       fetch(event.request)
         .then((response) => {
           const copy = response.clone();
-          caches.open(CACHE_NAME).then((cache) => cache.put('/?basemap=local', copy));
+          caches.open(CACHE_NAME).then((cache) => cache.put(atSite('/?basemap=local'), copy));
           return response;
         })
-        .catch(() => caches.match('/?basemap=local')),
+        .catch(() => caches.match(atSite('/?basemap=local'))),
     );
     return;
   }
