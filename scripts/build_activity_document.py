@@ -9,7 +9,7 @@ from docx.oxml.ns import qn
 from docx.shared import Inches, Pt, RGBColor
 
 
-OUTPUT = Path(__file__).resolve().parents[1] / "deliverables" / "Transformando_Territorios_Guia_Metodologica.docx"
+OUTPUT = Path(__file__).resolve().parents[1] / "deliverables" / "Transformando_Territorios_Guia_Metodologica_Actualizada_4_Sep_2026.docx"
 
 BLUE = "2E74B5"
 DARK_BLUE = "1F4D78"
@@ -507,14 +507,14 @@ def build_document():
 
     p = document.add_paragraph()
     p.paragraph_format.space_after = Pt(22)
-    r = p.add_run("Propuesta operativa para la planeación, facilitación y seguimiento de una experiencia educativa con jóvenes del sur del Huila.")
+    r = p.add_run("Guía metodológica para la Cátedra Social Solidaria presencial en San Adolfo, Acevedo - Huila.")
     set_run_font(r, size=12.5, color=GRAY, italic=True)
 
     metrics = document.add_table(rows=1, cols=3)
     set_table_geometry(metrics, [3120, 3120, 3120])
     metric_values = [
-        ("PÚBLICO", "Jóvenes de 18 a 25 años"),
-        ("DURACIÓN PROPUESTA", "3 horas presenciales"),
+        ("FECHA Y HORA", "4 de septiembre · 10:00 a. m."),
+        ("LUGAR", "San Adolfo · Acevedo, Huila"),
         ("EJE PRÁCTICO", "Simulador Café 2035"),
     ]
     for index, (label, value) in enumerate(metric_values):
@@ -546,11 +546,11 @@ def build_document():
     set_run_font(r, size=10.5, color=INK, bold=True)
     p = document.add_paragraph()
     p.paragraph_format.space_after = Pt(2)
-    r = p.add_run("Versión 1.0 | Septiembre de 2026")
+    r = p.add_run("Versión 1.1 | Actualización del 3 de septiembre de 2026")
     set_run_font(r, size=10, color=GRAY)
     p = document.add_paragraph()
     p.paragraph_format.space_after = Pt(0)
-    r = p.add_run("Ámbito territorial: municipios del sur del departamento del Huila")
+    r = p.add_run("Cátedra Social Solidaria presencial | San Adolfo, municipio de Acevedo - Huila")
     set_run_font(r, size=10, color=GRAY)
 
     document.add_page_break()
@@ -558,11 +558,11 @@ def build_document():
     add_heading(document, "1. Resumen ejecutivo", 1)
     add_body(
         document,
-        "La actividad propone una experiencia participativa en la que jóvenes de 18 a 25 años analizan cómo el cambio climático puede transformar el territorio cafetero del Huila entre 2026 y 2035. El simulador Café 2035 funciona como detonante de conversación: permite observar la evolución temporal de la huella cafetera estimada y su relación con emisiones de CO₂ equivalente, fuentes hídricas, salud del suelo, biodiversidad y resiliencia climática.",
+        "La actividad se realizará el viernes 4 de septiembre de 2026, a partir de las 10:00 a. m., en el corregimiento de San Adolfo, municipio de Acevedo - Huila, como parte de la Cátedra Social Solidaria presencial. El tema articulador es \"Liderazgo Juvenil para la Resiliencia Climática: Innovación y Cuidado del Ecosistema\".",
     )
     add_body(
         document,
-        "La sesión no busca enseñar una predicción exacta ni tomar decisiones productivas. Su propósito es fortalecer la lectura crítica del territorio, la comprensión de interdependencias socioambientales y la capacidad juvenil para formular acciones viables de adaptación, cuidado y comunicación climática.",
+        "La jornada combina aportes de personas expertas de ECAPMA y la CAM con una experiencia participativa para jóvenes. El simulador Café 2035 permite observar una evolución estimada de la huella cafetera entre 2026 y 2035 y conversar sobre emisiones de CO₂ equivalente, fuentes hídricas, salud del suelo, biodiversidad y resiliencia climática. No corresponde a una predicción parcelaria ni reemplaza estudios técnicos o decisiones de ordenamiento.",
     )
 
     add_heading(document, "2. Ficha técnica", 1)
@@ -571,10 +571,16 @@ def build_document():
         ["Elemento", "Definición propuesta"],
         [
             ("Nombre", "Transformando Territorios: Juventud, Innovación y Acción Climática desde el Huila"),
+            ("Espacio", "Cátedra Social Solidaria presencial."),
+            ("Tema", "Liderazgo Juvenil para la Resiliencia Climática: Innovación y Cuidado del Ecosistema."),
+            ("Fecha y hora", "Viernes 4 de septiembre de 2026, 10:00 a. m."),
+            ("Lugar", "Corregimiento de San Adolfo, municipio de Acevedo - Huila."),
             ("Población", "Jóvenes de 18 a 25 años; se recomienda un grupo de 20 a 35 participantes."),
-            ("Cobertura", "Sur del Huila, con énfasis en Pitalito, Acevedo, Elías, Isnos, Oporapa, Palestina, Saladoblanco, San Agustín y Timaná."),
+            ("Cobertura", "San Adolfo y municipio de Acevedo, con lectura territorial del sur del Huila."),
             ("Modalidad", "Presencial, apoyada por proyección del simulador web y trabajo colaborativo."),
-            ("Duración", "180 minutos, incluida una pausa activa de 15 minutos."),
+            ("Duración operativa", "180 minutos, de 10:00 a. m. a 1:00 p. m.; validar el cierre con la coordinación institucional."),
+            ("Aliados", "ECAPMA y Corporación Autónoma Regional del Alto Magdalena - CAM."),
+            ("Personas invitadas", "Luis Famer Lamilla Carvajal; Leydy Lorena Gómez Cerquera; Andrés David Vargas Guzman; Martha Cecilia Vinasco Guzman; Silvia Alejandra Trujillo Zapata. El orden y tema de cada intervención deben confirmarse con la coordinación."),
             ("Producto central", "Una propuesta juvenil de acción territorial por grupo, con problema priorizado, actores, primer paso e indicador sencillo."),
             ("Equipo mínimo", "Una persona coordinadora, una facilitadora principal, una persona de apoyo técnico y una persona de relatoría/logística."),
         ],
@@ -632,8 +638,10 @@ def build_document():
     add_heading(document, "7. Preparación previa", 1)
     add_heading(document, "7.1 Decisiones que debe cerrar el equipo", 2)
     for item in [
-        "Fecha, municipio, lugar, capacidad y condiciones de accesibilidad.",
-        "Número estimado de participantes y mecanismo de convocatoria.",
+        "Confirmar la hora prevista de cierre y los tiempos definitivos de cada intervención institucional.",
+        "Confirmar el orden, tema y duración asignados a cada persona invitada; el cartel no establece esa correspondencia.",
+        "Definir quién realiza la apertura de la Cátedra Social Solidaria y quién modera el diálogo con ECAPMA y la CAM.",
+        "Confirmar número estimado de participantes, capacidad del espacio y condiciones de accesibilidad en San Adolfo.",
         "Disponibilidad de internet, proyector, sonido, energía y plan de respaldo.",
         "Composición de los grupos y criterio para asegurar diversidad territorial y de género.",
         "Persona responsable de fotografías o testimonios y consentimiento correspondiente.",
@@ -663,45 +671,48 @@ def build_document():
         document,
         ["Tiempo", "Momento", "Propósito", "Producto o evidencia"],
         [
-            ("0-15 min", "Bienvenida y acuerdos", "Presentar el propósito, crear condiciones de participación y activar conocimientos previos.", "Acuerdos visibles y expectativa inicial."),
-            ("15-35 min", "El territorio que cambia", "Reconocer señales de cambio climático y territorial desde la experiencia juvenil.", "Mapa de percepciones y relatos breves."),
-            ("35-50 min", "Claves para leer Café 2035", "Explicar el escenario, la línea temporal, la leyenda y los indicadores.", "Comprensión básica del uso y sus límites."),
-            ("50-80 min", "Exploración guiada", "Comparar 2026, 2030 y 2035 por grupos.", "Ficha de hallazgos y preguntas."),
-            ("80-95 min", "Pausa activa", "Descanso y conversación informal.", "Reagrupación."),
-            ("95-125 min", "Lectura de impactos", "Relacionar cambios de la huella cafetera con agua, suelo, biodiversidad, clima y vida comunitaria.", "Prioridad territorial por grupo."),
-            ("125-155 min", "Laboratorio de acción", "Diseñar una respuesta juvenil viable.", "Prototipo de acción territorial."),
-            ("155-175 min", "Galería y compromisos", "Compartir, retroalimentar y elegir próximos pasos.", "Compromisos y posibles alianzas."),
-            ("175-180 min", "Cierre y evaluación", "Recoger aprendizajes y valoración rápida.", "Evaluación de salida."),
+            ("10:00-10:10", "Apertura y encuadre", "Dar la bienvenida, presentar el propósito y explicar la ruta de la jornada.", "Propósito y acuerdos claros."),
+            ("10:10-10:30", "Cambio climático y resiliencia comunitaria", "Compartir estrategias y experiencias de adaptación local.", "Ideas clave y preguntas juveniles."),
+            ("10:30-10:50", "Sistemas de Información Geográfica", "Mostrar cómo los SIG apoyan el monitoreo y la prospección climática.", "Conexión entre datos y territorio."),
+            ("10:50-11:05", "Jóvenes de Ambiente - CAM", "Presentar la estrategia y oportunidades de participación ambiental juvenil.", "Rutas posibles de vinculación."),
+            ("11:05-11:15", "Diálogo con personas expertas", "Recoger preguntas y conectar los tres aportes con San Adolfo y Acevedo.", "Preguntas priorizadas."),
+            ("11:15-11:25", "Pausa y alistamiento", "Descanso breve y preparación técnica del simulador.", "Sala reorganizada por grupos."),
+            ("11:25-11:40", "Frontera cafetera y Café 2035", "Explicar la expansión estimada 2026-2035, la línea temporal y sus límites.", "Comprensión básica del escenario."),
+            ("11:40-12:10", "Exploración guiada", "Comparar 2026, 2030 y 2035 por grupos.", "Ficha de hallazgos y preguntas."),
+            ("12:10-12:30", "Lectura de impactos", "Relacionar cambios con agua, suelo, biodiversidad, clima y vida comunitaria.", "Prioridad territorial por grupo."),
+            ("12:30-12:50", "Laboratorio de acción", "Diseñar una respuesta juvenil viable y verificable.", "Propuesta de acción territorial."),
+            ("12:50-1:00", "Compromisos y cierre", "Compartir próximos pasos y recoger una evaluación rápida.", "Compromisos y evaluación de salida."),
         ],
-        [1050, 2050, 3200, 3060],
+        [1300, 2250, 3000, 2810],
         header_fill=GREEN_LIGHT,
         alignments=[WD_ALIGN_PARAGRAPH.CENTER, WD_ALIGN_PARAGRAPH.LEFT, WD_ALIGN_PARAGRAPH.LEFT, WD_ALIGN_PARAGRAPH.LEFT],
     )
 
     add_heading(document, "9. Desarrollo metodológico", 1)
-    add_heading(document, "Momento 1. Bienvenida y acuerdos | 15 minutos", 2)
+    add_heading(document, "Momento 1. Apertura y encuadre | 10 minutos", 2)
     add_body(document, "Propósito: establecer un ambiente participativo, seguro y orientado a la acción.", bold_prefix="Propósito:")
     decimal_id = create_numbering_instance(document, decimal_abstract_id)
     for item in [
-        "Recibir a las y los participantes y explicar brevemente por qué se convoca el espacio.",
-        "Presentar el objetivo y aclarar que no se evaluarán conocimientos técnicos previos.",
-        "Construir tres acuerdos: escuchar sin descalificar, relacionar las ideas con el territorio y cuidar el tiempo de intervención.",
-        "Aplicar una pregunta de entrada: ¿qué palabra describe hoy la relación entre juventud y territorio en el sur del Huila?",
+        "Dar la bienvenida en nombre de la Cátedra Social Solidaria y reconocer a las entidades y personas invitadas.",
+        "Presentar el tema central: liderazgo juvenil para la resiliencia climática, la innovación y el cuidado del ecosistema.",
+        "Explicar la ruta de 10:00 a. m. a 1:00 p. m. y acordar intervenciones breves, escucha respetuosa y relación con el territorio.",
+        "Plantear una pregunta de entrada: ¿qué cambio ambiental preocupa u ofrece una oportunidad en San Adolfo y Acevedo?",
     ]:
         add_numbered(document, item, decimal_id)
     add_callout(document, "CLAVE DE FACILITACIÓN", "Registrar las palabras iniciales para retomarlas en el cierre y mostrar cómo cambió la conversación.", fill=GOLD_LIGHT, accent="8A651B")
 
-    add_heading(document, "Momento 2. El territorio que cambia | 20 minutos", 2)
-    add_body(document, "Propósito: conectar la discusión climática con señales observadas en la vida cotidiana.", bold_prefix="Propósito:")
+    add_heading(document, "Momento 2. Conversación experta, diálogo y pausa técnica | 75 minutos", 2)
+    add_body(document, "Propósito: ofrecer un marco común y conectarlo con preguntas y experiencias juveniles del territorio.", bold_prefix="Propósito:")
     decimal_id = create_numbering_instance(document, decimal_abstract_id)
     for item in [
-        "Ubicar un mapa impreso o dibujado del sur del Huila en una pared o mesa.",
-        "Entregar notas adhesivas de dos colores: uno para cambios preocupantes y otro para respuestas u oportunidades existentes.",
-        "Pedir que cada participante ubique una observación relacionada con lluvias, calor, agua, cultivos, bosques, suelos o movilidad.",
-        "Agrupar observaciones repetidas y preguntar qué efectos tienen sobre jóvenes, familias y comunidades.",
+        "10:10-10:30. Desarrollar el aporte sobre cambio climático, resiliencia comunitaria y estrategias de adaptación local.",
+        "10:30-10:50. Presentar el uso de los Sistemas de Información Geográfica para monitoreo y prospección climática.",
+        "10:50-11:05. Presentar la estrategia Jóvenes de Ambiente de la CAM y sus posibilidades de vinculación.",
+        "11:05-11:15. Recoger preguntas juveniles y pedir que las personas expertas relacionen sus respuestas con San Adolfo y Acevedo.",
+        "11:15-11:25. Realizar una pausa breve mientras el apoyo técnico abre el simulador y organiza los grupos.",
     ]:
         add_numbered(document, item, decimal_id)
-    add_body(document, "Preguntas orientadoras: ¿qué cambios se perciben desde hace algunos años?, ¿quiénes resultan más afectados?, ¿qué prácticas locales ya ayudan a responder?")
+    add_body(document, "Coordinación necesaria: confirmar antes de iniciar qué persona desarrolla cada tema y quién controla el tiempo. Los nombres del cartel no indican esta asignación.")
 
     add_heading(document, "Momento 3. Claves para leer Café 2035 | 15 minutos", 2)
     add_body(document, "Propósito: dar a todas las personas una base común para interpretar el simulador.", bold_prefix="Propósito:")
@@ -728,7 +739,7 @@ def build_document():
         add_numbered(document, item, decimal_id)
     add_body(document, "Preguntas orientadoras: ¿dónde aparecen continuidades, expansiones o pérdidas?, ¿qué indicador cambia más?, ¿qué relación puede existir entre varios indicadores?, ¿qué no permite saber el simulador?")
 
-    add_heading(document, "Momento 5. Lectura de impactos | 30 minutos", 2)
+    add_heading(document, "Momento 5. Lectura de impactos | 20 minutos", 2)
     add_body(document, "Cada grupo selecciona un foco —agua, suelo, biodiversidad, resiliencia climática o emisiones— y responde:")
     for item in [
         "¿Qué cambio muestra el escenario?",
@@ -738,7 +749,7 @@ def build_document():
     ]:
         add_bullet(document, item, bullet_id)
 
-    add_heading(document, "Momento 6. Laboratorio de acción | 30 minutos", 2)
+    add_heading(document, "Momento 6. Laboratorio de acción | 20 minutos", 2)
     add_body(document, "Propósito: convertir un hallazgo en una intervención juvenil concreta y verificable.", bold_prefix="Propósito:")
     add_body(document, "Cada grupo diseña una propuesta utilizando la siguiente fórmula:")
     add_callout(document, "FÓRMULA DE ACCIÓN", "Ante [problema o riesgo], jóvenes de [territorio] realizarán [acción concreta] con [aliados], comenzando por [primer paso] y verificando el avance mediante [indicador sencillo].", fill=GREEN_LIGHT, accent=GREEN)
@@ -750,14 +761,13 @@ def build_document():
     ]:
         add_bullet(document, item, bullet_id)
 
-    add_heading(document, "Momento 7. Galería, compromisos y cierre | 25 minutos", 2)
+    add_heading(document, "Momento 7. Compromisos y cierre | 10 minutos", 2)
     decimal_id = create_numbering_instance(document, decimal_abstract_id)
     for item in [
-        "Exponer las propuestas en formato galería; cada vocería dispone de dos minutos.",
-        "Entregar a cada participante dos marcas de retroalimentación: una para la propuesta más viable y otra para la de mayor impacto territorial.",
-        "Solicitar a cada grupo que defina un próximo paso, una persona enlace y una fecha tentativa de seguimiento.",
+        "Dar a cada grupo un minuto para compartir problema, acción y aliado principal.",
+        "Solicitar un próximo paso, una persona enlace y una fecha tentativa de seguimiento.",
         "Cerrar con la pregunta: ¿qué idea me llevo y qué acción sí puedo empezar desde mi lugar?",
-        "Aplicar la evaluación rápida de salida.",
+        "Aplicar una evaluación de salida muy breve y agradecer la participación.",
     ]:
         add_numbered(document, item, decimal_id)
 
@@ -766,7 +776,8 @@ def build_document():
         document,
         ["Rol", "Antes de la actividad", "Durante y después"],
         [
-            ("Coordinación general", "Define alcance, convocatoria, lugar y aliados; valida mensajes institucionales.", "Abre y cierra la jornada; acuerda seguimiento y custodia los productos."),
+            ("Coordinación general", "Confirma orden, tema y tiempo de las intervenciones; valida mensajes institucionales.", "Abre y cierra la jornada; protege el cronograma y acuerda seguimiento."),
+            ("Personas expertas", "Preparan aportes breves y coordinan ejemplos relacionados con el territorio.", "Desarrollan los temas acordados, responden preguntas y conectan sus aportes con la acción juvenil."),
             ("Facilitación principal", "Adapta la metodología y prepara preguntas.", "Conduce tiempos, conversaciones y transiciones; garantiza participación equilibrada."),
             ("Apoyo técnico", "Prueba computador, proyector, conectividad y respaldo local del simulador.", "Opera o apoya el simulador y resuelve incidentes sin interrumpir la metodología."),
             ("Relatoría y logística", "Prepara materiales, registro y formatos de consentimiento.", "Documenta hallazgos, recoge fichas, aplica evaluación y organiza evidencias."),
@@ -784,6 +795,7 @@ def build_document():
         "Mapa impreso o dibujado del sur del Huila.",
         "Notas adhesivas de dos colores, marcadores, cinta y papel tamaño pliego.",
         "Una ficha de trabajo por grupo y formatos de evaluación de salida.",
+        "Una copia impresa de la guía operativa para coordinación, facilitación y apoyo técnico.",
         "Agua y condiciones básicas de bienestar; espacio para pausa activa.",
         "Autorizaciones para fotografías o testimonios cuando corresponda.",
     ]
@@ -808,6 +820,7 @@ def build_document():
         [
             ("Falla de internet", "Abrir y probar el respaldo local antes de iniciar.", "Continuar con la cartografía e indicadores esenciales sin teselas externas.", "Apoyo técnico"),
             ("Falla de energía o proyección", "Llevar extensiones, adaptadores y capturas impresas de tres momentos.", "Trabajar con las láminas 2026, 2030 y 2035 y mantener la misma guía de preguntas.", "Coordinación / apoyo técnico"),
+            ("Intervenciones más largas de lo previsto", "Acordar una señal de tiempo y avisos a 5 y 1 minuto.", "Reducir preguntas plenarias y conservar al menos 60 minutos para simulador, acción y cierre.", "Coordinación / facilitación"),
             ("Discusión dominada por pocas voces", "Definir roles y tiempos de intervención.", "Usar ronda breve, escritura individual y vocerías rotativas.", "Facilitación"),
             ("Interpretación del escenario como predicción exacta", "Repetir el mensaje metodológico en la introducción.", "Diferenciar en un tablero: estimación, observación y pregunta por verificar.", "Facilitación"),
             ("Propuestas demasiado amplias", "Presentar criterios de plazo, aliado y evidencia.", "Reducir la idea a un primer paso realizable en tres meses.", "Facilitación / enlace"),
