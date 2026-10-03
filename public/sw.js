@@ -1,4 +1,4 @@
-const CACHE_NAME = 'cafe-2035-huila-v2';
+const CACHE_NAME = 'cafe-2035-huila-v3';
 const BASE_PATH = new URL(self.registration.scope).pathname.replace(/\/$/, '');
 const atSite = (path) => `${BASE_PATH}${path}`;
 const ESSENTIAL = [
@@ -10,6 +10,7 @@ const ESSENTIAL = [
   '/data/huila-areas-protegidas.geojson',
   '/data/huila-cauces-osm.geojson',
   '/data/cafe-frontier.geojson',
+  '/data/frontier-surface.json',
   '/data/simulation-snapshots.json',
   '/data/model-manifest.json',
 ].map(atSite);

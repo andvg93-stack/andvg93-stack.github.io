@@ -28,6 +28,16 @@ RUNAP es una exclusión dura. La capa UPRA de aptitud cafetera figuraba como “
 
 Todos los índices se limitan a 0–100 y se rotulan en pantalla como “índice didáctico estimado”.
 
+### Representación territorial continua (octubre de 2026)
+
+`npm run data:surface` genera `public/data/frontier-surface.json` a partir de los 292 elementos originales, los municipios IGAC y las áreas RUNAP. Es un producto exclusivamente visual: no modifica `cafe-frontier.geojson`, las hectáreas del modelo ni los 120 cortes de indicadores.
+
+La malla utiliza un paso de 0,0018 grados y crecimiento contiguo de coste determinista. Su textura espacial es sintética, no procede de un modelo de elevaciones ni de coberturas observadas. Los núcleos próximos del mismo municipio pueden compartir borde; una expansión con un núcleo previo a más de 2 km de su centro de referencia se representa como isla. La distancia usa la aproximación 111 km/grado; no equivale a una medición predial. Las hectáreas orientan el tamaño de los parches, pero la discretización, el suavizado y las exclusiones hacen que su área dibujada no sea un cálculo métrico exacto.
+
+Las celdas se incorporan progresivamente durante el mes anterior a su fecha de entrada; el retiro progresa desde el borde hacia el interior. Los contornos se extraen de la malla, compartiendo las fronteras entre celdas, sin filtros de desenfoque o turbulencia. Se conserva un contorno discontinuo de la huella inicial. El relleno ámbar representa expansión; el violeta tramado representa retiro o pérdida de aptitud, sin inferir que todos los retiros son climáticos. El tiempo determina completamente la geometría y la pausa la congela. Una máscara gráfica final excluye RUNAP incluso al suavizar los bordes.
+
+El desplazamiento transforma píxeles de pantalla a unidades del SVG usando su escala real (`preserveAspectRatio`). Al soltar, esa misma conversión se aplica al centro del mapa para evitar desapariciones o saltos. La prueba de arrastre compara posiciones en pantalla antes, durante y después del gesto, también con zoom y en formato móvil.
+
 ## Fuentes y atribución
 
 | Fuente | Uso | Atribución/licencia |
@@ -54,4 +64,3 @@ La aplicación redistribuye resultados derivados y geometrías simplificadas con
 ## Pruebas
 
 Las pruebas verifican tendencia robusta, clasificación de aptitud, activación y retiro, interpolación, límites 0–100, 37 municipios, 120 meses y paquete inferior a 8 MB. Playwright verifica reproducción/pausa, selección temporal, teclado, reinicio, sincronización, bloqueo de solicitudes externas y vistas 1440×900, 1024×768 y 390×844.
-

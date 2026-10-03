@@ -21,7 +21,7 @@ export function Timeline({ playhead, isPlaying, onToggle, onSeek, onPause }: Tim
     <section className="timeline-card" aria-label="Control temporal del escenario">
       <div className="timeline-card__topline">
         <div>
-          <span className="timeline-kicker">Evolución de la frontera cafetera</span>
+          <span className="timeline-kicker">Cambios de la frontera · referencia 2026</span>
           <output className="timeline-date" data-testid="timeline-date" aria-live="polite">
             {monthLabel(month)}
           </output>
@@ -70,4 +70,3 @@ export function Timeline({ playhead, isPlaying, onToggle, onSeek, onPause }: Tim
     </section>
   );
 }
-

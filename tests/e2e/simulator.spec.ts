@@ -4,6 +4,7 @@ async function openLocal(page: Page) {
   await page.goto('/?basemap=local');
   await expect(page.getByTestId('timeline-slider')).toBeVisible();
   await expect(page.getByTestId('local-territory-map')).toBeVisible();
+  await expect(page.getByTestId('active-surface')).toHaveAttribute('d', /^M/);
 }
 
 async function hoverMunicipality(page: Page, municipality: string) {
@@ -84,49 +85,70 @@ test('funciona con todas las solicitudes externas bloqueadas', async ({ page }) 
   await expect(page.getByRole('img', { name: /Mapa vectorial local del Huila/ })).toBeVisible();
 });
 
-test('desplaza el mapa móvil con una sola transformación por cuadro', async ({ page }) => {
-  await page.setViewportSize({ width: 390, height: 844 });
+for (const viewport of [{ width: 1440, height: 900 }, { width: 390, height: 844 }]) {
+  test(`el mapa sigue el arrastre sin desaparecer a ${viewport.width}px`, async ({ page }) => {
+    await page.setViewportSize(viewport);
+    await openLocal(page);
+    const map = page.getByRole('img', { name: /Mapa vectorial local del Huila/ });
+    const point = async () => map.evaluate((svg) => {
+      const marker = svg.querySelector('[data-municipality="Pitalito"]')!;
+      const p = new DOMPoint(Number(marker.getAttribute('data-hit-x')), Number(marker.getAttribute('data-hit-y')));
+      const ctm = svg.querySelector<SVGGElement>('.svg-map-content')!.getScreenCTM()!;
+      const pos = p.matrixTransform(ctm);
+      return { x: pos.x, y: pos.y };
+    });
+    const bounds = await map.boundingBox();
+    const initialView = await map.getAttribute('viewBox');
+    const start = { x: bounds!.x + bounds!.width * 0.42, y: bounds!.y + bounds!.height * 0.45 };
+    const before = await point();
+    await page.mouse.move(start.x, start.y);
+    await page.mouse.down();
+    await page.mouse.move(start.x + 60, start.y + 35, { steps: 12 });
+    await page.evaluate(() => new Promise(requestAnimationFrame));
+    const during = await point();
+    expect(during.x - before.x).toBeCloseTo(60, 0);
+    expect(during.y - before.y).toBeCloseTo(35, 0);
+    await page.screenshot({ path: `outputs/playwright/drag-${viewport.width}.png` });
+    await page.mouse.up();
+    const after = await point();
+    expect(after.x).toBeCloseTo(during.x, 0);
+    expect(after.y).toBeCloseTo(during.y, 0);
+    await expect(map).not.toHaveAttribute('viewBox', initialView!);
+    await expect(page.locator('.svg-map-content')).not.toHaveAttribute('transform');
+    await page.getByRole('button', { name: 'Restablecer vista del Huila' }).click();
+    await expect(map).toHaveAttribute('viewBox', initialView!);
+    await page.getByRole('button', { name: 'Acercar mapa', exact: true }).click();
+    const zoomed = await point();
+    await page.mouse.move(start.x, start.y);
+    await page.mouse.down();
+    await page.mouse.move(start.x - 30, start.y + 20, { steps: 8 });
+    await page.mouse.up();
+    const moved = await point();
+    expect(moved.x - zoomed.x).toBeCloseTo(-30, 0);
+    expect(moved.y - zoomed.y).toBeCloseTo(20, 0);
+    await hoverMunicipality(page, 'Pitalito');
+    await expect(page.locator('.local-map-tooltip strong')).toHaveText('Pitalito');
+  });
+}
+
+test('gesto táctil real desplaza el mapa y se recupera al cancelar', async ({ browser }) => {
+  const context = await browser.newContext({ viewport: { width: 390, height: 844 }, hasTouch: true, isMobile: true });
+  const page = await context.newPage();
   await openLocal(page);
   const map = page.getByRole('img', { name: /Mapa vectorial local del Huila/ });
-  const content = page.locator('.svg-map-content');
   const box = await map.boundingBox();
-  expect(box).not.toBeNull();
-  const startX = box!.x + box!.width * 0.55;
-  const startY = box!.y + box!.height * 0.42;
-  const initialViewBox = await map.getAttribute('viewBox');
-
-  await map.dispatchEvent('pointerdown', {
-    bubbles: true,
-    clientX: startX,
-    clientY: startY,
-    pointerId: 7,
-    pointerType: 'touch',
-  });
-  for (let step = 1; step <= 12; step += 1) {
-    await map.dispatchEvent('pointermove', {
-      bubbles: true,
-      clientX: startX + step * 4,
-      clientY: startY + step * 2,
-      pointerId: 7,
-      pointerType: 'touch',
-    });
-  }
-  await page.evaluate(() => new Promise(requestAnimationFrame));
-
-  await expect(map).toHaveAttribute('viewBox', initialViewBox ?? '');
-  await expect(content).toHaveClass(/is-panning/);
-  expect(await content.evaluate((element) => (element as SVGGElement).style.transform)).toContain('translate');
-
-  await map.dispatchEvent('pointerup', {
-    bubbles: true,
-    clientX: startX + 48,
-    clientY: startY + 24,
-    pointerId: 7,
-    pointerType: 'touch',
-  });
-  await expect(map).not.toHaveAttribute('viewBox', initialViewBox ?? '');
-  await expect(content).not.toHaveClass(/is-panning/);
-  expect(await content.evaluate((element) => (element as SVGGElement).style.transform)).toBe('');
+  const initial = await map.getAttribute('viewBox');
+  const client = await context.newCDPSession(page);
+  const x = box!.x + box!.width * 0.4, y = box!.y + box!.height * 0.5;
+  await client.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: [{ x, y }] });
+  await client.send('Input.dispatchTouchEvent', { type: 'touchMove', touchPoints: [{ x: x + 45, y: y + 25 }] });
+  await client.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] });
+  await expect(map).not.toHaveAttribute('viewBox', initial!);
+  await expect(page.locator('.svg-map-content')).not.toHaveAttribute('transform');
+  await client.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: [{ x, y }] });
+  await client.send('Input.dispatchTouchEvent', { type: 'touchCancel', touchPoints: [] });
+  await expect(page.locator('.svg-map-content')).not.toHaveClass(/is-panning/);
+  await context.close();
 });
 
 test('muestra los cauces y rotula los ríos principales', async ({ page }) => {
@@ -138,17 +160,17 @@ test('muestra los cauces y rotula los ríos principales', async ({ page }) => {
   await expect(waterways.first()).toHaveCSS('stroke-width', '1.55px');
 });
 
-test('agrupa la frontera en tres blobs orgánicos sin mostrar círculos individuales', async ({ page }) => {
+test('distingue superficies continuas de expansión y retiro sin filtros costosos', async ({ page }) => {
   await openLocal(page);
+  await expect(page.getByTestId('expansion-surface')).toHaveAttribute('d', '');
+  await expect(page.getByTestId('retired-surface')).toHaveAttribute('d', '');
   await page.getByTestId('timeline-slider').press('End');
-  await expect(page.getByTestId('coffee-blob-layer')).toBeVisible();
-  await expect(page.getByTestId('active-blob')).toHaveAttribute('filter', 'url(#coffee-active-blob)');
-  await expect(page.getByTestId('expansion-blob')).toHaveAttribute('filter', 'url(#coffee-expansion-blob)');
-  await expect(page.getByTestId('retired-blob')).toHaveAttribute('filter', 'url(#coffee-retired-blob)');
-  await expect(page.locator('filter[id^="coffee-"][id$="-blob"]')).toHaveCount(3);
-  await expect(page.getByTestId('frontier-hit-layer')).toHaveCount(0);
-  expect(await page.locator('.svg-frontier--initial, .svg-frontier--expansion, .svg-frontier--retired').count()).toBe(0);
-  expect(await page.getByTestId('active-blob').locator('[data-connected-to]').count()).toBeGreaterThan(0);
+  for (const id of ['active-surface', 'expansion-surface', 'retired-surface']) {
+    await expect(page.getByTestId(id)).toHaveAttribute('d', /^M/);
+  }
+  await expect(page.locator('feGaussianBlur, feTurbulence, .blob-connection')).toHaveCount(0);
+  await expect(page.getByTestId('retired-surface')).toHaveCSS('fill', /retirement-hatch/);
+  await expect(page.locator('.surface-baseline')).toHaveAttribute('d', /^M/);
 });
 
 test('mantiene los detalles territoriales sobre las geometrías agrupadas', async ({ page }) => {
@@ -178,23 +200,23 @@ test('la geometría evoluciona de forma continua y se congela al pausar', async 
   await openLocal(page);
   const slider = page.getByTestId('timeline-slider');
   const blobs = page.getByTestId('coffee-blob-layer');
-  await slider.fill('14');
+  await slider.fill('15');
   await page.getByTestId('play-toggle').click();
   await page.waitForTimeout(70);
   const firstMonth = Number(await blobs.getAttribute('data-visual-month'));
-  const firstRoughness = await blobs.getAttribute('data-roughness');
+  const firstRoughness = await page.getByTestId('expansion-surface').getAttribute('d');
   await page.waitForTimeout(130);
   const secondMonth = Number(await blobs.getAttribute('data-visual-month'));
-  const secondRoughness = await blobs.getAttribute('data-roughness');
+  const secondRoughness = await page.getByTestId('expansion-surface').getAttribute('d');
   expect(secondMonth).toBeGreaterThan(firstMonth);
   expect(secondRoughness).not.toBe(firstRoughness);
 
   await page.getByTestId('play-toggle').click();
   const pausedMonth = await blobs.getAttribute('data-visual-month');
-  const pausedRoughness = await blobs.getAttribute('data-roughness');
+  const pausedRoughness = await blobs.innerHTML();
   await page.waitForTimeout(350);
   await expect(blobs).toHaveAttribute('data-visual-month', pausedMonth ?? '');
-  await expect(blobs).toHaveAttribute('data-roughness', pausedRoughness ?? '');
+  expect(await blobs.innerHTML()).toBe(pausedRoughness);
 });
 
 test('volver a una fecha reconstruye exactamente el mismo estado orgánico', async ({ page }) => {
@@ -204,15 +226,13 @@ test('volver a una fecha reconstruye exactamente el mismo estado orgánico', asy
   await slider.fill('60');
   const initialState = await blobs.evaluate((element) => ({
     month: element.getAttribute('data-visual-month'),
-    roughness: element.getAttribute('data-roughness'),
-    progress: Array.from(element.querySelectorAll('[data-progress]')).map((node) => node.getAttribute('data-progress')),
+    paths: Array.from(element.querySelectorAll('path')).map((node) => node.getAttribute('d')),
   }));
   await slider.fill('30');
   await slider.fill('60');
   const reconstructedState = await blobs.evaluate((element) => ({
     month: element.getAttribute('data-visual-month'),
-    roughness: element.getAttribute('data-roughness'),
-    progress: Array.from(element.querySelectorAll('[data-progress]')).map((node) => node.getAttribute('data-progress')),
+    paths: Array.from(element.querySelectorAll('path')).map((node) => node.getAttribute('d')),
   }));
   expect(reconstructedState).toEqual(initialState);
 });

@@ -83,6 +83,24 @@ export function HealthPanel({
         <span className="panel-score">{Math.round((snapshot.waterIndex + snapshot.soilIndex + snapshot.biodiversityIndex + snapshot.resilienceIndex) / 4)}</span>
       </div>
 
+      <div className="territory-balance">
+        <div>
+          <span>Huella cafetera</span>
+          <strong>{formatHectares(snapshot.areaHa)} ha</strong>
+          <small>{snapshot.coffeeAreaDeltaPercent >= 0 ? '+' : ''}{snapshot.coffeeAreaDeltaPercent.toFixed(1)}% vs. 2026</small>
+        </div>
+        <div>
+          <span>Expansión</span>
+          <strong>+{formatHectares(snapshot.expansionHa)} ha</strong>
+          <small>desde enero de 2026</small>
+        </div>
+        <div>
+          <span>Retiro</span>
+          <strong>−{formatHectares(snapshot.retiredHa)} ha</strong>
+          <small>pérdida o desplazamiento</small>
+        </div>
+      </div>
+
       <div className="co2-card" data-testid="metric-co2">
         <div className="co2-card__icon"><Cloudy aria-hidden="true" /></div>
         <div>
@@ -96,24 +114,6 @@ export function HealthPanel({
         {METRICS.map((metric) => (
           <MetricRow key={metric.key} metric={metric} snapshot={snapshot} snapshots={snapshots} />
         ))}
-      </div>
-
-      <div className="territory-balance">
-        <div>
-          <span>Huella cafetera</span>
-          <strong>{formatHectares(snapshot.areaHa)} ha</strong>
-          <small>{snapshot.coffeeAreaDeltaPercent >= 0 ? '+' : ''}{snapshot.coffeeAreaDeltaPercent.toFixed(1)}% vs. 2026</small>
-        </div>
-        <div>
-          <span>Expansión visible</span>
-          <strong>+{formatHectares(snapshot.expansionHa)} ha</strong>
-          <small>incorporación acumulada</small>
-        </div>
-        <div>
-          <span>Retiro</span>
-          <strong>−{formatHectares(snapshot.retiredHa)} ha</strong>
-          <small>pérdida o desplazamiento</small>
-        </div>
       </div>
 
       <div className="insight-card">

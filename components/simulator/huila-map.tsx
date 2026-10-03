@@ -445,10 +445,9 @@ export function HuilaMap({ month }: { month: number }) {
           <span>Huella estimada</span>
         </div>
         <span><i className="legend-swatch legend-swatch--coffee" /> Café inicial / persistente</span>
-        <span><i className="legend-swatch legend-swatch--expansion" /> Nueva expansión</span>
+        <span><i className="legend-swatch legend-swatch--expansion" /> Expansión desde 2026</span>
         <span><i className="legend-swatch legend-swatch--retired" /> Retiro o pérdida de aptitud</span>
-        <span><i className="legend-swatch legend-swatch--nature" /> Área protegida / natural</span>
-        <span><i className="legend-swatch legend-swatch--water" /> Cauces con nombre</span>
+        <span><i className="legend-swatch legend-swatch--nature" /> Área protegida</span>
       </div>
 
       <div className="south-focus-note">

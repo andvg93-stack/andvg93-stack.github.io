@@ -6,14 +6,11 @@ import type { Feature, FeatureCollection, GeoJsonProperties, Geometry } from 'ge
 
 import {
   buildFrontierVisuals,
-  descriptorTransform,
-  interpolatePoint,
-  roughnessForMonth,
-  visualScale,
   visualWeights,
   type FrontierVisualDescriptor,
 } from '@/lib/simulation/frontier-visuals';
 import type { FrontierCollection, FrontierFeature } from '@/lib/simulation/types';
+import { prepareSurface, surfacePaths, type SurfaceData } from '@/lib/simulation/frontier-surface';
 import { sitePath } from '@/lib/site-path';
 
 const BASE_BOUNDS = {
@@ -51,6 +48,7 @@ interface TerritoryData {
   protectedAreas: FeatureCollection;
   waterways: FeatureCollection;
   frontier: FrontierCollection;
+  surface: SurfaceData;
 }
 
 interface HoverInfo {
@@ -74,71 +72,8 @@ interface DragState {
   centerY: number;
   viewWidth: number;
   viewHeight: number;
-  rectWidth: number;
-  rectHeight: number;
-}
-
-interface OrganicFilterProps {
-  id: string;
-  fill: string;
-  outline: string;
-  frequencyX: number;
-  frequencyY: number;
-  displacement: number;
-}
-
-function OrganicFilter({
-  id,
-  fill,
-  outline,
-  frequencyX,
-  frequencyY,
-  displacement,
-}: OrganicFilterProps) {
-  return (
-    <filter
-      id={id}
-      x={BASE_BOUNDS.minX - 0.18}
-      y={BASE_BOUNDS.minY - 0.18}
-      width={BASE_BOUNDS.width + 0.36}
-      height={BASE_BOUNDS.height + 0.36}
-      filterUnits="userSpaceOnUse"
-      primitiveUnits="userSpaceOnUse"
-      colorInterpolationFilters="sRGB"
-    >
-      <feGaussianBlur in="SourceGraphic" stdDeviation="0.0072" result="soft-field" />
-      <feColorMatrix
-        in="soft-field"
-        type="matrix"
-        values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 17 -6.2"
-        result="joined-field"
-      />
-      <feTurbulence
-        type="fractalNoise"
-        baseFrequency={`${frequencyX.toFixed(2)} ${frequencyY.toFixed(2)}`}
-        numOctaves="1"
-        seed="2035"
-        result="terrain-noise"
-      />
-      <feDisplacementMap
-        in="joined-field"
-        in2="terrain-noise"
-        scale={displacement}
-        xChannelSelector="R"
-        yChannelSelector="G"
-        result="rough-field"
-      />
-      <feMorphology in="rough-field" operator="dilate" radius="0.00155" result="outline-field" />
-      <feFlood floodColor={outline} result="outline-color" />
-      <feComposite in="outline-color" in2="outline-field" operator="in" result="outline-shape" />
-      <feFlood floodColor={fill} result="fill-color" />
-      <feComposite in="fill-color" in2="rough-field" operator="in" result="fill-shape" />
-      <feMerge>
-        <feMergeNode in="outline-shape" />
-        <feMergeNode in="fill-shape" />
-      </feMerge>
-    </filter>
-  );
+  pixelsPerUnit: number;
+  pointerId: number;
 }
 
 function ringPath(ring: number[][]) {
@@ -279,12 +214,6 @@ function useReducedMotion() {
   return reducedMotion;
 }
 
-function connectionPath(descriptor: FrontierVisualDescriptor, progress: number) {
-  if (!descriptor.connectsToParent || !descriptor.parentCentroid) return '';
-  const endpoint = interpolatePoint(descriptor.parentCentroid, descriptor.centroid, progress);
-  return `M${descriptor.parentCentroid.x},${descriptor.parentCentroid.y}L${endpoint.x},${endpoint.y}`;
-}
-
 function summarizeMunicipality(
   municipality: string,
   descriptors: FrontierVisualDescriptor[],
@@ -354,9 +283,10 @@ export function LocalTerritoryMap({ month }: { month: number }) {
       fetch(sitePath('/data/huila-areas-protegidas.geojson')).then((response) => response.json() as Promise<FeatureCollection>),
       fetch(sitePath('/data/huila-cauces-osm.geojson')).then((response) => response.json() as Promise<FeatureCollection>),
       fetch(sitePath('/data/cafe-frontier.geojson')).then((response) => response.json() as Promise<FrontierCollection>),
+      fetch(sitePath('/data/frontier-surface.json')).then((response) => response.json() as Promise<SurfaceData>),
     ])
-      .then(([municipalities, protectedAreas, waterways, frontier]) => {
-        if (!cancelled) setData({ municipalities, protectedAreas, waterways, frontier });
+      .then(([municipalities, protectedAreas, waterways, frontier, surface]) => {
+        if (!cancelled) setData({ municipalities, protectedAreas, waterways, frontier, surface });
       })
       .catch(() => {
         if (!cancelled) setData(null);
@@ -418,17 +348,9 @@ export function LocalTerritoryMap({ month }: { month: number }) {
     () => buildFrontierVisuals(data?.frontier.features ?? []),
     [data],
   );
-  const visualFeatures = useMemo(
-    () => descriptors.map((descriptor) => ({
-      descriptor,
-      weights: visualWeights(descriptor, visualMonth),
-    })),
-    [descriptors, visualMonth],
-  );
-  const frontierPaths = useMemo(() => new Map(descriptors.map((descriptor) => [
-    descriptor.feature.properties.id,
-    geometryPath(descriptor.feature.geometry),
-  ])), [descriptors]);
+  const surface = useMemo(() => data ? prepareSurface(data.surface) : null, [data]);
+  const paths = useMemo(() => surface ? surfacePaths(surface, visualMonth) : null, [surface, visualMonth]);
+  const baselinePath = useMemo(() => surface ? surfacePaths(surface, 0, true).persistent : '', [surface]);
   const summaryMonth = Math.round(visualMonth);
   const descriptorsByMunicipality = useMemo(() => {
     const grouped = new Map<string, FrontierVisualDescriptor[]>();
@@ -447,7 +369,7 @@ export function LocalTerritoryMap({ month }: { month: number }) {
     panFrameRef.current = null;
     const drag = dragRef.current;
     if (!drag || !contentRef.current) return;
-    contentRef.current.style.transform = `translate(${drag.latestX - drag.startX}px, ${drag.latestY - drag.startY}px)`;
+    contentRef.current.setAttribute('transform', `translate(${(drag.latestX - drag.startX) / drag.pixelsPerUnit} ${(drag.latestY - drag.startY) / drag.pixelsPerUnit})`);
   };
 
   const finishDrag = () => {
@@ -458,22 +380,24 @@ export function LocalTerritoryMap({ month }: { month: number }) {
       panFrameRef.current = null;
     }
     const nextCenter = {
-      x: drag.centerX - ((drag.latestX - drag.startX) / drag.rectWidth) * drag.viewWidth,
-      y: drag.centerY - ((drag.latestY - drag.startY) / drag.rectHeight) * drag.viewHeight,
+      x: drag.centerX - (drag.latestX - drag.startX) / drag.pixelsPerUnit,
+      y: drag.centerY - (drag.latestY - drag.startY) / drag.pixelsPerUnit,
     };
     const nextViewBox = `${nextCenter.x - drag.viewWidth / 2} ${nextCenter.y - drag.viewHeight / 2} ${drag.viewWidth} ${drag.viewHeight}`;
     svgRef.current?.setAttribute('viewBox', nextViewBox);
     if (contentRef.current) {
-      contentRef.current.style.transform = '';
+      contentRef.current.removeAttribute('transform');
       contentRef.current.classList.remove('is-panning');
     }
     dragRef.current = null;
+    if (svgRef.current?.hasPointerCapture(drag.pointerId)) svgRef.current.releasePointerCapture(drag.pointerId);
     setCenter(nextCenter);
   };
 
   const onPointerMove = (event: React.PointerEvent<SVGSVGElement>) => {
     const drag = dragRef.current;
     if (drag) {
+      if (event.pointerId !== drag.pointerId) return;
       drag.latestX = event.clientX;
       drag.latestY = event.clientY;
       if (panFrameRef.current === null) panFrameRef.current = requestAnimationFrame(applyPanTransform);
@@ -510,7 +434,6 @@ export function LocalTerritoryMap({ month }: { month: number }) {
       ...summary,
     });
   };
-  const roughness = roughnessForMonth(Math.round(visualMonth * 2) / 2);
 
   return (
     <div ref={shellRef} className="local-territory-map" data-testid="local-territory-map">
@@ -521,9 +444,11 @@ export function LocalTerritoryMap({ month }: { month: number }) {
           aria-label="Mapa vectorial local del Huila con municipios, áreas protegidas, cauces y huella cafetera"
           onWheel={(event) => {
             event.preventDefault();
+            if (dragRef.current) return;
             setZoomClamped(zoom * (event.deltaY < 0 ? 1.18 : 0.85));
           }}
           onPointerDown={(event) => {
+            if (dragRef.current || (event.pointerType === 'mouse' && event.button !== 0)) return;
             const rect = event.currentTarget.getBoundingClientRect();
             const width = BASE_BOUNDS.width / zoom;
             const height = BASE_BOUNDS.height / zoom;
@@ -537,15 +462,21 @@ export function LocalTerritoryMap({ month }: { month: number }) {
               centerY: center.y,
               viewWidth: width,
               viewHeight: height,
-              rectWidth: rect.width,
-              rectHeight: rect.height,
+              pixelsPerUnit: Math.min(rect.width / width, rect.height / height),
+              pointerId: event.pointerId,
             };
             contentRef.current?.classList.add('is-panning');
-            event.currentTarget.setPointerCapture(event.pointerId);
+            if (event.isTrusted) event.currentTarget.setPointerCapture(event.pointerId);
           }}
           onPointerMove={onPointerMove}
-          onPointerUp={finishDrag}
+          onPointerUp={(event) => {
+            if (dragRef.current?.pointerId !== event.pointerId) return;
+            dragRef.current.latestX = event.clientX;
+            dragRef.current.latestY = event.clientY;
+            finishDrag();
+          }}
           onPointerCancel={finishDrag}
+          onLostPointerCapture={finishDrag}
           onPointerLeave={() => setHover(null)}
         >
           <defs>
@@ -554,40 +485,14 @@ export function LocalTerritoryMap({ month }: { month: number }) {
                 <path key={shape.key} d={shape.d} />
               ))}
             </clipPath>
-            <pattern
-              id="expansion-hatch"
-              width="0.018"
-              height="0.018"
-              patternUnits="userSpaceOnUse"
-              patternTransform="rotate(35)"
-            >
-              <rect width="0.018" height="0.018" fill="#e96f51" />
-              <line x1="0" y1="0" x2="0" y2="0.018" stroke="#ffe1d7" strokeWidth="0.005" />
+            <mask id="coffee-allowed" maskUnits="userSpaceOnUse" x="-77" y="-5" width="4" height="5">
+              <rect x="-77" y="-5" width="4" height="5" fill="white" />
+              {protectedPaths.map((shape) => <path key={shape.key} d={shape.d} fill="black" />)}
+            </mask>
+            <pattern id="retirement-hatch" width="0.014" height="0.014" patternUnits="userSpaceOnUse" patternTransform="rotate(35)">
+              <rect width="0.014" height="0.014" fill="#ddd6e7" />
+              <path d="M0 0V0.014" stroke="#735989" strokeWidth="0.004" />
             </pattern>
-            <OrganicFilter
-              id="coffee-active-blob"
-              fill="#d79d31"
-              outline="#754d0b"
-              frequencyX={34}
-              frequencyY={29}
-              displacement={roughness.displacement}
-            />
-            <OrganicFilter
-              id="coffee-expansion-blob"
-              fill="#e96f51"
-              outline="#943b2b"
-              frequencyX={34}
-              frequencyY={29}
-              displacement={roughness.displacement}
-            />
-            <OrganicFilter
-              id="coffee-retired-blob"
-              fill="#737c77"
-              outline="#4d5651"
-              frequencyX={34}
-              frequencyY={29}
-              displacement={roughness.displacement}
-            />
           </defs>
           <g ref={contentRef} className="svg-map-content">
           <g className="svg-territory-base">
@@ -610,89 +515,11 @@ export function LocalTerritoryMap({ month }: { month: number }) {
               ))}
           </g>
 
-          <g
-            className="svg-blob-layer"
-            clipPath="url(#huila-mask)"
-            data-testid="coffee-blob-layer"
-            data-visual-month={visualMonth.toFixed(3)}
-            data-roughness={`${roughness.frequencyX.toFixed(3)}:${roughness.frequencyY.toFixed(3)}:${roughness.displacement.toFixed(5)}`}
-          >
-            <g className="svg-blob-source svg-blob-source--retired" filter="url(#coffee-retired-blob)" data-testid="retired-blob">
-              {visualFeatures
-                .filter(({ weights }) => weights.retired > 0.001)
-                .map(({ descriptor, weights }) => (
-                  <path
-                    key={descriptor.feature.properties.id}
-                    d={frontierPaths.get(descriptor.feature.properties.id)}
-                    transform={descriptorTransform(descriptor, weights.retired, 1, 1.38)}
-                    data-progress={weights.retired.toFixed(4)}
-                  />
-                ))}
-            </g>
-
-            <g className="svg-blob-source svg-blob-source--active" filter="url(#coffee-active-blob)" data-testid="active-blob">
-              {visualFeatures
-                .filter(({ weights }) => weights.active > 0.001)
-                .flatMap(({ descriptor, weights }) => {
-                  const connection = connectionPath(descriptor, weights.entry);
-                  const width = descriptor.radiusDegrees * 1.08 * visualScale(weights.active);
-                  return [
-                    connection ? (
-                      <path
-                        key={`${descriptor.feature.properties.id}-link`}
-                        className="blob-connection"
-                        d={connection}
-                        strokeWidth={width}
-                        data-connected-to={descriptor.parentId ?? undefined}
-                      />
-                    ) : null,
-                    <path
-                      key={descriptor.feature.properties.id}
-                      d={frontierPaths.get(descriptor.feature.properties.id)}
-                      transform={descriptorTransform(descriptor, weights.active, weights.entry, 1.42)}
-                      data-progress={weights.active.toFixed(4)}
-                    />,
-                  ];
-                })}
-            </g>
-
-            <g className="svg-blob-source svg-blob-source--expansion" filter="url(#coffee-expansion-blob)" data-testid="expansion-blob">
-              {visualFeatures
-                .filter(({ weights }) => weights.expansion > 0.001)
-                .flatMap(({ descriptor, weights }) => {
-                  const connection = connectionPath(descriptor, weights.entry);
-                  const width = descriptor.radiusDegrees * 0.92 * visualScale(weights.expansion);
-                  return [
-                    connection ? (
-                      <path
-                        key={`${descriptor.feature.properties.id}-expansion-link`}
-                        className="blob-connection"
-                        d={connection}
-                        strokeWidth={width}
-                      />
-                    ) : null,
-                    <path
-                      key={`${descriptor.feature.properties.id}-expansion`}
-                      d={frontierPaths.get(descriptor.feature.properties.id)}
-                      transform={descriptorTransform(descriptor, weights.expansion, weights.entry, 1.42)}
-                      data-progress={weights.expansion.toFixed(4)}
-                    />,
-                  ];
-                })}
-            </g>
-
-            <g className="svg-expansion-texture" aria-hidden="true">
-              {visualFeatures
-                .filter(({ weights }) => weights.expansion > 0.001)
-                .map(({ descriptor, weights }) => (
-                  <path
-                    key={`${descriptor.feature.properties.id}-texture`}
-                    d={frontierPaths.get(descriptor.feature.properties.id)}
-                    transform={descriptorTransform(descriptor, weights.expansion, weights.entry, 1.42)}
-                  />
-                ))}
-            </g>
-
+          <g className="svg-surface-layer" clipPath="url(#huila-mask)" mask="url(#coffee-allowed)" data-testid="coffee-blob-layer" data-visual-month={visualMonth.toFixed(3)}>
+            <path className="surface-persistent" data-testid="active-surface" d={paths?.persistent ?? ''} fillRule="evenodd" />
+            <path className="surface-expansion" data-testid="expansion-surface" d={paths?.expansion ?? ''} fillRule="evenodd" />
+            <path className="surface-retired" data-testid="retired-surface" d={paths?.retired ?? ''} fillRule="evenodd" />
+            <path className="surface-baseline" d={baselinePath} fillRule="evenodd" />
           </g>
 
           <g className="svg-waterways svg-waterways--casing" clipPath="url(#huila-mask)" aria-hidden="true">
@@ -751,6 +578,11 @@ export function LocalTerritoryMap({ month }: { month: number }) {
         <button type="button" onClick={() => setZoomClamped(zoom / 1.25)} aria-label="Alejar mapa">
           <Minus aria-hidden="true" />
         </button>
+        <button type="button" aria-label="Restablecer vista del Huila" onClick={() => {
+          finishDrag();
+          setZoom(1);
+          setCenter({ x: BASE_BOUNDS.minX + BASE_BOUNDS.width / 2, y: BASE_BOUNDS.minY + BASE_BOUNDS.height / 2 });
+        }}>⌖</button>
       </div>
 
       {hover && (

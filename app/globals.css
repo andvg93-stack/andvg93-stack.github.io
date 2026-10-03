@@ -281,22 +281,19 @@
 }
 
 .local-territory-map svg:active { cursor: grabbing; }
-.svg-map-content {
-  transform-box: view-box;
-  transform-origin: 0 0;
-}
-.svg-map-content.is-panning { will-change: transform; }
+.svg-map-content.is-panning { pointer-events: none; }
 .svg-territory-base path { fill: rgba(239, 233, 213, 0.84); stroke: #496a62; stroke-width: 0.0015; vector-effect: non-scaling-stroke; }
 .svg-protected path { fill: rgba(46, 107, 79, 0.54); stroke: #275d47; stroke-width: 0.0011; vector-effect: non-scaling-stroke; }
 .svg-focus-municipalities path { fill: rgba(241, 197, 91, 0.08); stroke: #173f3a; stroke-width: 0.0026; vector-effect: non-scaling-stroke; }
 .svg-waterways path { fill: none; stroke-linecap: round; stroke-linejoin: round; vector-effect: non-scaling-stroke; }
 .svg-waterways--casing path { stroke: rgba(244, 252, 252, 0.94); stroke-width: 3.6px; }
 .svg-waterways--main path { stroke: #197c9d; stroke-width: 1.55px; opacity: 0.96; }
-.svg-blob-source { pointer-events: none; }
-.svg-blob-source path { fill: #fff; stroke: none; }
-.svg-blob-source .blob-connection { fill: none; stroke: #fff; stroke-linecap: round; stroke-linejoin: round; }
-.svg-expansion-texture { opacity: 0.3; pointer-events: none; }
-.svg-expansion-texture path { fill: url('#expansion-hatch'); stroke: none; }
+.svg-surface-layer { pointer-events: none; }
+.svg-surface-layer path { vector-effect: non-scaling-stroke; stroke-linejoin: round; }
+.surface-persistent { fill: #d4b575; stroke: #907343; stroke-width: 0.55px; }
+.surface-expansion { fill: #f0a51c; stroke: #a65b06; stroke-width: 1.2px; }
+.surface-retired { fill: url('#retirement-hatch'); stroke: #725588; stroke-width: 0.8px; }
+.surface-baseline { fill: none; stroke: #6e624f; stroke-width: 0.6px; stroke-dasharray: 2 3; opacity: 0.5; }
 .svg-municipality-hit-layer {
   pointer-events: none;
 }
@@ -398,7 +395,7 @@
 .south-focus-note {
   position: absolute;
   z-index: 5;
-  top: 74px;
+  top: 118px;
   left: 14px;
   display: grid;
   grid-template-columns: auto 1fr;
@@ -488,9 +485,10 @@
   border: 1px solid rgba(20, 52, 48, 0.28);
 }
 
-.legend-swatch--coffee { background: #d79d31; }
-.legend-swatch--expansion { background: repeating-linear-gradient(135deg, #e96f51 0 3px, #f3b39f 3px 5px); }
-.legend-swatch--retired { background: #77817c; }
+.legend-swatch--coffee { background: #d4b575; }
+.legend-swatch--expansion { background: #f0a51c; border-color: #a65b06; }
+.legend-swatch--retired { background: repeating-linear-gradient(135deg, #ddd6e7 0 3px, #735989 3px 5px); }
+.legend-swatch--baseline { height: 0; border: 0; border-top: 1px dashed #6e624f; }
 .legend-swatch--nature { background: #518268; }
 .legend-swatch--water { height: 3px; border: 0; background: #69abc2; }
 
@@ -732,4 +730,32 @@
     animation-duration: 0.001ms !important;
     animation-iteration-count: 1 !important;
   }
+}
+
+/* Reserve a real timeline row so the south of Huila is never hidden beneath it. */
+.map-column { display: grid; grid-template-rows: minmax(0, 1fr) auto; }
+.map-shell { position: relative; min-height: 0; }
+.timeline-card { position: relative; bottom: auto; left: auto; width: 100%; transform: none; border-radius: 0; box-shadow: none; padding: 16px 22px; }
+.timeline-kicker { font-size: 12px; }
+.timeline-help { font-size: 12px; }
+.timeline-years { font-size: 11px; }
+.map-legend { font-size: 12px; width: 220px; gap: 8px; }
+.south-focus-note { pointer-events: none; }
+.territory-balance { grid-template-columns: 1fr 1fr; border-radius: 8px; overflow: hidden; }
+.territory-balance > div { display: block; padding: 10px; }
+.territory-balance > div:first-child { grid-column: 1 / -1; }
+.territory-balance strong { font-size: 16px; }
+.territory-balance > div:first-child strong { font-size: 25px; }
+.territory-balance span { font-size: 12px; }
+.territory-balance small { font-size: 11px; white-space: normal; }
+.territory-balance > div:nth-child(2) strong { color: #ffc15a; }
+.territory-balance > div:nth-child(3) strong { color: #d8bfe9; }
+.health-metric__label > span { font-size: 12px; }
+@media (max-width: 800px) {
+  .map-column { grid-template-rows: minmax(430px, 58svh) auto; }
+  .timeline-card { padding: 14px; }
+  .map-legend { width: 164px; gap: 6px; font-size: 10px; padding: 10px; top: 64px; }
+  .map-date-chip { left: 70px; transform: none; }
+  .map-date-chip span { display: none; }
+  .map-mode-badge { display: none; }
 }
