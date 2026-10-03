@@ -1,4 +1,4 @@
-const CACHE_NAME = 'cafe-2035-huila-v4';
+const CACHE_NAME = 'cafe-2035-huila-v5';
 const BASE_PATH = new URL(self.registration.scope).pathname.replace(/\/$/, '');
 const atSite = (path) => `${BASE_PATH}${path}`;
 const ESSENTIAL = [

@@ -82,10 +82,10 @@ test('abril y mayo de 2035 muestran el balance gradual recalculado', async ({ pa
   await openLocal(page);
   const slider = page.getByTestId('timeline-slider');
   await slider.fill('111');
-  await expect(page.locator('.territory-balance > div').first()).toContainText('153.923');
+  await expect(page.locator('.territory-balance > div').first()).toContainText('155.965');
   await slider.fill('112');
-  await expect(page.locator('.territory-balance > div').first()).toContainText('153.939');
-  await expect(page.locator('.territory-balance > div').nth(2)).toContainText('7.498');
+  await expect(page.locator('.territory-balance > div').first()).toContainText('155.996');
+  await expect(page.locator('.territory-balance > div').nth(2)).toContainText('14.400');
   await expect(page.getByTestId('timeline-date')).toContainText('mayo de 2035');
 });
 

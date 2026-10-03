@@ -21,10 +21,10 @@ RUNAP es una exclusión dura. La capa UPRA de aptitud cafetera figuraba como “
 ## Indicadores
 
 - **CO₂ equivalente:** suma de hectáreas incorporadas progresivamente × 96 t CO₂e/ha para la clase sintética natural o × 17 t CO₂e/ha para mosaico agropecuario, dividida por 1.000. Son factores didácticos de existencias; IPCC aporta la referencia conceptual, no una calibración regional de estos números. El porcentaje usa 5,2 millones de t CO₂e como referencia asumida, no un inventario observado.
-- **Fuentes hídricas:** 60 % conservación de condición ribereña y 40 % cambio relativo de demanda. Los factores regionales de 233,2 L/kg de demanda y 16,1 L/kg de consumo azul se conservan como referencia conceptual.
-- **Salud del suelo:** 45 % proporción de hectáreas activas fuera de pendiente fuerte sintética, 30 % fuera de carbono orgánico bajo sintético y 25 % condición sin conversión natural (`1 − conversión natural acumulada / (0,10 × área inicial)`).
-- **Biodiversidad:** `60 × R + 25 × P + 15 × C`. `R = 0,84 − 3,2 × conversión natural acumulada / área inicial`; `P = 1 − expansión acumulada próxima a RUNAP / (0,20 × área inicial)`; `C = 1 − conversión natural acumulada / (0,10 × área inicial)`. Cada componente se limita a 0–1. Las escalas 0,84, 3,2, 0,10, 0,20 y las ponderaciones son supuestos didácticos. No se usan inventarios biológicos ni núcleos naturales observados. Se sustituyó el cociente sobre la expansión del mes que hacía caer el índice con la primera incorporación mínima.
-- **Resiliencia climática:** 60 % proporción activa en aptitud alta/media, interpolada entre aptitud inicial y futura con el avance climático del escenario; 20 % índice hídrico y 20 % índice de suelo.
+- **Fuentes hídricas:** 60 % conservación de condición ribereña y 40 % cambio relativo de demanda. En 2.1 las dos presiones se multiplican por 2 para el ejercicio de aula: `ribera = 78 − 1.900 × conversión próxima a cauces / área inicial`; `demanda = 82 − 340 × aumento relativo de área`. Los factores regionales de 233,2 L/kg de demanda y 16,1 L/kg de consumo azul se conservan como referencia conceptual.
+- **Salud del suelo:** 45 % proporción de hectáreas activas fuera de pendiente fuerte sintética, 30 % fuera de carbono orgánico bajo sintético y 25 % condición sin conversión natural (`1 − conversión natural acumulada / (0,10 × área inicial)`). En 2.1 se resta adicionalmente `75 × expansión acumulada / área inicial` como presión didáctica por intensificación territorial.
+- **Biodiversidad:** `60 × R + 25 × P + 15 × C`. En 2.1 se moderan las tres presiones con un factor didáctico 0,35: `R = 0,84 − 0,35 × 3,2 × conversión natural acumulada / área inicial`; `P = 1 − 0,35 × expansión acumulada próxima a RUNAP / (0,20 × área inicial)`; `C = 1 − 0,35 × conversión natural acumulada / (0,10 × área inicial)`. Cada componente se limita a 0–1. Las escalas y ponderaciones son supuestos didácticos. No se usan inventarios biológicos ni núcleos naturales observados.
+- **Resiliencia climática:** 60 % proporción activa en aptitud alta/media, interpolada entre aptitud inicial y futura con el avance climático del escenario; 20 % índice hídrico y 20 % índice de suelo. En 2.1 se resta `6 × avance climático normalizado` como presión adicional didáctica, repartida en los 119 intervalos.
 
 Todos los índices se limitan a 0–100 y se rotulan en pantalla como “índice didáctico estimado”.
 
@@ -51,6 +51,23 @@ Las pruebas verifican el balance de todos los meses y municipios, el respeto a l
 El desplazamiento transforma píxeles de pantalla a unidades del SVG usando su escala real (`preserveAspectRatio`). Al soltar, esa misma conversión se aplica al centro del mapa para evitar desapariciones o saltos. La prueba de arrastre compara posiciones en pantalla antes, durante y después del gesto, también con zoom y en formato móvil.
 
 ## Fuentes y atribución
+
+### Calibración de aula 2.1.0
+
+Por solicitud del usuario se multiplica por 1,92 tanto la expansión como el retiro objetivo de la versión 2.0, conservando su proporción. Se mantienen las 292 ubicaciones, el área inicial y las ventanas progresivas. Para distribuir el mayor retiro sin superar el 100 % de una celda, se selecciona un número suficiente de celdas de riesgo. La nueva expansión es 19.798,5 ha, el retiro 15.294,6 ha y el área final 156.201,7 ha (+3,0 % respecto a 2026). La cifra cercana a 20.000 ha es una calibración pedagógica, no una estimación oficial incorporada desde una fuente nueva.
+
+Se interpretó “reducir el de biodiversidad” como moderar su caída respecto a la versión anterior. Se amplifican las sensibilidades de agua, suelo y resiliencia y se atenúa la de biodiversidad mediante los coeficientes descritos arriba. Estos ajustes no cambian las coberturas sintéticas ni incorporan mediciones ambientales.
+
+| Índice | Enero 2026 | Diciembre 2035 | Caída en puntos |
+|---|---:|---:|---:|
+| Agua | 79,6 | 64,3 | 15,3 |
+| Suelo | 88,9 | 72,3 | 16,6 |
+| Resiliencia | 91,4 | 77,6 | 13,8 |
+| Biodiversidad | 90,4 | 83,0 | 7,4 |
+
+El máximo neto mensual es 84,0 ha; el máximo de expansión, 206,2 ha; el de retiro, 167,4 ha. Los indicadores mantienen saltos máximos de 0,2 puntos. La mayor rotación territorial hizo que Isnos superara el control anual municipal del 3 % de la versión anterior: para este escenario ampliado el control se fija explícitamente en 5 %, manteniendo el límite mensual municipal de 0,5 % y los límites departamentales previos. Las pruebas conservan todos los meses y todos los municipios, además de verificar la proporción del ajuste y la mayor caída de agua/suelo/resiliencia frente a biodiversidad.
+
+Verificación 2.1: 23 pruebas de datos/modelo y TypeScript correctos; valores abril/mayo y congelación al pausar correctos. La primera medición de fluidez del navegador local registró 20,63 fps (fallo conservado en los resultados de prueba); la repetición aislada del mismo test superó 30 fps. La fluidez depende del equipo y su carga, por lo que esta repetición no garantiza un mínimo universal.
 
 | Fuente | Uso | Atribución/licencia |
 |---|---|---|

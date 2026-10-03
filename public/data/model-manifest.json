@@ -1,7 +1,7 @@
 {
   "model": "Café 2035 · Huila",
-  "version": "2.0.0",
-  "generatedAt": "2026-10-03T14:10:56.138Z",
+  "version": "2.1.0",
+  "generatedAt": "2026-10-03T14:23:42.405Z",
   "coordinateSystems": {
     "sourceAreaCalculations": "MAGNA-SIRGAS / Origen-Nacional (EPSG:9377), valores EVA municipales",
     "webDelivery": "WGS 84 / CRS84"
@@ -11,7 +11,14 @@
     "end": "2035-12-01",
     "climate": "SSP2-4.5, señal departamental didáctica interpolada",
     "timeSteps": 120,
-    "deterministic": true
+    "deterministic": true,
+    "didacticCalibration": {
+      "territorialScale": 1.92,
+      "waterPressureMultiplier": 2,
+      "soilExpansionPressure": 75,
+      "resilienceClimatePressure": 6,
+      "biodiversityPressureMultiplier": 0.35
+    }
   },
   "sources": [
     {
@@ -65,6 +72,7 @@
     }
   ],
   "assumptions": [
+    "Calibración didáctica 2.1: expansión y retiro ×1,92 respecto a la trayectoria 2.0; mayor sensibilidad de agua, suelo y resiliencia, y menor caída de biodiversidad. Son supuestos de aula solicitados, no nuevas mediciones ambientales.",
     "La huella inicial es una estimación espacial calibrada a hectáreas municipales EVA; no representa lotes cafeteros observados.",
     "Las celdas son unidades visuales agregadas: su geometría no equivale a las hectáreas indicadas en el tooltip.",
     "Las incorporaciones y retiros son fracciones progresivas de las celdas, repartidas a lo largo de 2026–2035 mediante 80 % de avance lineal y 20 % de smoothstep; no son observaciones mensuales.",
@@ -79,15 +87,15 @@
     "frontierFeatures": 292,
     "monthlySnapshots": 120,
     "baselineAreaHa": 151697.8,
-    "finalAreaHa": 154043.9,
+    "finalAreaHa": 156201.7,
     "expansionInsideRunap": 0,
-    "maxMonthlyNetChangeHa": 42.6,
-    "maxMonthlyExpansionHa": 107.4,
-    "maxMonthlyRetirementHa": 87.6,
+    "maxMonthlyNetChangeHa": 84,
+    "maxMonthlyExpansionHa": 206.2,
+    "maxMonthlyRetirementHa": 167.4,
     "maxMonthlyIndexChange": 0.2,
     "areaBalanceConsistent": true,
     "indicesWithinRange": true,
-    "visualSurfaceNodes": 39939
+    "visualSurfaceNodes": 41887
   },
   "files": [
     {
@@ -108,19 +116,19 @@
     },
     {
       "name": "cafe-frontier.geojson",
-      "sha256": "aa5c32f16b11b5eb259c51c20440f3780caa76470a3e09eccb3467ba3b415740"
+      "sha256": "fc10c069860769875bf72e29ca74a548cc019433f1eb0e98028d6d78602df1f6"
     },
     {
       "name": "simulation-snapshots.json",
-      "sha256": "4dd7c4906002b18faae3bec0943099ed43906ca085f10252d908210b1433aae5"
+      "sha256": "ea590934c21023821e8bba2cf447f7058cbe9c0510251cf61000ceb110214f6f"
     },
     {
       "name": "municipality-model.json",
-      "sha256": "ff1cfff83c27b8bd7956ac6f7eea4a2850eaad22c9e8badaab938b1b431bbb64"
+      "sha256": "1a65054eafb88a3f39640ec9a376d5d177044cb45112e02ca23703bc0d170f6b"
     },
     {
       "name": "frontier-surface.json",
-      "sha256": "261cebf222445621f3cb5c927a84147dd937670f220fede87c5d1c263f3ca0db"
+      "sha256": "411e31c49e931e0503b43c7291169d00fe3bf7fa65c96465bf6695550055e20c"
     }
   ]
 }

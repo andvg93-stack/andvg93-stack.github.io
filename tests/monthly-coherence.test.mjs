@@ -57,10 +57,26 @@ test('municipal end areas and retirement volumes respect their targets even with
       assert.ok(Math.abs(value - previous) / start < 0.005, `${municipality.municipality}, month ${month}`);
       if (month >= 12) {
         const past = local.reduce((v, f) => v + f.properties.hectares * frontierWeights(f.properties, month - 12).active, 0);
-        assert.ok(Math.abs(value - past) / start < 0.03, `${municipality.municipality}, year ${month}`);
+        // The requested 1.92× classroom scenario doubles territorial turnover.
+        // A municipality may exceed the former 3% yearly cap; retain a 5% cap.
+        assert.ok(Math.abs(value - past) / start < 0.05, `${municipality.municipality}, year ${month}`);
       }
       previous = value;
     }
+  }
+});
+
+test('classroom calibration increases territorial turnover and emphasizes water, soil and resilience', () => {
+  const initial = snapshots[0], final = snapshots.at(-1);
+  assert.ok(final.expansionHa > 19000 && final.expansionHa < 21000);
+  assert.ok(Math.abs(final.expansionHa / 10312.1 - 1.92) < 0.001);
+  assert.ok(Math.abs(final.retiredHa / 7966 - 1.92) < 0.001);
+  const bioDrop = initial.biodiversityIndex - final.biodiversityIndex;
+  assert.ok(bioDrop > 0 && bioDrop < 11);
+  for (const key of ['waterIndex', 'soilIndex', 'resilienceIndex']) {
+    const drop = initial[key] - final[key];
+    assert.ok(drop >= 12 && drop <= 20, key);
+    assert.ok(drop > bioDrop, key);
   }
 });
 

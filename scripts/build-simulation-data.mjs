@@ -3,6 +3,14 @@ import { createHash } from 'node:crypto';
 import { readFile, writeFile } from 'node:fs/promises';
 
 const DATA_DIR = new URL('../public/data/', import.meta.url);
+// Requested classroom calibration; these multipliers are not observations.
+const DIDACTIC = {
+  territorialScale: 1.92,
+  waterPressureMultiplier: 2,
+  soilExpansionPressure: 75,
+  resilienceClimatePressure: 6,
+  biodiversityPressureMultiplier: 0.35,
+};
 const FOCUS_MUNICIPALITIES = new Set([
   'Acevedo',
   'Elías',
@@ -237,9 +245,9 @@ function buildSnapshot(month, features, baselineArea) {
 
   const weightedShare = (predicate) => area ? sum(active, 'active', predicate) / area : 0;
 
-  const riparianScore = clamp(78 - (nearWaterConversion / baselineArea) * 950, 0, 100);
+  const riparianScore = clamp(78 - (nearWaterConversion / baselineArea) * 950 * DIDACTIC.waterPressureMultiplier, 0, 100);
   const demandGrowth = Math.max(0, area / baselineArea - 1);
-  const demandScore = clamp(82 - demandGrowth * 170, 0, 100);
+  const demandScore = clamp(82 - demandGrowth * 170 * DIDACTIC.waterPressureMultiplier, 0, 100);
   const waterIndex = clamp(0.6 * riparianScore + 0.4 * demandScore, 0, 100);
 
   const outsideSteep = weightedShare((feature) => !feature.properties.steepSlope);
@@ -248,15 +256,17 @@ function buildSnapshot(month, features, baselineArea) {
   // changing an entire index through a denominator equal to expansion alone.
   const noNaturalConversion = clamp(1 - convertedNatural / (baselineArea * 0.1), 0, 1);
   const soilIndex = clamp(
-    45 * outsideSteep + 30 * outsideLowSoc + 25 * noNaturalConversion,
+    45 * outsideSteep + 30 * outsideLowSoc + 25 * noNaturalConversion -
+      (expansionArea / baselineArea) * DIDACTIC.soilExpansionPressure,
     0,
     100,
   );
 
-  const naturalRetention = clamp(0.84 - (convertedNatural / baselineArea) * 3.2, 0, 1);
-  const distantFromProtected = clamp(1 - nearProtectedExpansion / (baselineArea * 0.2), 0, 1);
+  const naturalRetention = clamp(0.84 - (convertedNatural / baselineArea) * 3.2 * DIDACTIC.biodiversityPressureMultiplier, 0, 1);
+  const distantFromProtected = clamp(1 - nearProtectedExpansion / (baselineArea * 0.2) * DIDACTIC.biodiversityPressureMultiplier, 0, 1);
+  const biodiversityConversion = clamp(1 - convertedNatural / (baselineArea * 0.1) * DIDACTIC.biodiversityPressureMultiplier, 0, 1);
   const biodiversityIndex = clamp(
-    60 * naturalRetention + 25 * distantFromProtected + 15 * noNaturalConversion,
+    60 * naturalRetention + 25 * distantFromProtected + 15 * biodiversityConversion,
     0,
     100,
   );
@@ -269,7 +279,8 @@ function buildSnapshot(month, features, baselineArea) {
     return total + p.hectares * item.active * suitability;
   }, 0) / area : 0;
   const resilienceIndex = clamp(
-    60 * futureSuitable + 0.2 * waterIndex + 0.2 * soilIndex,
+    60 * futureSuitable + 0.2 * waterIndex + 0.2 * soilIndex -
+      DIDACTIC.resilienceClimatePressure * climateProgress,
     0,
     100,
   );
@@ -329,7 +340,7 @@ for (const municipality of municipalities.features) {
   const targetGrowth = clamp(annualRate * 2.2 + (focus ? 0.085 : 0.035) - climatePressure, -0.13, 0.16);
   const retirementFraction = clamp(Math.max(climatePressure * 0.8 + Math.max(0, -annualRate), -targetGrowth + 0.01), 0.025, 0.2);
   const initialCount = clamp(Math.round(baselineArea / 620), 2, 30);
-  const retirementCount = clamp(Math.ceil(initialCount * retirementFraction), 1, Math.max(1, initialCount - 1));
+  const retirementCount = clamp(Math.ceil(initialCount * retirementFraction * DIDACTIC.territorialScale), 1, initialCount);
   const expansionFraction = Math.max(0.035, targetGrowth + retirementFraction);
   const expansionCount = clamp(Math.ceil(initialCount * expansionFraction), 1, 8);
   const desiredCandidates = initialCount + expansionCount + 10;
@@ -383,9 +394,9 @@ for (const municipality of municipalities.features) {
   );
 
   const initialAreaPerCell = baselineArea / initial.length;
-  const retirementArea = baselineArea * retirementFraction;
+  const retirementArea = baselineArea * retirementFraction * DIDACTIC.territorialScale;
   const retiringCellFraction = retirementArea / (initialAreaPerCell * retiring.size);
-  const targetArea = baselineArea * (1 + targetGrowth);
+  const targetArea = baselineArea * (1 + targetGrowth * DIDACTIC.territorialScale);
   const expansionAreaPerCell = Math.max(0, (targetArea - baselineArea + retirementArea) / Math.max(1, future.length));
 
   initial.forEach((candidate, index) => {
@@ -465,7 +476,7 @@ for (const municipality of municipalities.features) {
     annualRateCappedPercent: round(annualRate * 100, 2),
     estimated2026Ha: round(baselineArea),
     target2035Ha: round(targetArea),
-    targetDeltaPercent: round(targetGrowth * 100),
+    targetDeltaPercent: round(targetGrowth * DIDACTIC.territorialScale * 100),
     retirementTargetHa: round(retirementArea),
     expansionTargetHa: round(expansionAreaPerCell * future.length),
     impliedAnnualNetPercent: round((Math.pow(targetArea / baselineArea, 12 / 119) - 1) * 100, 3),
@@ -494,12 +505,12 @@ await writeFile(
 );
 await writeFile(
   new URL('simulation-snapshots.json', DATA_DIR),
-  `${JSON.stringify({ version: '2.0.0', snapshots }, null, 2)}\n`,
+  `${JSON.stringify({ version: '2.1.0', snapshots }, null, 2)}\n`,
   'utf8',
 );
 await writeFile(
   new URL('municipality-model.json', DATA_DIR),
-  `${JSON.stringify({ version: '2.0.0', municipalities: municipalitySummary }, null, 2)}\n`,
+  `${JSON.stringify({ version: '2.1.0', municipalities: municipalitySummary }, null, 2)}\n`,
   'utf8',
 );
 
@@ -516,7 +527,7 @@ const files = [
 
 const manifest = {
   model: 'Café 2035 · Huila',
-  version: '2.0.0',
+  version: '2.1.0',
   generatedAt,
   coordinateSystems: {
     sourceAreaCalculations: 'MAGNA-SIRGAS / Origen-Nacional (EPSG:9377), valores EVA municipales',
@@ -528,6 +539,7 @@ const manifest = {
     climate: 'SSP2-4.5, señal departamental didáctica interpolada',
     timeSteps: 120,
     deterministic: true,
+    didacticCalibration: DIDACTIC,
   },
   sources: [
     {
@@ -581,6 +593,7 @@ const manifest = {
     },
   ],
   assumptions: [
+    'Calibración didáctica 2.1: expansión y retiro ×1,92 respecto a la trayectoria 2.0; mayor sensibilidad de agua, suelo y resiliencia, y menor caída de biodiversidad. Son supuestos de aula solicitados, no nuevas mediciones ambientales.',
     'La huella inicial es una estimación espacial calibrada a hectáreas municipales EVA; no representa lotes cafeteros observados.',
     'Las celdas son unidades visuales agregadas: su geometría no equivale a las hectáreas indicadas en el tooltip.',
     'Las incorporaciones y retiros son fracciones progresivas de las celdas, repartidas a lo largo de 2026–2035 mediante 80 % de avance lineal y 20 % de smoothstep; no son observaciones mensuales.',
