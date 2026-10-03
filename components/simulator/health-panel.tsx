@@ -61,7 +61,7 @@ function insight(snapshot: SimulationSnapshot) {
     return 'La conversión de cobertura natural concentra el mayor deterioro: biodiversidad y agua caen antes que el área total de café.';
   }
   if (snapshot.expansionHa > snapshot.retiredHa) {
-    return 'La huella crece, pero parte del aumento ocurre cerca de cauces y núcleos naturales. El lugar importa tanto como las hectáreas.';
+    return 'La huella crece mientras algunas áreas se retiran gradualmente. El balance neto y la ubicación de la expansión explican los cambios del territorio.';
   }
   return 'La huella se desplaza: algunas zonas se retiran mientras otras se incorporan. El balance total oculta ese cambio territorial.';
 }

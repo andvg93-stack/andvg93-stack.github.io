@@ -1,7 +1,7 @@
 {
   "model": "Café 2035 · Huila",
-  "version": "1.0.0",
-  "generatedAt": "2026-08-31T21:10:30.785Z",
+  "version": "2.0.0",
+  "generatedAt": "2026-10-03T14:10:56.138Z",
   "coordinateSystems": {
     "sourceAreaCalculations": "MAGNA-SIRGAS / Origen-Nacional (EPSG:9377), valores EVA municipales",
     "webDelivery": "WGS 84 / CRS84"
@@ -17,49 +17,49 @@
     {
       "name": "IGAC · Límites municipales",
       "url": "https://mapas2.igac.gov.co/server/rest/services/limites/limites/FeatureServer",
-      "accessedAt": "2026-08-31T21:10:30.785Z",
+      "accessedAt": "2026-08-31T21:02:36.202Z",
       "license": "Datos abiertos de la República de Colombia; atribución IGAC",
       "use": "37 límites municipales y contorno del Huila"
     },
     {
       "name": "UPRA · Evaluaciones Agropecuarias Municipales (EVA)",
       "url": "https://www.datos.gov.co/resource/uejq-wxrr.json",
-      "accessedAt": "2026-08-31T21:10:30.785Z",
+      "accessedAt": "2026-08-31T21:02:36.202Z",
       "license": "Datos Abiertos Colombia; atribución UPRA",
       "use": "Área sembrada municipal de café 2019–2025"
     },
     {
       "name": "RUNAP · Parques Nacionales Naturales",
       "url": "https://mapas.parquesnacionales.gov.co/arcgis/rest/services/pnn/runap/FeatureServer",
-      "accessedAt": "2026-08-31T21:10:30.785Z",
+      "accessedAt": "2026-08-31T21:02:36.202Z",
       "license": "Datos abiertos; atribución RUNAP / PNN",
       "use": "Exclusión legal y proximidad a áreas protegidas"
     },
     {
       "name": "OpenStreetMap contributors",
       "url": "https://www.openstreetmap.org/copyright",
-      "accessedAt": "2026-08-31T21:10:30.785Z",
+      "accessedAt": "2026-08-31T21:02:36.202Z",
       "license": "ODbL",
       "use": "Cauces con nombre para contexto y proximidad hídrica"
     },
     {
       "name": "UPRA · Aptitud para café, julio de 2022",
       "url": "https://geoservicios.upra.gov.co/arcgis/rest/services/aptitud_uso_suelo/Aptitud_Cafe_Jul2022/MapServer/0",
-      "accessedAt": "2026-08-31T21:10:30.785Z",
+      "accessedAt": "2026-08-31T21:02:36.202Z",
       "license": "Referencia institucional UPRA",
       "use": "Estructura conceptual A1/A2/A3/N; servicio no disponible durante esta compilación"
     },
     {
       "name": "IDEAM · Nuevos escenarios de cambio climático",
       "url": "https://ideam.gov.co/sala-de-prensa/noticia/el-instituto-lanza-nuevos-escenarios-de-cambio-climatico-escala-departamental-para-fortalecer-la",
-      "accessedAt": "2026-08-31T21:10:30.785Z",
+      "accessedAt": "2026-08-31T21:02:36.202Z",
       "license": "Referencia institucional IDEAM",
       "use": "Señal SSP2-4.5 2021–2040"
     },
     {
       "name": "IPCC 2019 Refinement · AFOLU",
       "url": "https://efdb.ipcc-nggip.iges.or.jp/public/2019rf/vol4.html",
-      "accessedAt": "2026-08-31T21:10:30.785Z",
+      "accessedAt": "2026-08-31T21:02:36.202Z",
       "license": "Referencia metodológica",
       "use": "Método de diferencia de existencias y conversión 44/12"
     }
@@ -67,7 +67,9 @@
   "assumptions": [
     "La huella inicial es una estimación espacial calibrada a hectáreas municipales EVA; no representa lotes cafeteros observados.",
     "Las celdas son unidades visuales agregadas: su geometría no equivale a las hectáreas indicadas en el tooltip.",
-    "Las incorporaciones y retiros mensuales son interpolaciones didácticas de una trayectoria anual.",
+    "Las incorporaciones y retiros son fracciones progresivas de las celdas, repartidas a lo largo de 2026–2035 mediante 80 % de avance lineal y 20 % de smoothstep; no son observaciones mensuales.",
+    "El retiro municipal se calibra al porcentaje objetivo, sin obligar a retirar una celda completa; el área final respeta el objetivo municipal y el balance inicial + expansión − retiro.",
+    "Los índices de conversión natural y proximidad RUNAP usan cargas acumuladas respecto al área inicial, con escalas didácticas del 10 % y 20 %; no porcentajes observados de biodiversidad.",
     "Los indicadores son índices didácticos estimados; no sustituyen monitoreo ambiental ni ordenamiento territorial.",
     "El CO₂e incluye solo cambio de cobertura; excluye fertilizantes, transporte, beneficio y energía."
   ],
@@ -77,9 +79,15 @@
     "frontierFeatures": 292,
     "monthlySnapshots": 120,
     "baselineAreaHa": 151697.8,
-    "finalAreaHa": 154161.3,
+    "finalAreaHa": 154043.9,
     "expansionInsideRunap": 0,
-    "indicesWithinRange": true
+    "maxMonthlyNetChangeHa": 42.6,
+    "maxMonthlyExpansionHa": 107.4,
+    "maxMonthlyRetirementHa": 87.6,
+    "maxMonthlyIndexChange": 0.2,
+    "areaBalanceConsistent": true,
+    "indicesWithinRange": true,
+    "visualSurfaceNodes": 39939
   },
   "files": [
     {
@@ -100,15 +108,19 @@
     },
     {
       "name": "cafe-frontier.geojson",
-      "sha256": "060fc776ca19e0836ac9affe52ec393cfe3942cf5d655065468998563662b618"
+      "sha256": "aa5c32f16b11b5eb259c51c20440f3780caa76470a3e09eccb3467ba3b415740"
     },
     {
       "name": "simulation-snapshots.json",
-      "sha256": "f68e4e49f6cda0971c4319b21fd766aea370c8c3f4129f44bd6edb3d6cba2837"
+      "sha256": "4dd7c4906002b18faae3bec0943099ed43906ca085f10252d908210b1433aae5"
     },
     {
       "name": "municipality-model.json",
-      "sha256": "626d78ce89c6d81ca4330d1a5494c1f43696b71d63de61b5fee9d8574d9a3aba"
+      "sha256": "ff1cfff83c27b8bd7956ac6f7eea4a2850eaad22c9e8badaab938b1b431bbb64"
+    },
+    {
+      "name": "frontier-surface.json",
+      "sha256": "261cebf222445621f3cb5c927a84147dd937670f220fede87c5d1c263f3ca0db"
     }
   ]
 }

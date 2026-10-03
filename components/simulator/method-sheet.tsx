@@ -40,7 +40,7 @@ export function MethodSheet({ manifest }: { manifest: ModelManifest }) {
               <code>40% aptitud + 25% clima + 15% cobertura + 10% presión + 10% continuidad</code>
             </div>
             <p>
-              Los cambios mensuales son una interpolación visual. El escenario usa una señal SSP2-4.5 hasta 2035 y no pretende ubicar fincas individuales.
+              Las incorporaciones y los retiros parciales se distribuyen durante varios años. La superficie siempre cumple: área inicial + expansión − retiro. El escenario usa una señal climática didáctica hasta 2035; las fechas mensuales son estimadas.
             </p>
           </section>
 
@@ -85,4 +85,3 @@ export function MethodSheet({ manifest }: { manifest: ModelManifest }) {
     </Sheet>
   );
 }
-

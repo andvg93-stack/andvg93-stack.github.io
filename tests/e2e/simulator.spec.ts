@@ -78,6 +78,17 @@ test('se detiene en 2035 y reinicia al volver a reproducir', async ({ page }) =>
   expect(Number(await slider.inputValue())).toBeLessThan(119);
 });
 
+test('abril y mayo de 2035 muestran el balance gradual recalculado', async ({ page }) => {
+  await openLocal(page);
+  const slider = page.getByTestId('timeline-slider');
+  await slider.fill('111');
+  await expect(page.locator('.territory-balance > div').first()).toContainText('153.923');
+  await slider.fill('112');
+  await expect(page.locator('.territory-balance > div').first()).toContainText('153.939');
+  await expect(page.locator('.territory-balance > div').nth(2)).toContainText('7.498');
+  await expect(page.getByTestId('timeline-date')).toContainText('mayo de 2035');
+});
+
 test('funciona con todas las solicitudes externas bloqueadas', async ({ page }) => {
   await page.route(/^https?:\/\/(?!127\.0\.0\.1|localhost)/, (route) => route.abort());
   await openLocal(page);

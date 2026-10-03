@@ -1,5 +1,5 @@
 {
-  "version": "1.0.0",
+  "version": "2.0.0",
   "municipalities": [
     {
       "code": "41001",
@@ -11,7 +11,10 @@
       "annualRateCappedPercent": 2.44,
       "estimated2026Ha": 4931.9,
       "target2035Ha": 4876.1,
-      "targetDeltaPercent": -1.1
+      "targetDeltaPercent": -1.1,
+      "retirementTargetHa": 394.5,
+      "expansionTargetHa": 338.8,
+      "impliedAnnualNetPercent": -0.115
     },
     {
       "code": "41006",
@@ -23,7 +26,10 @@
       "annualRateCappedPercent": 1.27,
       "estimated2026Ha": 14570.5,
       "target2035Ha": 15851.6,
-      "targetDeltaPercent": 8.8
+      "targetDeltaPercent": 8.8,
+      "retirementTargetHa": 364.3,
+      "expansionTargetHa": 1645.4,
+      "impliedAnnualNetPercent": 0.853
     },
     {
       "code": "41013",
@@ -35,7 +41,10 @@
       "annualRateCappedPercent": 3,
       "estimated2026Ha": 1507.7,
       "target2035Ha": 1509.3,
-      "targetDeltaPercent": 0.1
+      "targetDeltaPercent": 0.1,
+      "retirementTargetHa": 120.6,
+      "expansionTargetHa": 122.1,
+      "impliedAnnualNetPercent": 0.01
     },
     {
       "code": "41016",
@@ -47,7 +56,10 @@
       "annualRateCappedPercent": 1.99,
       "estimated2026Ha": 1251.2,
       "target2035Ha": 1224.6,
-      "targetDeltaPercent": -2.1
+      "targetDeltaPercent": -2.1,
+      "retirementTargetHa": 100.1,
+      "expansionTargetHa": 73.5,
+      "impliedAnnualNetPercent": -0.217
     },
     {
       "code": "41020",
@@ -59,7 +71,10 @@
       "annualRateCappedPercent": 2.44,
       "estimated2026Ha": 6682.8,
       "target2035Ha": 6874.8,
-      "targetDeltaPercent": 2.9
+      "targetDeltaPercent": 2.9,
+      "retirementTargetHa": 320.8,
+      "expansionTargetHa": 512.8,
+      "impliedAnnualNetPercent": 0.286
     },
     {
       "code": "41026",
@@ -71,7 +86,10 @@
       "annualRateCappedPercent": 3,
       "estimated2026Ha": 118.7,
       "target2035Ha": 123.6,
-      "targetDeltaPercent": 4.1
+      "targetDeltaPercent": 4.1,
+      "retirementTargetHa": 5.7,
+      "expansionTargetHa": 10.6,
+      "impliedAnnualNetPercent": 0.406
     },
     {
       "code": "41078",
@@ -83,7 +101,10 @@
       "annualRateCappedPercent": 2.14,
       "estimated2026Ha": 935.6,
       "target2035Ha": 918.7,
-      "targetDeltaPercent": -1.8
+      "targetDeltaPercent": -1.8,
+      "retirementTargetHa": 74.8,
+      "expansionTargetHa": 58,
+      "impliedAnnualNetPercent": -0.183
     },
     {
       "code": "41132",
@@ -95,7 +116,10 @@
       "annualRateCappedPercent": 2.7,
       "estimated2026Ha": 2171.4,
       "target2035Ha": 2159.4,
-      "targetDeltaPercent": -0.6
+      "targetDeltaPercent": -0.6,
+      "retirementTargetHa": 173.7,
+      "expansionTargetHa": 161.7,
+      "impliedAnnualNetPercent": -0.056
     },
     {
       "code": "41206",
@@ -107,7 +131,10 @@
       "annualRateCappedPercent": -0.01,
       "estimated2026Ha": 1917.7,
       "target2035Ha": 1792.6,
-      "targetDeltaPercent": -6.5
+      "targetDeltaPercent": -6.5,
+      "retirementTargetHa": 153.6,
+      "expansionTargetHa": 28.5,
+      "impliedAnnualNetPercent": -0.678
     },
     {
       "code": "41244",
@@ -119,7 +146,10 @@
       "annualRateCappedPercent": 1.24,
       "estimated2026Ha": 1160.8,
       "target2035Ha": 1262.2,
-      "targetDeltaPercent": 8.7
+      "targetDeltaPercent": 8.7,
+      "retirementTargetHa": 29,
+      "expansionTargetHa": 130.4,
+      "impliedAnnualNetPercent": 0.848
     },
     {
       "code": "41298",
@@ -131,7 +161,10 @@
       "annualRateCappedPercent": 0.73,
       "estimated2026Ha": 9541.4,
       "target2035Ha": 9074.1,
-      "targetDeltaPercent": -4.9
+      "targetDeltaPercent": -4.9,
+      "retirementTargetHa": 763.3,
+      "expansionTargetHa": 296,
+      "impliedAnnualNetPercent": -0.505
     },
     {
       "code": "41306",
@@ -143,7 +176,10 @@
       "annualRateCappedPercent": 0.53,
       "estimated2026Ha": 5320.1,
       "target2035Ha": 5036.6,
-      "targetDeltaPercent": -5.3
+      "targetDeltaPercent": -5.3,
+      "retirementTargetHa": 425.6,
+      "expansionTargetHa": 142,
+      "impliedAnnualNetPercent": -0.551
     },
     {
       "code": "41319",
@@ -155,7 +191,10 @@
       "annualRateCappedPercent": 1.85,
       "estimated2026Ha": 4951.2,
       "target2035Ha": 4830.5,
-      "targetDeltaPercent": -2.4
+      "targetDeltaPercent": -2.4,
+      "retirementTargetHa": 396.1,
+      "expansionTargetHa": 275.4,
+      "impliedAnnualNetPercent": -0.248
     },
     {
       "code": "41349",
@@ -167,7 +206,10 @@
       "annualRateCappedPercent": 0.57,
       "estimated2026Ha": 952.5,
       "target2035Ha": 902.5,
-      "targetDeltaPercent": -5.2
+      "targetDeltaPercent": -5.2,
+      "retirementTargetHa": 76.2,
+      "expansionTargetHa": 26.2,
+      "impliedAnnualNetPercent": -0.542
     },
     {
       "code": "41357",
@@ -179,7 +221,10 @@
       "annualRateCappedPercent": 1.26,
       "estimated2026Ha": 2735.6,
       "target2035Ha": 2743,
-      "targetDeltaPercent": 0.3
+      "targetDeltaPercent": 0.3,
+      "retirementTargetHa": 131.3,
+      "expansionTargetHa": 138.8,
+      "impliedAnnualNetPercent": 0.027
     },
     {
       "code": "41359",
@@ -191,7 +236,10 @@
       "annualRateCappedPercent": 3,
       "estimated2026Ha": 5533.8,
       "target2035Ha": 6231.1,
-      "targetDeltaPercent": 12.6
+      "targetDeltaPercent": 12.6,
+      "retirementTargetHa": 138.3,
+      "expansionTargetHa": 835.6,
+      "impliedAnnualNetPercent": 1.204
     },
     {
       "code": "41378",
@@ -203,7 +251,10 @@
       "annualRateCappedPercent": -0.3,
       "estimated2026Ha": 2581.4,
       "target2035Ha": 2590,
-      "targetDeltaPercent": 0.3
+      "targetDeltaPercent": 0.3,
+      "retirementTargetHa": 64.5,
+      "expansionTargetHa": 73.1,
+      "impliedAnnualNetPercent": 0.033
     },
     {
       "code": "41396",
@@ -215,7 +266,10 @@
       "annualRateCappedPercent": 1.3,
       "estimated2026Ha": 11865.3,
       "target2035Ha": 11907.6,
-      "targetDeltaPercent": 0.4
+      "targetDeltaPercent": 0.4,
+      "retirementTargetHa": 569.5,
+      "expansionTargetHa": 611.9,
+      "impliedAnnualNetPercent": 0.036
     },
     {
       "code": "41483",
@@ -227,7 +281,10 @@
       "annualRateCappedPercent": 2.6,
       "estimated2026Ha": 2044.3,
       "target2035Ha": 2181.5,
-      "targetDeltaPercent": 6.7
+      "targetDeltaPercent": 6.7,
+      "retirementTargetHa": 51.1,
+      "expansionTargetHa": 188.3,
+      "impliedAnnualNetPercent": 0.657
     },
     {
       "code": "41503",
@@ -239,7 +296,10 @@
       "annualRateCappedPercent": -0.83,
       "estimated2026Ha": 2902.1,
       "target2035Ha": 2921.4,
-      "targetDeltaPercent": 0.7
+      "targetDeltaPercent": 0.7,
+      "retirementTargetHa": 163.5,
+      "expansionTargetHa": 182.8,
+      "impliedAnnualNetPercent": 0.067
     },
     {
       "code": "41518",
@@ -251,7 +311,10 @@
       "annualRateCappedPercent": 0.87,
       "estimated2026Ha": 1752.3,
       "target2035Ha": 1671.8,
-      "targetDeltaPercent": -4.6
+      "targetDeltaPercent": -4.6,
+      "retirementTargetHa": 140.2,
+      "expansionTargetHa": 59.7,
+      "impliedAnnualNetPercent": -0.473
     },
     {
       "code": "41524",
@@ -263,7 +326,10 @@
       "annualRateCappedPercent": -0.15,
       "estimated2026Ha": 2231.9,
       "target2035Ha": 2079.3,
-      "targetDeltaPercent": -6.8
+      "targetDeltaPercent": -6.8,
+      "retirementTargetHa": 182,
+      "expansionTargetHa": 29.3,
+      "impliedAnnualNetPercent": -0.712
     },
     {
       "code": "41530",
@@ -275,7 +341,10 @@
       "annualRateCappedPercent": 0.04,
       "estimated2026Ha": 4450.1,
       "target2035Ha": 4721.1,
-      "targetDeltaPercent": 6.1
+      "targetDeltaPercent": 6.1,
+      "retirementTargetHa": 111.3,
+      "expansionTargetHa": 382.2,
+      "impliedAnnualNetPercent": 0.598
     },
     {
       "code": "41548",
@@ -287,7 +356,10 @@
       "annualRateCappedPercent": -0.68,
       "estimated2026Ha": 4614.8,
       "target2035Ha": 4430.3,
-      "targetDeltaPercent": -4
+      "targetDeltaPercent": -4,
+      "retirementTargetHa": 252.9,
+      "expansionTargetHa": 68.5,
+      "impliedAnnualNetPercent": -0.411
     },
     {
       "code": "41551",
@@ -299,7 +371,10 @@
       "annualRateCappedPercent": 0.38,
       "estimated2026Ha": 17829.4,
       "target2035Ha": 18425.3,
-      "targetDeltaPercent": 3.3
+      "targetDeltaPercent": 3.3,
+      "retirementTargetHa": 855.8,
+      "expansionTargetHa": 1451.7,
+      "impliedAnnualNetPercent": 0.332
     },
     {
       "code": "41615",
@@ -311,7 +386,10 @@
       "annualRateCappedPercent": 1.25,
       "estimated2026Ha": 785.2,
       "target2035Ha": 755.7,
-      "targetDeltaPercent": -3.8
+      "targetDeltaPercent": -3.8,
+      "retirementTargetHa": 62.8,
+      "expansionTargetHa": 33.3,
+      "impliedAnnualNetPercent": -0.385
     },
     {
       "code": "41660",
@@ -323,7 +401,10 @@
       "annualRateCappedPercent": -0.46,
       "estimated2026Ha": 3529.1,
       "target2035Ha": 3704.8,
-      "targetDeltaPercent": 5
+      "targetDeltaPercent": 5,
+      "retirementTargetHa": 88.2,
+      "expansionTargetHa": 263.9,
+      "impliedAnnualNetPercent": 0.491
     },
     {
       "code": "41668",
@@ -335,7 +416,10 @@
       "annualRateCappedPercent": 0.86,
       "estimated2026Ha": 6041,
       "target2035Ha": 6517.7,
-      "targetDeltaPercent": 7.9
+      "targetDeltaPercent": 7.9,
+      "retirementTargetHa": 151,
+      "expansionTargetHa": 627.7,
+      "impliedAnnualNetPercent": 0.769
     },
     {
       "code": "41676",
@@ -347,7 +431,10 @@
       "annualRateCappedPercent": 0.08,
       "estimated2026Ha": 3322.6,
       "target2035Ha": 3361.5,
-      "targetDeltaPercent": 1.2
+      "targetDeltaPercent": 1.2,
+      "retirementTargetHa": 83.1,
+      "expansionTargetHa": 122,
+      "impliedAnnualNetPercent": 0.117
     },
     {
       "code": "41770",
@@ -359,7 +446,10 @@
       "annualRateCappedPercent": 3,
       "estimated2026Ha": 8549.9,
       "target2035Ha": 8900.4,
-      "targetDeltaPercent": 4.1
+      "targetDeltaPercent": 4.1,
+      "retirementTargetHa": 410.4,
+      "expansionTargetHa": 760.9,
+      "impliedAnnualNetPercent": 0.406
     },
     {
       "code": "41791",
@@ -371,7 +461,10 @@
       "annualRateCappedPercent": 1.34,
       "estimated2026Ha": 3562.3,
       "target2035Ha": 3436.2,
-      "targetDeltaPercent": -3.5
+      "targetDeltaPercent": -3.5,
+      "retirementTargetHa": 285,
+      "expansionTargetHa": 158.8,
+      "impliedAnnualNetPercent": -0.363
     },
     {
       "code": "41797",
@@ -383,7 +476,10 @@
       "annualRateCappedPercent": 1.57,
       "estimated2026Ha": 727.2,
       "target2035Ha": 705,
-      "targetDeltaPercent": -3.1
+      "targetDeltaPercent": -3.1,
+      "retirementTargetHa": 58.2,
+      "expansionTargetHa": 36,
+      "impliedAnnualNetPercent": -0.312
     },
     {
       "code": "41799",
@@ -395,7 +491,10 @@
       "annualRateCappedPercent": 1.08,
       "estimated2026Ha": 3145,
       "target2035Ha": 3015.2,
-      "targetDeltaPercent": -4.1
+      "targetDeltaPercent": -4.1,
+      "retirementTargetHa": 251.6,
+      "expansionTargetHa": 121.8,
+      "impliedAnnualNetPercent": -0.424
     },
     {
       "code": "41801",
@@ -407,7 +506,10 @@
       "annualRateCappedPercent": 0.69,
       "estimated2026Ha": 2838.2,
       "target2035Ha": 2696.5,
-      "targetDeltaPercent": -5
+      "targetDeltaPercent": -5,
+      "retirementTargetHa": 227.1,
+      "expansionTargetHa": 85.4,
+      "impliedAnnualNetPercent": -0.515
     },
     {
       "code": "41807",
@@ -419,7 +521,10 @@
       "annualRateCappedPercent": -1.44,
       "estimated2026Ha": 4642.9,
       "target2035Ha": 4611.8,
-      "targetDeltaPercent": -0.7
+      "targetDeltaPercent": -0.7,
+      "retirementTargetHa": 289.7,
+      "expansionTargetHa": 258.7,
+      "impliedAnnualNetPercent": -0.068
     }
   ]
 }

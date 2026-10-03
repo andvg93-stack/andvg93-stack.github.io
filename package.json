@@ -15,7 +15,7 @@
     "data:fetch": "node scripts/fetch-base-data.mjs",
     "data:build": "node scripts/build-simulation-data.mjs",
     "data:surface": "node scripts/build-frontier-surface.mjs",
-    "test:model": "node --test tests/model.test.mjs tests/data.test.mjs tests/frontier-visuals.test.mjs tests/frontier-surface.test.mjs",
+    "test:model": "node --test tests/model.test.mjs tests/data.test.mjs tests/frontier-visuals.test.mjs tests/frontier-surface.test.mjs tests/monthly-coherence.test.mjs",
     "test:e2e": "playwright test",
     "test": "npm run test:model && npm run test:e2e"
   },

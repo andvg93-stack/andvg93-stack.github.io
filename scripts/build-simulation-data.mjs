@@ -1,3 +1,4 @@
+import { frontierWeights, temporalProgress } from '../lib/simulation/temporal-progress.mjs';
 import { createHash } from 'node:crypto';
 import { readFile, writeFile } from 'node:fs/promises';
 
@@ -220,46 +221,21 @@ function round(value, digits = 1) {
 }
 
 function buildSnapshot(month, features, baselineArea) {
-  const active = features.filter(
-    (feature) =>
-      feature.properties.startMonth <= month &&
-      (feature.properties.retireMonth == null || feature.properties.retireMonth > month),
-  );
-  const expanded = active.filter((feature) => feature.properties.origin === 'expansion');
-  const retired = features.filter(
-    (feature) => feature.properties.retireMonth != null && feature.properties.retireMonth <= month,
-  );
+  const weighted = features.map((feature) => ({ feature, ...frontierWeights(feature.properties, month) }));
+  const active = weighted.filter((item) => item.active > 0);
+  const expanded = weighted.filter((item) => item.expansion > 0);
+  const sum = (items, weight, predicate = () => true) =>
+    items.filter(({ feature }) => predicate(feature)).reduce((total, item) => total + item.feature.properties.hectares * item[weight], 0);
+  const area = sum(active, 'active');
+  const expansionArea = sum(expanded, 'expansion');
+  const retiredArea = sum(weighted, 'retired');
+  const convertedNatural = sum(expanded, 'expansion', (f) => f.properties.sourceCover === 'Cobertura natural');
+  const nearWaterConversion = sum(expanded, 'expansion', (f) => f.properties.nearWater);
+  const nearProtectedExpansion = sum(expanded, 'expansion', (f) => f.properties.nearProtected);
+  const co2eTonnes = expanded.reduce((total, item) => total + item.feature.properties.hectares *
+    item.expansion * (item.feature.properties.sourceCover === 'Cobertura natural' ? 96 : 17), 0);
 
-  const area = active.reduce((sum, feature) => sum + feature.properties.hectares, 0);
-  const expansionArea = expanded.reduce((sum, feature) => sum + feature.properties.hectares, 0);
-  const retiredArea = retired.reduce((sum, feature) => sum + feature.properties.hectares, 0);
-  const convertedNatural = expanded
-    .filter((feature) => feature.properties.sourceCover === 'Cobertura natural')
-    .reduce((sum, feature) => sum + feature.properties.hectares, 0);
-  const nearWaterConversion = expanded
-    .filter((feature) => feature.properties.nearWater)
-    .reduce((sum, feature) => sum + feature.properties.hectares, 0);
-  const co2eTonnes = expanded.reduce(
-    (sum, feature) =>
-      sum +
-      feature.properties.hectares *
-        (feature.properties.sourceCover === 'Cobertura natural' ? 96 : 17),
-    0,
-  );
-
-  const weightedShare = (predicate) => {
-    if (!area) return 0;
-    return (
-      active.filter(predicate).reduce((sum, feature) => sum + feature.properties.hectares, 0) / area
-    );
-  };
-  const expansionShare = (predicate) => {
-    if (!expansionArea) return 1;
-    return (
-      expanded.filter(predicate).reduce((sum, feature) => sum + feature.properties.hectares, 0) /
-      expansionArea
-    );
-  };
+  const weightedShare = (predicate) => area ? sum(active, 'active', predicate) / area : 0;
 
   const riparianScore = clamp(78 - (nearWaterConversion / baselineArea) * 950, 0, 100);
   const demandGrowth = Math.max(0, area / baselineArea - 1);
@@ -268,9 +244,9 @@ function buildSnapshot(month, features, baselineArea) {
 
   const outsideSteep = weightedShare((feature) => !feature.properties.steepSlope);
   const outsideLowSoc = weightedShare((feature) => !feature.properties.lowSoc);
-  const noNaturalConversion = expansionShare(
-    (feature) => feature.properties.sourceCover !== 'Cobertura natural',
-  );
+  // Burdens grow from zero with converted hectares. Avoid a first tiny expansion
+  // changing an entire index through a denominator equal to expansion alone.
+  const noNaturalConversion = clamp(1 - convertedNatural / (baselineArea * 0.1), 0, 1);
   const soilIndex = clamp(
     45 * outsideSteep + 30 * outsideLowSoc + 25 * noNaturalConversion,
     0,
@@ -278,16 +254,20 @@ function buildSnapshot(month, features, baselineArea) {
   );
 
   const naturalRetention = clamp(0.84 - (convertedNatural / baselineArea) * 3.2, 0, 1);
-  const distantFromProtected = expansionShare((feature) => !feature.properties.nearProtected);
+  const distantFromProtected = clamp(1 - nearProtectedExpansion / (baselineArea * 0.2), 0, 1);
   const biodiversityIndex = clamp(
     60 * naturalRetention + 25 * distantFromProtected + 15 * noNaturalConversion,
     0,
     100,
   );
 
-  const futureSuitable = weightedShare((feature) =>
-    ['S1', 'S2'].some((prefix) => feature.properties.aptitude2035.startsWith(prefix)),
-  );
+  const suitable = (aptitude) => ['S1', 'S2'].some((prefix) => aptitude.startsWith(prefix)) ? 1 : 0;
+  const climateProgress = temporalProgress(month, 0, 119);
+  const futureSuitable = area ? active.reduce((total, item) => {
+    const p = item.feature.properties;
+    const suitability = suitable(p.aptitude2026) * (1 - climateProgress) + suitable(p.aptitude2035) * climateProgress;
+    return total + p.hectares * item.active * suitability;
+  }, 0) / area : 0;
   const resilienceIndex = clamp(
     60 * futureSuitable + 0.2 * waterIndex + 0.2 * soilIndex,
     0,
@@ -347,9 +327,9 @@ for (const municipality of municipalities.features) {
   const focus = FOCUS_MUNICIPALITIES.has(name);
   const climatePressure = altitude < 900 ? 0.1 : altitude < 1300 ? 0.06 : 0.025;
   const targetGrowth = clamp(annualRate * 2.2 + (focus ? 0.085 : 0.035) - climatePressure, -0.13, 0.16);
-  const retirementFraction = clamp(climatePressure * 0.8 + Math.max(0, -annualRate), 0.025, 0.13);
+  const retirementFraction = clamp(Math.max(climatePressure * 0.8 + Math.max(0, -annualRate), -targetGrowth + 0.01), 0.025, 0.2);
   const initialCount = clamp(Math.round(baselineArea / 620), 2, 30);
-  const retirementCount = clamp(Math.round(initialCount * retirementFraction), 1, Math.max(1, initialCount - 1));
+  const retirementCount = clamp(Math.ceil(initialCount * retirementFraction), 1, Math.max(1, initialCount - 1));
   const expansionFraction = Math.max(0.035, targetGrowth + retirementFraction);
   const expansionCount = clamp(Math.ceil(initialCount * expansionFraction), 1, 8);
   const desiredCandidates = initialCount + expansionCount + 10;
@@ -403,17 +383,14 @@ for (const municipality of municipalities.features) {
   );
 
   const initialAreaPerCell = baselineArea / initial.length;
-  const retirementArea = initialAreaPerCell * retiring.size;
+  const retirementArea = baselineArea * retirementFraction;
+  const retiringCellFraction = retirementArea / (initialAreaPerCell * retiring.size);
   const targetArea = baselineArea * (1 + targetGrowth);
-  const expansionAreaPerCell = Math.max(
-    initialAreaPerCell * 0.45,
-    (targetArea - baselineArea + retirementArea) / Math.max(1, future.length),
-  );
+  const expansionAreaPerCell = Math.max(0, (targetArea - baselineArea + retirementArea) / Math.max(1, future.length));
 
   initial.forEach((candidate, index) => {
-    const retireMonth = retiring.has(candidate.seed)
-      ? Math.round(34 + (index / Math.max(1, initial.length - 1)) * 78)
-      : null;
+    const retireMonth = retiring.has(candidate.seed) ? 119 : null;
+    const retirementStartMonth = 12 + Math.round(hash01(`${candidate.seed}-retirement`) * 12);
     const nearProtected = protectedBounds.some(
       (areaBounds) => pointToBoundsDistance(candidate.point, areaBounds) <= 0.009,
     );
@@ -428,6 +405,8 @@ for (const municipality of municipalities.features) {
         origin: 'initial',
         startMonth: 0,
         retireMonth,
+        retirementStartMonth: retireMonth == null ? undefined : retirementStartMonth,
+        retirementFraction: retireMonth == null ? 0 : Number(retiringCellFraction.toFixed(8)),
         hectares: round(initialAreaPerCell),
         aptitude2026: candidate.aptitude2026,
         aptitude2035: candidate.aptitude2035,
@@ -444,7 +423,7 @@ for (const municipality of municipalities.features) {
   });
 
   future.forEach((candidate, index) => {
-    const startMonth = Math.round(8 + ((index + hash01(candidate.seed)) / future.length) * 108);
+    const startMonth = 1 + Math.round(((index + hash01(candidate.seed)) / future.length) * 23);
     const nearProtected = protectedBounds.some(
       (areaBounds) => pointToBoundsDistance(candidate.point, areaBounds) <= 0.009,
     );
@@ -457,7 +436,8 @@ for (const municipality of municipalities.features) {
         municipalCode: municipality.properties.MpCodigo,
         focus,
         origin: 'expansion',
-        startMonth: clamp(startMonth, 1, 119),
+        startMonth: clamp(startMonth, 1, 24),
+        entryEndMonth: 119,
         retireMonth: null,
         hectares: round(expansionAreaPerCell),
         aptitude2026: candidate.aptitude2026,
@@ -486,6 +466,9 @@ for (const municipality of municipalities.features) {
     estimated2026Ha: round(baselineArea),
     target2035Ha: round(targetArea),
     targetDeltaPercent: round(targetGrowth * 100),
+    retirementTargetHa: round(retirementArea),
+    expansionTargetHa: round(expansionAreaPerCell * future.length),
+    impliedAnnualNetPercent: round((Math.pow(targetArea / baselineArea, 12 / 119) - 1) * 100, 3),
   });
 }
 
@@ -511,12 +494,12 @@ await writeFile(
 );
 await writeFile(
   new URL('simulation-snapshots.json', DATA_DIR),
-  `${JSON.stringify({ version: '1.0.0', snapshots }, null, 2)}\n`,
+  `${JSON.stringify({ version: '2.0.0', snapshots }, null, 2)}\n`,
   'utf8',
 );
 await writeFile(
   new URL('municipality-model.json', DATA_DIR),
-  `${JSON.stringify({ version: '1.0.0', municipalities: municipalitySummary }, null, 2)}\n`,
+  `${JSON.stringify({ version: '2.0.0', municipalities: municipalitySummary }, null, 2)}\n`,
   'utf8',
 );
 
@@ -533,7 +516,7 @@ const files = [
 
 const manifest = {
   model: 'Café 2035 · Huila',
-  version: '1.0.0',
+  version: '2.0.0',
   generatedAt,
   coordinateSystems: {
     sourceAreaCalculations: 'MAGNA-SIRGAS / Origen-Nacional (EPSG:9377), valores EVA municipales',
@@ -550,49 +533,49 @@ const manifest = {
     {
       name: 'IGAC · Límites municipales',
       url: 'https://mapas2.igac.gov.co/server/rest/services/limites/limites/FeatureServer',
-      accessedAt: generatedAt,
+      accessedAt: eva.generatedAt,
       license: 'Datos abiertos de la República de Colombia; atribución IGAC',
       use: '37 límites municipales y contorno del Huila',
     },
     {
       name: 'UPRA · Evaluaciones Agropecuarias Municipales (EVA)',
       url: 'https://www.datos.gov.co/resource/uejq-wxrr.json',
-      accessedAt: generatedAt,
+      accessedAt: eva.generatedAt,
       license: 'Datos Abiertos Colombia; atribución UPRA',
       use: 'Área sembrada municipal de café 2019–2025',
     },
     {
       name: 'RUNAP · Parques Nacionales Naturales',
       url: 'https://mapas.parquesnacionales.gov.co/arcgis/rest/services/pnn/runap/FeatureServer',
-      accessedAt: generatedAt,
+      accessedAt: eva.generatedAt,
       license: 'Datos abiertos; atribución RUNAP / PNN',
       use: 'Exclusión legal y proximidad a áreas protegidas',
     },
     {
       name: 'OpenStreetMap contributors',
       url: 'https://www.openstreetmap.org/copyright',
-      accessedAt: generatedAt,
+      accessedAt: eva.generatedAt,
       license: 'ODbL',
       use: 'Cauces con nombre para contexto y proximidad hídrica',
     },
     {
       name: 'UPRA · Aptitud para café, julio de 2022',
       url: 'https://geoservicios.upra.gov.co/arcgis/rest/services/aptitud_uso_suelo/Aptitud_Cafe_Jul2022/MapServer/0',
-      accessedAt: generatedAt,
+      accessedAt: eva.generatedAt,
       license: 'Referencia institucional UPRA',
       use: 'Estructura conceptual A1/A2/A3/N; servicio no disponible durante esta compilación',
     },
     {
       name: 'IDEAM · Nuevos escenarios de cambio climático',
       url: 'https://ideam.gov.co/sala-de-prensa/noticia/el-instituto-lanza-nuevos-escenarios-de-cambio-climatico-escala-departamental-para-fortalecer-la',
-      accessedAt: generatedAt,
+      accessedAt: eva.generatedAt,
       license: 'Referencia institucional IDEAM',
       use: 'Señal SSP2-4.5 2021–2040',
     },
     {
       name: 'IPCC 2019 Refinement · AFOLU',
       url: 'https://efdb.ipcc-nggip.iges.or.jp/public/2019rf/vol4.html',
-      accessedAt: generatedAt,
+      accessedAt: eva.generatedAt,
       license: 'Referencia metodológica',
       use: 'Método de diferencia de existencias y conversión 44/12',
     },
@@ -600,7 +583,9 @@ const manifest = {
   assumptions: [
     'La huella inicial es una estimación espacial calibrada a hectáreas municipales EVA; no representa lotes cafeteros observados.',
     'Las celdas son unidades visuales agregadas: su geometría no equivale a las hectáreas indicadas en el tooltip.',
-    'Las incorporaciones y retiros mensuales son interpolaciones didácticas de una trayectoria anual.',
+    'Las incorporaciones y retiros son fracciones progresivas de las celdas, repartidas a lo largo de 2026–2035 mediante 80 % de avance lineal y 20 % de smoothstep; no son observaciones mensuales.',
+    'El retiro municipal se calibra al porcentaje objetivo, sin obligar a retirar una celda completa; el área final respeta el objetivo municipal y el balance inicial + expansión − retiro.',
+    'Los índices de conversión natural y proximidad RUNAP usan cargas acumuladas respecto al área inicial, con escalas didácticas del 10 % y 20 %; no porcentajes observados de biodiversidad.',
     'Los indicadores son índices didácticos estimados; no sustituyen monitoreo ambiental ni ordenamiento territorial.',
     'El CO₂e incluye solo cambio de cobertura; excluye fertilizantes, transporte, beneficio y energía.',
   ],
@@ -612,6 +597,12 @@ const manifest = {
     baselineAreaHa: round(baselineArea),
     finalAreaHa: snapshots.at(-1).areaHa,
     expansionInsideRunap: 0,
+    maxMonthlyNetChangeHa: round(Math.max(...snapshots.slice(1).map((value, i) => Math.abs(value.areaHa - snapshots[i].areaHa)))),
+    maxMonthlyExpansionHa: round(Math.max(...snapshots.slice(1).map((value, i) => value.expansionHa - snapshots[i].expansionHa))),
+    maxMonthlyRetirementHa: round(Math.max(...snapshots.slice(1).map((value, i) => value.retiredHa - snapshots[i].retiredHa))),
+    maxMonthlyIndexChange: round(Math.max(...snapshots.slice(1).flatMap((value, i) =>
+      ['waterIndex', 'soilIndex', 'biodiversityIndex', 'resilienceIndex'].map((key) => Math.abs(value[key] - snapshots[i][key])))), 3),
+    areaBalanceConsistent: snapshots.every((value) => Math.abs(value.areaHa - (baselineArea + value.expansionHa - value.retiredHa)) < 0.2),
     indicesWithinRange: snapshots.every((snapshot) =>
       [
         snapshot.waterIndex,

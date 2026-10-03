@@ -18,12 +18,12 @@ function prepareChunk(data: SurfaceData) {
     indices: [square, square + 1, square + columns + 1, square + columns].map((id) => lookup.get(id) ?? -1),
   }));
   const cache = [new Map<string, string>(), new Map<string, string>(), new Map<string, string>()];
-  const eventMonths = [new Set<number>(), new Set<number>(), new Set<number>()];
+  const eventTimes = [new Set<number>(), new Set<number>(), new Set<number>()];
   for (const [, , entry, exit] of data.nodes) {
-    if (entry >= 0) eventMonths[1].add(Math.floor(entry));
-    if (exit <= 119) { eventMonths[0].add(Math.floor(exit)); eventMonths[2].add(Math.floor(exit)); }
+    if (entry >= 0) eventTimes[1].add(entry);
+    if (exit <= 119) { eventTimes[0].add(exit); eventTimes[2].add(exit); }
   }
-  return { ...data, columns, cells, cache, eventMonths };
+  return { ...data, columns, cells, cache, eventTimes: eventTimes.map((times) => [...times].sort((a,b) => a-b)) };
 }
 export function prepareSurface(data: SurfaceData) {
   const width = Math.max(...data.nodes.map((n) => n[0])) + 3;
@@ -54,9 +54,14 @@ function chunkPaths(surface: ReturnType<typeof prepareChunk>, month: number, bas
   const values = new Float32Array(surface.nodes.length);
   const outputs = ['', '', ''];
   for (let layer = 0; layer < (baseline ? 1 : 3); layer++) {
-    const events = [...surface.eventMonths[layer]];
-    const moving = events.some((m) => month >= m - 0.05 && month <= m + 1.05);
-    const key = baseline ? 'baseline' : moving ? `time:${month}` : `stable:${events.filter((m) => m < month).sort((a,b) => b-a)[0] ?? -1}`;
+    const events = surface.eventTimes[layer];
+    let low = 0, high = events.length;
+    while (low < high) {
+      const mid = (low + high) >> 1;
+      if (events[mid] <= month) low = mid + 1; else high = mid;
+    }
+    const moving = (events[low] ?? Infinity) - month < 1 / 24 || month - (events[low - 1] ?? -Infinity) < 1 / 24;
+    const key = baseline ? 'baseline' : moving ? `time:${month}` : `stable:${low}`;
     const cached = surface.cache[layer].get(key);
     if (cached !== undefined) { outputs[layer] = cached; continue; }
     surface.nodes.forEach(([, , entry, exit], i) => {

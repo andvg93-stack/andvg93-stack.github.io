@@ -1,5 +1,7 @@
 /** Visual mesh only. Does not change model hectares, indicators or source data. */
 import { readFileSync, writeFileSync } from 'node:fs';
+import { createHash } from 'node:crypto';
+import { monthAtProgress } from '../lib/simulation/temporal-progress.mjs';
 
 const read = (name) => JSON.parse(readFileSync(`public/data/${name}`, 'utf8'));
 const municipalities = read('huila-municipios.geojson').features;
@@ -116,12 +118,21 @@ for (const feature of sorted) {
     }
   }
   cells.forEach((cell, index) => {
-    cell.entry = p.origin === 'initial' ? -1 : p.startMonth - 1 + (index + 0.5) / cells.length;
-    cell.exit = p.retireMonth == null ? 999 : p.retireMonth - 1 + 1 - (index + 0.5) / cells.length;
+    const rank = (index + 0.5) / cells.length;
+    cell.entry = p.origin === 'initial' ? -1 : monthAtProgress(rank, p.startMonth, p.entryEndMonth ?? p.startMonth + 1);
+    const fraction = p.retirementFraction ?? 1;
+    const retirementRank = (1 - rank) / fraction;
+    cell.exit = p.retireMonth == null || retirementRank >= 1 ? 999
+      : monthAtProgress(retirementRank, p.retirementStartMonth ?? p.retireMonth - 1, p.retireMonth);
   });
   previous.push(...cells); byMunicipality.set(p.municipality, previous);
 }
 if (unplaced) throw new Error(`${unplaced} features could not be placed`);
 const nodes = [...occupied.values()].sort((a, b) => a.y - b.y || a.x - b.x).map((c) => [c.x, c.y, +c.entry.toFixed(5), +c.exit.toFixed(5)]);
 writeFileSync('public/data/frontier-surface.json', JSON.stringify({ version: 1, step, origin, nodes, note: 'Malla visual sintética: crecimiento contiguo con exclusión IGAC/RUNAP. No representa lotes ni cobertura observada. No cambia el modelo.' }));
+const manifest = read('model-manifest.json');
+manifest.files = manifest.files.filter((f) => f.name !== 'frontier-surface.json');
+manifest.files.push({ name: 'frontier-surface.json', sha256: createHash('sha256').update(readFileSync('public/data/frontier-surface.json')).digest('hex') });
+manifest.checks.visualSurfaceNodes = nodes.length;
+writeFileSync('public/data/model-manifest.json', `${JSON.stringify(manifest, null, 2)}\n`);
 console.log(`Visual surface: ${nodes.length} nodes; ${features.length} source features; no model changes.`);

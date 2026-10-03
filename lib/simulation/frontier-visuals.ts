@@ -1,4 +1,5 @@
 import type { FrontierFeature } from './types';
+import { frontierWeights } from './temporal-progress.mjs';
 
 export const MAX_CONNECTION_GAP_KM = 2;
 
@@ -152,6 +153,9 @@ export function visualWeights(
   playhead: number,
 ): FrontierVisualWeights {
   const { properties } = descriptor.feature;
+  if (properties.entryEndMonth != null || properties.retirementStartMonth != null) {
+    return frontierWeights(properties, playhead);
+  }
   const entry = properties.origin === 'initial' ? 1 : eventProgress(playhead, properties.startMonth);
   const retirement =
     properties.retireMonth == null ? 0 : eventProgress(playhead, properties.retireMonth);

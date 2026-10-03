@@ -29,7 +29,10 @@ export interface FrontierProperties {
   focus: boolean;
   origin: 'initial' | 'expansion';
   startMonth: number;
+  entryEndMonth?: number;
   retireMonth: number | null;
+  retirementStartMonth?: number;
+  retirementFraction?: number;
   hectares: number;
   aptitude2026: string;
   aptitude2035: string;
@@ -70,4 +73,3 @@ export interface ModelManifest {
   checks: Record<string, string | number | boolean>;
   files: Array<{ name: string; sha256: string }>;
 }
-
