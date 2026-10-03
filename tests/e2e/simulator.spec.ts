@@ -35,6 +35,27 @@ async function hoverMunicipality(page: Page, municipality: string) {
   });
 }
 
+test('paleta aprobada distingue la frontera y compara los índices con 2026', async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await openLocal(page);
+  await page.getByTestId('timeline-slider').press('End');
+  for (const [surface, swatch, color] of [
+    ['.surface-persistent', '.legend-swatch--coffee', 'rgb(255, 228, 92)'],
+    ['.surface-expansion', '.legend-swatch--expansion', 'rgb(230, 56, 63)'],
+    ['.surface-retired', '.legend-swatch--retired', 'rgb(133, 60, 195)'],
+  ]) {
+    await expect(page.locator(surface)).toHaveCSS('fill', color);
+    await expect(page.locator(swatch)).toHaveCSS('background-color', color);
+    await expect(page.locator(surface)).toHaveAttribute('d', /^M/);
+  }
+  await expect(page.getByTestId('metric-waterIndex').locator('.metric-comparison')).toContainText('80 2026');
+  await expect(page.getByTestId('metric-waterIndex').locator('.metric-comparison')).toContainText('64 2035');
+  await expect(page.locator('.health-panel')).toHaveCSS('background-color', 'rgb(255, 255, 255)');
+  await expect(page.locator('#retirement-hatch')).toHaveCount(0);
+  const dimensions = await page.locator('.health-panel').evaluate((el) => ({ height: el.clientHeight, scroll: el.scrollHeight }));
+  expect(dimensions.scroll).toBeLessThanOrEqual(dimensions.height + 1);
+});
+
 test('inicia en 2026, reproduce, pausa y conserva el mes', async ({ page }) => {
   await openLocal(page);
   const slider = page.getByTestId('timeline-slider');

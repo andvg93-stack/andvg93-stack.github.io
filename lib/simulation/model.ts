@@ -13,25 +13,25 @@ export const METRICS: Array<{
     key: 'waterIndex',
     label: 'Salud de fuentes hídricas',
     shortLabel: 'Agua',
-    color: '#59b8d3',
+    color: '#2199d8',
   },
   {
     key: 'soilIndex',
     label: 'Salud del suelo',
     shortLabel: 'Suelo',
-    color: '#db9f55',
+    color: '#cc9446',
   },
   {
     key: 'biodiversityIndex',
     label: 'Biodiversidad',
     shortLabel: 'Biodiversidad',
-    color: '#79b57f',
+    color: '#509967',
   },
   {
     key: 'resilienceIndex',
     label: 'Resiliencia climática',
     shortLabel: 'Resiliencia',
-    color: '#d5bd68',
+    color: '#259ca2',
   },
 ];
 
@@ -98,4 +98,3 @@ export function metricDelta(
 export function formatHectares(value: number) {
   return new Intl.NumberFormat('es-CO', { maximumFractionDigits: 0 }).format(value);
 }
-

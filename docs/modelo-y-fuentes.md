@@ -92,4 +92,10 @@ La aplicación redistribuye resultados derivados y geometrías simplificadas con
 
 ## Pruebas
 
+### Diseño aprobado (3 de octubre de 2026)
+
+La interfaz adopta fondo azul claro, panel blanco y cronología azul oscuro. Café persistente: amarillo `#FFE45C`; expansión: rojo `#E6383F`; retiro: morado sólido `#853CC3`, sin tramado. La leyenda usa los mismos colores. Las barras comparan el valor inicial de 2026 con la fecha seleccionada; no cambian los índices ni las geometrías. La versión de caché PWA pasa a v6 para actualizar la interfaz instalada.
+
+Validación: 23 pruebas de modelo, comprobación TypeScript, arrastre real con ratón a 1440/390 px y gesto táctil, reproducción/pausa, selección temporal, funcionamiento sin solicitudes externas y capturas de escritorio, portátil y móvil. La primera comprobación de ajuste del panel detectó 63 px de desbordamiento vertical en escritorio; se corrigió el espaciado y pasó la comprobación de altura completa, junto con las comprobaciones de paleta y comparación de índices.
+
 Las pruebas verifican tendencia robusta, clasificación de aptitud, activación y retiro, interpolación, límites 0–100, 37 municipios, 120 meses y paquete inferior a 8 MB. Playwright verifica reproducción/pausa, selección temporal, teclado, reinicio, sincronización, bloqueo de solicitudes externas y vistas 1440×900, 1024×768 y 390×844.

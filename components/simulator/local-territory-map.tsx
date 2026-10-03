@@ -489,10 +489,6 @@ export function LocalTerritoryMap({ month }: { month: number }) {
               <rect x="-77" y="-5" width="4" height="5" fill="white" />
               {protectedPaths.map((shape) => <path key={shape.key} d={shape.d} fill="black" />)}
             </mask>
-            <pattern id="retirement-hatch" width="0.014" height="0.014" patternUnits="userSpaceOnUse" patternTransform="rotate(35)">
-              <rect width="0.014" height="0.014" fill="#ddd6e7" />
-              <path d="M0 0V0.014" stroke="#735989" strokeWidth="0.004" />
-            </pattern>
           </defs>
           <g ref={contentRef} className="svg-map-content">
           <g className="svg-territory-base">

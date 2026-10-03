@@ -290,9 +290,9 @@
 .svg-waterways--main path { stroke: #197c9d; stroke-width: 1.55px; opacity: 0.96; }
 .svg-surface-layer { pointer-events: none; }
 .svg-surface-layer path { vector-effect: non-scaling-stroke; stroke-linejoin: round; }
-.surface-persistent { fill: #d4b575; stroke: #907343; stroke-width: 0.55px; }
-.surface-expansion { fill: #f0a51c; stroke: #a65b06; stroke-width: 1.2px; }
-.surface-retired { fill: url('#retirement-hatch'); stroke: #725588; stroke-width: 0.8px; }
+.surface-persistent { fill: #ffe45c; stroke: #a68512; stroke-width: 0.7px; }
+.surface-expansion { fill: #e6383f; stroke: #a81d29; stroke-width: 1px; }
+.surface-retired { fill: #853cc3; stroke: #59218e; stroke-width: 0.8px; }
 .surface-baseline { fill: none; stroke: #6e624f; stroke-width: 0.6px; stroke-dasharray: 2 3; opacity: 0.5; }
 .svg-municipality-hit-layer {
   pointer-events: none;
@@ -485,9 +485,9 @@
   border: 1px solid rgba(20, 52, 48, 0.28);
 }
 
-.legend-swatch--coffee { background: #d4b575; }
-.legend-swatch--expansion { background: #f0a51c; border-color: #a65b06; }
-.legend-swatch--retired { background: repeating-linear-gradient(135deg, #ddd6e7 0 3px, #735989 3px 5px); }
+.legend-swatch--coffee { background: #ffe45c; border-color: #a68512; }
+.legend-swatch--expansion { background: #e6383f; border-color: #a81d29; }
+.legend-swatch--retired { background: #853cc3; border-color: #59218e; }
 .legend-swatch--baseline { height: 0; border: 0; border-top: 1px dashed #6e624f; }
 .legend-swatch--nature { background: #518268; }
 .legend-swatch--water { height: 3px; border: 0; background: #69abc2; }
@@ -758,4 +758,95 @@
   .map-date-chip { left: 70px; transform: none; }
   .map-date-chip span { display: none; }
   .map-mode-badge { display: none; }
+}
+
+/* Approved light observatory design. Geography and simulation remain unchanged. */
+:root { --background: #f5f9fd; --foreground: #102c48; --primary: #102f4f; --card: #fff; --card-foreground: #102c48; --border: #cbdbea; }
+.simulator-app { background: #f5f9fd; font-family: var(--font-sans-ui); }
+.app-header { background: #fff; border-color: #d3e1ee; box-shadow: none; }
+.app-brand h1 { color: #102c48; }
+.app-brand span { color: #315c80; }
+.brand-mark { background: #102f4f; box-shadow: none; }
+.header-context { background: #eff5fb; border-color: #c4d5e6; color: #375878; }
+.header-context strong, .method-trigger { color: #102c48; }
+.method-trigger { background: #fff; border-color: #a9bfd5; }
+.map-column { background: #e6f2fa; border-color: #c7dbea; border-radius: 10px; box-shadow: none; }
+.map-shell::after { background: none; }
+.svg-territory-base path { fill: #fff4d9; stroke: #788e99; }
+.svg-protected path { fill: #7e9c7b; stroke: #4d745d; }
+.svg-focus-municipalities path { fill: none; }
+.svg-municipality-labels text { fill: #163c57; }
+.local-map-controls { border-color: #c0d4e5; box-shadow: 0 3px 12px #123c5710; }
+.local-map-controls button { color: #153b5e; background: #fff; }
+.local-map-controls button:hover { background: #eaf3fa; }
+.map-legend, .south-focus-note { background: #ffffffed; border-color: #d2e2ef; color: #25476a; box-shadow: 0 4px 15px #1b426a10; }
+.map-legend__title, .south-focus-note span { color: #102c48; }
+.south-focus-note { border-left-color: #e6383f; }
+.south-focus-note > svg { color: #e6383f; }
+.map-date-chip { background: #102f4f; box-shadow: none; }
+.map-date-chip span { color: #c4def0; }
+.map-mode-badge { background: #fff; color: #315572; border: 1px solid #d2e2ef; border-radius: 7px; }
+.timeline-card { background: #123250; color: #fff; }
+.timeline-kicker, .timeline-help, .timeline-years { color: #b7d3e9; }
+.timeline-status { color: #e3edf5; }
+.timeline-play { background: #ffce51; color: #123250; }
+.timeline-play:hover { background: #ffe080; }
+.health-panel { background: #fff; color: #102c48; border-color: #d3e1ee; border-radius: 10px; box-shadow: none; scrollbar-color: #c4d5e6 transparent; }
+.health-panel__header { border-color: #e1eaf1; gap: 0.5rem; align-items: center; }
+.panel-kicker { color: #2368a3; font-size: 10px; letter-spacing: 0.07em; }
+.panel-score { width: 56px; height: 56px; flex-shrink: 0; border: 4px solid #51af87; background: #fff; color: #102c48; font-family: var(--font-sans-ui); font-size: 22px; line-height: 1; align-content: center; }
+.panel-score small { font-size: 10px; margin-top: 2px; font-weight: 500; }
+.territory-balance { background: #e8e2d2; border-color: #eee5d3; margin-top: 14px; }
+.territory-balance > div { background: #fffbf2; padding: 10px; }
+.territory-balance span { color: #163951; font-weight: 600; }
+.territory-balance small { color: #4a6176; font-size: 11px; }
+.territory-balance strong { color: #102c48; }
+.territory-balance > div:first-child strong { font-size: clamp(25px, 2.5vw, 36px); letter-spacing: -0.03em; }
+.territory-balance > div:nth-child(2) strong { color: #c8212c; }
+.territory-balance > div:nth-child(3) strong { color: #7430b2; }
+.co2-card { border-color: #e0e7ef; background: #f7f9fc; border-radius: 8px; }
+.co2-card__icon { color: #138bc8; background: #dceffd; }
+.co2-card span, .co2-card strong small { color: #375472; }
+.co2-card .co2-delta { color: #ba2934; }
+.health-metrics { gap: 12px; }
+.health-metric__label > span { display: flex; align-items: center; gap: 7px; color: #102c48; font-size: 12px; }
+.health-metric__label > span svg { width: 19px; height: 19px; flex-shrink: 0; }
+.health-metric__label strong { font-size: 21px; line-height: 1; }
+.health-metric__label small { font-size: 10px; color: #476684; margin-left: 3px; }
+.health-meter, .health-meter::-webkit-progress-bar { background: #dce5ee; height: 8px; }
+.metric-comparison { display: flex; align-items: center; gap: 8px; margin-top: 6px; color: #426386; font-size: 11px; }
+.metric-comparison small { font-size: 9px; color: #5a7389; }
+.metric-comparison__line { flex: 1; height: 1px; background: #bacdde; position: relative; }
+.metric-comparison__line::after { content: ''; position: absolute; right: 0; top: -2px; width: 5px; height: 5px; border-right: 1px solid #8ba9c2; border-top: 1px solid #8ba9c2; transform: rotate(45deg); }
+.insight-card { background: #eaf5fd; border: 0; border-radius: 8px; }
+.insight-card > svg { color: #2588b6; }
+.insight-card span { color: #24567a; }
+.insight-card p { color: #24445e; font-size: 11px; }
+.panel-disclaimer { color: #55728d; font-size: 10px; }
+.app-footer { color: #52738d; }
+.legend-swatch--nature { background: #7e9c7b; }
+@media (min-width: 1121px) {
+  .health-panel { padding: 16px 20px; }
+  .health-panel__header { padding-bottom: 8px; }
+  .territory-balance > div:first-child strong { line-height: 1.15; margin: 6px 0; }
+  .territory-balance > div { padding: 8px 10px; }
+  .health-metrics { gap: 8px; margin-top: 12px; }
+  .co2-card { padding: 8px 10px; margin-top: 12px; }
+  .insight-card { margin-top: 12px; padding: 8px 10px; }
+}
+@media (max-width: 1120px) and (min-width: 801px) {
+  .health-panel h2 { font-size: 21px; }
+  .panel-score { width: 44px; height: 44px; font-size: 18px; }
+  .panel-kicker { font-size: 9px; }
+  .health-metrics { gap: 12px; }
+  .health-metric__label > span { font-size: 11px; gap: 4px; }
+  .health-metric__label strong { font-size: 18px; }
+}
+@media (max-width: 800px) {
+  .health-panel { padding: 18px; }
+  .health-panel h2 { font-size: 27px; }
+  .panel-kicker { font-size: 11px; }
+  .health-metric__label > span { font-size: 14px; }
+  .territory-balance > div:first-child strong { font-size: 34px; }
+  .insight-card p { font-size: 13px; }
 }

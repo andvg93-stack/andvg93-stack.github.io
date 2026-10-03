@@ -145,8 +145,8 @@ function overlayLayers(month: number): StyleSpecification['layers'] {
       source: 'sim-frontier',
       filter: retiredFilter(month),
       paint: {
-        'fill-color': '#6e7772',
-        'fill-opacity': 0.5,
+        'fill-color': '#853cc3',
+        'fill-opacity': 1,
       },
     },
     {
@@ -155,8 +155,8 @@ function overlayLayers(month: number): StyleSpecification['layers'] {
       source: 'sim-frontier',
       filter: activeFilter(month, 'initial'),
       paint: {
-        'fill-color': '#d79d31',
-        'fill-opacity': 0.82,
+        'fill-color': '#ffe45c',
+        'fill-opacity': 1,
       },
     },
     {
@@ -165,8 +165,8 @@ function overlayLayers(month: number): StyleSpecification['layers'] {
       source: 'sim-frontier',
       filter: activeFilter(month, 'expansion'),
       paint: {
-        'fill-color': '#e96f51',
-        'fill-opacity': 0.76,
+        'fill-color': '#e6383f',
+        'fill-opacity': 1,
       },
     },
     {
@@ -183,8 +183,8 @@ function overlayLayers(month: number): StyleSpecification['layers'] {
           'match',
           ['get', 'origin'],
           'expansion',
-          '#9f3c2a',
-          '#81560b',
+          '#a81d29',
+          '#a68512',
         ],
         'line-width': 0.8,
         'line-opacity': 0.82,
@@ -242,7 +242,7 @@ function createStyle(
     {
       id: 'sim-background',
       type: 'background' as const,
-      paint: { 'background-color': '#d9e4de' },
+      paint: { 'background-color': '#e6f2fa' },
     },
   ];
   return {
